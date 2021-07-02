@@ -1,0 +1,17 @@
+@import 'reset';
+
+/* standard fonts for this story, to be adhered to for consistency */
+@import 'fonts';
+
+/* app specific css (specific to this example) */
+@import 'app';
+
+/* chart specific css (inside svg container) */
+@import 'svg';
+
+/* ScrollyTeller css */
+@import '../../src/ScrollyTeller/scss/style.scss';
+
+/* pretty print for code */
+@import './desertPrettifyTheme.scss';
+
