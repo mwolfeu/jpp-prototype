@@ -49,8 +49,10 @@ export default class App {
           get(elt, ['dataset', 'narrationtarget']),
         );
       });
-  }
+  } 
 }
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new App();
