@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Scrolly Teller Example</title>
-        <link type="text/css" rel="stylesheet" href="dist/bundle.css"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div class="app-container" id="scrolly-teller-app">
-            <div class="title-area">
-                <div class="title left">ScrollyTeller</div>
-                <h3 class="intro left">ScrollyTeller is a JavaScript library that builds the HTML for a scrolling
-                    data story from csv files, and provides a flexible framework for triggering chart actions when
-                    text "narration" scrolls into view. For an introduction to the mechanics of scrollytelling, see the
-                    excellent <a href="https://github.com/russellgoldenberg/scrollama"
-                      target="_blank">Scrollama</a> library, which
-                    ScrollyTeller relies on for detecting scroll events
-                    and progress.</h3>
+
+<head>
+    <meta charset="utf-8">
+    <title>Abuse Tracker - Justice Project Pakistan</title>
+    <link type="text/css" rel="stylesheet" href="dist/bundle.css" />
+    <link type="text/css" rel="stylesheet" href="css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@300&family=Newsreader:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+    <div class="app-container" id="scrolly-teller-app">
+        <!-- <div class="title-area">
+                <div class="title left">Abuse Tracker</div>
+                <h3 class="intro left">Justice Project Pakistan.</h3>
                 <p class="intro left"><strong>Scroll down</strong> to learn how to create a data story using
                     ScrollyTeller. The <strong>spacebar</strong> and <strong>arrow keys</strong> also advance the
                     story.</p>
                 <p class="intro left">Use the <span class="navbar" style="display: inline; padding: 0; margin: 0;">
                     <span class="navButton" style="padding: 5px;">buttons</span></span> to jump to different parts of the
                     story.</p>
-            </div>
-            <nav class="navbar">
-                <div
-                  data-section="introduction"
-                  data-narrationtarget="introStart"
-                  class="navButton intro"><h3>Overview</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="storyConfigStart"
-                  class="navButton storyConfig"><h3>Story Config</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="sectionConfigStart"
-                  class="navButton sectionConfig"><h3>Section Config</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="fetchNarrationStart"
-                  class="navButton fetchNarration"><h3>Fetch Narration</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="fetchDataStart"
-                  class="navButton fetchData"><h3>Fetch Data</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="renderGraphStart"
-                  class="navButton renderGraph"><h3>Render Graph</h3></div>
-                <div data-section="wealthAndHealth"
-                  data-narrationtarget="eventHandlersStart"
-                  class="navButton eventHandlers"><h3>Event Handlers</h3></div>
-                <div data-section="builtInTriggers"
-                  data-narrationtarget="builtInTriggersStart"
-                  class="navButton builtInTriggers"><h3>Built-in Triggers</h3></div>
-            </nav>
-            <div id="app"></div>
+            </div> -->
+        <div class="landing-page-inner">
+            <h1 class="title">Tracking Abuse</h1>
+            <hr class="title-bar">
+            <h2 class="subtitle">Identifying, and Uncovering Human Rights Violations</h2>
+            <h2 class="subtitle">by Pakistani Authorities</h2>
         </div>
-        <script src="https://cdn.jsdelivr.net/gh/google/code-prettify/loader/run_prettify.js"></script>
-        <script type="text/javascript" src="dist/bundle.js"></script>
-    </body>
+        <div id="scroll-down-wrapper" class="">
+            <h2 id="scroll-down-title"> Scroll For The Story</h2>
+            <div id="scroll-down-icon"><span class="material-icons">expand_more</span></div>
+        </div>
+        <nav class="navbar">
+            <!-- <div data-section="introduction" data-narrationtarget="introStart" class="navButton intro">
+                <h3>Overview</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="storyConfigStart" class="navButton storyConfig">
+                <h3>Story Config</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="sectionConfigStart" class="navButton sectionConfig">
+                <h3>Section Config</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="fetchNarrationStart" class="navButton fetchNarration">
+                <h3>Fetch Narration</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="fetchDataStart" class="navButton fetchData">
+                <h3>Fetch Data</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="renderGraphStart" class="navButton renderGraph">
+                <h3>Render Graph</h3>
+            </div>
+            <div data-section="wealthAndHealth" data-narrationtarget="eventHandlersStart" class="navButton eventHandlers">
+                <h3>Event Handlers</h3>
+            </div>
+            <div data-section="builtInTriggers" data-narrationtarget="builtInTriggersStart" class="navButton builtInTriggers">
+                <h3>Built-in Triggers</h3>
+            </div> -->
+        </nav>
+        <div id="app"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify/loader/run_prettify.js"></script>
+    <script type="text/javascript" src="dist/bundle.js"></script>
+</body>
+
 </html>
