@@ -1,6 +1,3 @@
-import './slide1.svg';
-import './slide2.svg';
-import './slide3.svg';
-import './slide4.svg';
-import './slide5.svg';
-import './slide5.png'; // add to dist for github display
+import './intro-0.jpg';
+import './intro-1.jpg';
+import './intro-2.jpg'; // add to dist for github display

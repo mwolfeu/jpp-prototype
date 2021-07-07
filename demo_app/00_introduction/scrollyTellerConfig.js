@@ -69,8 +69,8 @@ export default {
         select(`#${graphId}`)
             .append('div')
             .classed('imageDiv', true)
-        updateImage(graphId, { imgFileName: 'intro.jpg' }, sectionState.imgFileName);
-        sectionState.imgFileName = 'intro.jpg';
+        updateImage(graphId, { imgFileName: 'intro-0.jpg' }, sectionState.imgFileName);
+        sectionState.imgFileName = 'intro-0.jpg';
         return undefined;
     },
 

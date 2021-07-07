@@ -4,8 +4,12 @@ import {get } from 'lodash-es';
 import './scss/style.scss';
 import ScrollyTeller from '../src/ScrollyTeller/ScrollyTeller.js';
 import intro from './00_introduction/scrollyTellerConfig';
-import wealthAndHealthConfig from './01_wealthAndHealthOfNations/scrollyTellerConfig';
-import builtInTriggers from './02_builtInTriggers/scrollyTellerConfig';
+import vis from './01_visualization/scrollyTellerConfig';
+import endnotes from './02_endnotes/scrollyTellerConfig';
+
+
+// import wealthAndHealthConfig from './01_wealthAndHealthOfNations/scrollyTellerConfig';
+// import builtInTriggers from './02_builtInTriggers/scrollyTellerConfig';
 
 export default class App {
     constructor() {
@@ -17,8 +21,10 @@ export default class App {
              * Each section object should be a valid ScrollyTeller section configuration */
             sectionList: [
                 intro,
-                wealthAndHealthConfig,
-                builtInTriggers,
+                vis,
+                endnotes
+                // wealthAndHealthConfig,
+                // builtInTriggers,
             ],
             /** optional function to receive the current sectionIdentifier,
              * narrationIndex, narrationId, and narrationClass
