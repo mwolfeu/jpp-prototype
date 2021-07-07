@@ -1,0 +1,9 @@
+narrationId,narrationClass,marginTopVh,marginBottomVh,minHeightVh,h2Text,paragraphText,hRef,hRefText,trigger,graphTitle,graphCaption
+en-0,endnotes,40,40,50,"<div class='chapeau'>End Notes</div>","This is the summation copy provided by JPP and an invitation to use the data. Rights and restrictions should be provided as well as links to the current dataset and data-dictionary.  Additionally, if desired, contact information and/or a contact form if a user would like to make a submission.",,,"{
+	""imgFileName"": ""JPP-Logo-New-1.png""
+}",,
+en-1,endnotes,1,1,1,,,,,"{
+	""imgFileName"": ""none.png""
+}",,
+,centered-narration,50,0,50,,"Attributions: Illustrations in this story were modified from the open collection of <a href=""https://harvardartmuseums.org/""
+                  target=""_blank"">The Harvard Art Museum</a> and <a href=""https://unsplash.com/"" target=""_blank"">Unsplash.com</a>.",,,,,,,
