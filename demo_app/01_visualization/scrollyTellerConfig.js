@@ -1,13 +1,82 @@
+/* globals PR */
+import { isNil } from 'lodash-es'
+import { interpolate } from 'd3-interpolate';
 import { select } from 'd3-selection';
+import { extent } from 'd3-array';
+import visualization from './components/main.js';
+import snippets from './components/codeSnippets';
+import './scss/visualization.scss';
 import './data/narration.csv';
-import './scss/introduction.scss';
-import './data/slides';
-import { updateImage } from '../utils';
+import './data/geo';
+import { highlightLines, updateImage } from '../utils';
 
 /** local state object */
 const sectionState = {
     imgFileName: '',
 };
+const CODE_HIGHLIGHT_COLOR = '#8078ff36';
+
+function handleActivateNarrationAndResize({
+    graphId,
+    state: {
+        year,
+        snippet,
+        highlight,
+        imgFileName,
+    },
+    /** destructure "year" variable from state */
+    sectionConfig: {
+        graph: {
+            $codeSnippetSelection,
+            visualizationSelector,
+            visualizationGraph,
+        },
+    },
+    /** destructure graph from section config */
+    width,
+    height,
+}) {
+    /** DISPLAY CODE SNIPPETS */
+    let code = '';
+    if (snippet) {
+        code = snippet.includes('HTML') ?
+            snippets[snippet] :
+            `<pre class="prettyprint lang-js linenums:5">${snippets[snippet]}</pre>`;
+    }
+    $codeSnippetSelection
+        .html(code);
+    PR.prettyPrint();
+
+    if (snippet && highlight) {
+        highlightLines(
+            $codeSnippetSelection,
+            highlight.toString().split(','),
+            CODE_HIGHLIGHT_COLOR,
+        );
+    }
+
+    /** DISPLAY/FLIP BETWEEN IMAGES */
+    updateImage(graphId, { imgFileName }, sectionState.imgFileName);
+    sectionState.imgFileName = imgFileName;
+
+    /** HIDE GRAPH WHEN CODE SNIPPETS ARE DISPLAYED */
+    if (snippet || imgFileName) {
+        select(visualizationSelector).style('opacity', 0);
+    } else {
+        /** render a year (year = undefined defaults to min year in component) */
+        select(visualizationSelector)
+            .style('opacity', 1);
+        /** handle resize if width/height exist */
+        if (width && height) {
+            visualizationGraph.resize({ width, height });
+        } else if (!isNil(year)) {
+            visualizationGraph.render({
+                year: Number(year),
+                duration: 1000,
+            });
+        }
+    }
+}
 
 /** section configuration object with identifier, narration, and data (for the graph)  */
 export default {
@@ -20,7 +89,7 @@ export default {
      *      'csv', 'tsv', 'json', 'html', 'txt', 'xml', which will be parsed by d3.promise
      *  2) array of narration objects,
      *  3) a promise to return an array of narration objects in the appropriate form
-     * See README for the specification of the narration objects */
+     * See README for the specfication of the narration objects */
     narration: 'demo_app/01_visualization/data/narration.csv',
 
     /** data can be either of the following 4 options:
@@ -31,9 +100,7 @@ export default {
      *  4) undefined
      */
     /** data from path example */
-    data: [],
-
-    convertTriggerToObject: true,
+    data: 'demo_app/01_visualization/data/geo/PAK_admMulti.json',
 
     /**
      * Optional method to reshape the data passed into ScrollyTeller, or resolved by the data promise
@@ -41,7 +108,37 @@ export default {
      * @returns {object|array} -  an object or array of data of user-defined shape
      */
     reshapeDataFunction: function processData(results) {
-        return {};
+        /** compute data domains for population (radius), income (x), life expectancy (y), and years
+         * These functions compute the data domains [min, max] over a range of years from
+         * 1950 - 2008 so the graph axes don't change as we update */
+        // const rDomain = extent(results.reduce((acc, d) => (acc.concat(...extent(d.population))), []));
+        // const xDomain = extent(results.reduce((acc, d) => (acc.concat(...extent(d.income))), []));
+        // const yDomain = extent(results.reduce((acc, d) =>
+        //     (acc.concat(...extent(d.lifeExpectancy))), []));
+        // const yearDomain = extent(results.reduce((acc, d) => (acc.concat(...extent(d.years))), []));
+
+        // /** Legend items are regions, so get unique region names */
+        // const legendArray = results.reduce((acc, d) =>
+        //     (acc.includes(d.region) ? acc : acc.concat(d.region)), []);
+
+        // /** return the raw data, domains, and scales, which will be assigned
+        //  * to sectionConfig.data. The sectionConfig object is received by all scrollyteller
+        //  * functions such as buildGraphFunction(), onActivateNarrationFunction(), onScrollFunction() */
+
+        const legendArray = null;
+        const rDomain = null;
+        const xDomain = null;
+        const yDomain = null;
+        const yearDomain = null;
+
+        return {
+            dataArray: results,
+            legendArray,
+            rDomain,
+            xDomain,
+            yDomain,
+            yearDomain,
+        };
     },
 
     /**
@@ -52,7 +149,6 @@ export default {
      * This function is called as follows:
      * buildGraphFunction(graphId, sectionConfig)
      * @param {string} graphId - id of the graph in this section. const myGraph = d3.select(`#${graphId}`);
-     * @param {object} sectionConfig - the configuration object passed to ScrollyTeller
      * @param {object} [sectionConfig] - the configuration object passed to ScrollyTeller
      * @param {string} [sectionConfig.sectionIdentifier] - the identifier for this section
      * @param {object} [sectionConfig.graph] - the chart instance, or a reference containing the result of the buildChart() function above
@@ -63,15 +159,56 @@ export default {
      * @returns {object} - chart instance
      */
     buildGraphFunction: function buildGraph(graphId, sectionConfig) {
+        const {
+            /** destructure the dataArray and domains computed by reshapeDataFunction() from the sectionConfig */
+            data: {
+                dataArray,
+                legendArray,
+                rDomain,
+                xDomain,
+                yDomain,
+                yearDomain,
+            },
+        } = sectionConfig;
+
+        /** create a css selector to select the graph div by id */
+        const graphSelector = `#${graphId}`;
+
+        /** create a div to render images */
+        select(`#${graphId}`)
+            .append('div')
+            .classed('imageDiv', true);
+
+        /** build the graph */
+        const visualizationGraph = new visualization({
+            container: graphSelector,
+            /** data */
+            data: dataArray,
+            /** data domains */
+            rDomain,
+            xDomain,
+            yDomain,
+            yearDomain,
+            /** legend values */
+            legendArray,
+            /** dimensions */
+            height: select(graphSelector).node().offsetHeight * 0.9,
+            width: select(graphSelector).node().offsetWidth * 0.9,
+        });
+
+        /** create a div to render code snippets */
+        const $codeSnippetSelection = select(graphSelector)
+            .append('div')
+            .attr('id', 'codeSnippet');
+
         /** REMEMBER TO RETURN THE GRAPH! (could also return as an object with multiple graphs, etc)
          * The graph object is assigned to sectionConfig.graph, which is returned to all scrollyteller
          * functions such as buildGraphFunction(), onActivateNarrationFunction(), onScrollFunction()  */
-        select(`#${graphId}`)
-            .append('div')
-            .classed('imageDiv', true)
-        updateImage(graphId, { imgFileName: 'NONE-intro-0.jpg' }, sectionState.imgFileName);
-        sectionState.imgFileName = 'NONE-intro-0.jpg';
-        return undefined;
+        return {
+            $codeSnippetSelection,
+            visualizationSelector: `#${graphId} svg`,
+            visualizationGraph,
+        };
     },
 
     /**
@@ -93,7 +230,32 @@ export default {
      * @param {object} [params.sectionConfig.elementResizeDetector] - the element-resize-detector object: see https://github.com/wnr/element-resize-detector for usage
      * @returns {void}
      */
-    onScrollFunction: function onScroll() {},
+    onScrollFunction: function onScroll({
+        progress,
+        state: {
+            yearDomain,
+        },
+        /** destructure year progress variable set from the narration.csv file */
+        sectionConfig: {
+            graph: {
+                snippet,
+                imgFileName,
+                visualizationGraph,
+                visualizationSelector,
+            },
+            /** destructure graph from section config */
+        },
+    }) {
+        if (snippet || imgFileName) {
+            select(visualizationSelector).style('opacity', 0);
+        } else if (!isNil(yearDomain)) {
+            const interpolateYear = interpolate(...yearDomain)(progress);
+            visualizationGraph.render({
+                year: Math.floor(interpolateYear),
+                duration: 100,
+            });
+        }
+    },
 
     /**
      * Called when a narration block is activated.
@@ -116,17 +278,7 @@ export default {
      * @param {object} [params.sectionConfig.elementResizeDetector] - the element-resize-detector object: see https://github.com/wnr/element-resize-detector for usage
      * @returns {void}
      */
-    onActivateNarrationFunction: function onActivateNarration({
-        graphId,
-        state,
-        state: {
-            imgFileName,
-        },
-    }) {
-        /** DISPLAY/FLIP BETWEEN IMAGES */
-        updateImage(graphId, state, sectionState.imgFileName);
-        sectionState.imgFileName = imgFileName;
-    },
+    onActivateNarrationFunction: handleActivateNarrationAndResize,
 
     /**
      * Called upon resize of the graph container
@@ -144,5 +296,15 @@ export default {
      * @param {object} [params.sectionConfig.elementResizeDetector] - the element-resize-detector object: see https://github.com/wnr/element-resize-detector for usage
      * @returns {void}
      */
-    onResizeFunction: function onResize() {},
+    onResizeFunction: function onResize({
+        graphElement,
+        ...rest
+    }) {
+        handleActivateNarrationAndResize({
+            ...rest,
+            graphElement,
+            width: graphElement.offsetWidth * 0.9,
+            height: graphElement.offsetHeight * 0.9,
+        });
+    },
 };

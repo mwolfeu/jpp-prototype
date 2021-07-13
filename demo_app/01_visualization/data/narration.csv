@@ -1,5 +1,7 @@
 narrationId,narrationClass,marginTopVh,marginBottomVh,minHeightVh,h2Text,paragraphText,hRef,hRefText,trigger,graphTitle,graphCaption
-vis-0,visualization,40,40,50,"Visualization Section","IFrame for visualization to be inserted here.",,,"{
-	""NONE-imgFileName"": ""NONE-intro-0.jpg""
-}",GraphTitle,Caption
-
+,intro,40,40,50,,"",,,"{
+	""containerStyle"": {
+		""opacity"": 1
+	},
+	""year"": 1950
+}",,""

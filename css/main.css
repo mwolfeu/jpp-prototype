@@ -135,3 +135,107 @@ body {
     filter: blur(1px) saturate(0.4);
     opacity: .5 !important;
 }
+
+#section_visualization .narration_list {
+    min-width: 0px;
+    max-width: 0px;
+    padding: 0px;
+}
+
+#graph_visualization_container.graph_container {
+    wwidth: 90vw;
+}
+
+#graph_visualization_container #main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    position: absolute;
+}
+
+
+/* VISUALIZATION */
+
+#graph_visualization_container #map-meta-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+#graph_visualization_container #map {
+    width: 60%;
+}
+
+#graph_visualization_container #meta {
+    width: 40%;
+}
+
+#graph_visualization_container #map,
+#graph_visualization_container #meta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+#graph_visualization_container #map #filter-control,
+#graph_visualization_container #meta #title {
+    height: 10%;
+}
+
+#graph_visualization_container #map #vis,
+#graph_visualization_container #meta #vis {
+    height: 85%;
+}
+
+#graph_visualization_container #map #howto,
+#graph_visualization_container #meta #howto {
+    height: 5%;
+    font-size: 1rem;
+    padding-left: .5rem;
+    padding-top: .5rem;
+}
+
+#graph_visualization_container #map #filter-control {
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+#graph_visualization_container #map #vis {
+    width: 100%;
+}
+
+#graph_visualization_container #map #year-control {
+    height: 5%;
+    width: 100%;
+}
+
+#graph_visualization_container #map #geo {
+    height: 95%;
+    width: 100%;
+}
+
+#graph_visualization_container #map #howto {
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+#graph_visualization_container #meta #title {
+    width: 100%;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+}
+
+#graph_visualization_container #meta #vis {
+    width: 100%;
+    border-left: 1px solid black;
+}
+
+#graph_visualization_container #meta #howto {
+    width: 100%;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+}

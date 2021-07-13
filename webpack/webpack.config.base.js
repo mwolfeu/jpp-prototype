@@ -99,6 +99,16 @@ export default new Config().merge({
                 }
             },
             {
+                test: /\.(json)/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: 'data/',
+                    }
+                }
+            },
+            {
                 test: /\.(csv|tsv)/,
                 use: {
                     loader: 'csv-loader',
