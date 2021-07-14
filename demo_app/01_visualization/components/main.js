@@ -114,6 +114,7 @@ export default class WealthAndHealthOfNations {
             this.geo = select(props.containerEl)
                 .append('svg')
                 .on("click", function() {
+                    if (props.crNAME1 == 'Pakistan') return;
                     let width = props.containerEl.clientWidth;
                     let height = props.containerEl.clientHeight;
                     changeRegion(null, {...props, width, height });
@@ -158,6 +159,7 @@ export default class WealthAndHealthOfNations {
                 .style("cursor", "pointer")
                 .attr("d", geoPath(proj))
                 .on("click", function() {
+                    if (props.crNAME1 != 'Pakistan') return;
                     changeRegion(this, props);
                 })
                 .attr("opacity", 0)
