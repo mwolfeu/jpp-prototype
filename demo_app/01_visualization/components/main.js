@@ -91,9 +91,11 @@ export default class WealthAndHealthOfNations {
         let i = 0;
         var legendLinear = legendColor()
             .shapeWidth(30)
+            .title('Cases')
             .shapeHeight(10)
             .ascending(true)
-            .labels(s.domain()) // d => d.i
+            .labelFormat('r')
+            // .labels(s.domain()) // d => d.i
             // .cells([0, 5, 10, 15, 20])
             .orient('horizontal')
             .scale(s);
