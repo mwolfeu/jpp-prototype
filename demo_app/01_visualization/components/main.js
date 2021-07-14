@@ -35,6 +35,7 @@ export default class WealthAndHealthOfNations {
                       <div id="title">Abuse Cases by Region</div>
                       <div id="vis">
                           <div id="geo">
+                            <span id="filter-button" class="material-icons-outlined">filter_list</span>
                             <div id="filter-legend"></div>
                           </div>
                           <div id="year-control"></div>
@@ -77,6 +78,30 @@ export default class WealthAndHealthOfNations {
         return this.props;
     }
 
+    legend(s, target) {
+        target.append("g")
+            .attr("class", "legendLinear")
+            .attr("transform", `translate(10,${target.node().clientHeight-30})`)
+            .style("font-size", "16px");
+
+        var sc = d3.scaleLinear()
+            .domain([0, 10])
+            .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
+
+        let i = 0;
+        var legendLinear = legendColor()
+            .shapeWidth(30)
+            .shapeHeight(10)
+            .ascending(true)
+            .labels(s.domain()) // d => d.i
+            // .cells([0, 5, 10, 15, 20])
+            .orient('horizontal')
+            .scale(s);
+
+        target.select(".legendLinear")
+            .call(legendLinear);
+    }
+
     _init(props) {
         this._updateProps(props);
 
@@ -113,12 +138,12 @@ export default class WealthAndHealthOfNations {
         if (!this.geo) {
             this.geo = select(props.containerEl)
                 .append('svg')
-                .on("click", function() {
-                    if (props.crNAME1 == 'Pakistan') return;
+                .on("click", (function() {
+                    if (this.props.crNAME1 == "Pakistan") return;
                     let width = props.containerEl.clientWidth;
                     let height = props.containerEl.clientHeight;
                     changeRegion(null, {...props, width, height });
-                })
+                }).bind(this))
         }
 
         const t = this.geo.transition().duration(dur);
@@ -134,6 +159,11 @@ export default class WealthAndHealthOfNations {
             .style("opacity", 0)
             .remove();
 
+        let steps = 6;
+        let sc = d3.scaleLinear().domain(extent);
+        let colorScale = d3.scaleLinear().domain(sc.ticks(steps)).range(d3.quantize(d3.interpolateViridis, steps));
+        this.legend(colorScale, this.geo);
+
         this.geo.append("g")
             .selectAll("path")
             .data(props.data.features)
@@ -147,9 +177,9 @@ export default class WealthAndHealthOfNations {
                     else { // add em up
                         rate = stateMean[d.properties.NAME_1];
                     }
-                    let s = d3.scaleLinear().domain(extent);
-                    console.log(`${g2}, ${rate}, ${s(rate)} %cXXX`, `color:${d3.interpolateViridis(s(rate))};`);
-                    return d3.interpolateViridis(s(rate));
+
+                    //console.log(`${g2}, ${rate}, ${s(rate)} %cXXX`, `color:${d3.interpolateViridis(s(rate))};`);
+                    return colorScale(rate);
                 })
                 .attr("data-name1", d => d.properties.NAME_1)
                 .attr("data-name2", d => d.properties.NAME_2)
@@ -159,6 +189,7 @@ export default class WealthAndHealthOfNations {
                 .style("cursor", "pointer")
                 .attr("d", geoPath(proj))
                 .on("click", function() {
+                    event.stopPropagation();
                     if (props.crNAME1 != 'Pakistan') return;
                     changeRegion(this, props);
                 })
@@ -197,7 +228,6 @@ export default class WealthAndHealthOfNations {
 
         let crNAME1 = name ? name : 'Pakistan';
 
-        event.stopPropagation();
         this._init({...props, data, crNAME1 });
         // this.initInMap(props, select(el).attr("data-gid2"), name)
     }
