@@ -4,13 +4,15 @@ import {
     scaleOrdinal,
     scaleSqrt,
 } from 'd3-scale';
+import * as d3 from "d3";
 import { select } from 'd3-selection';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { schemeCategory10 } from 'd3-scale-chromatic'
 import { legendColor } from 'd3-svg-legend';
-import { geoPath } from 'd3-geo';
-import { geoMercator } from 'd3-geo';
+import { geoPath, geoMercator } from 'd3-geo';
 import { random } from 'lodash-es';
+import { abuseData, extent, getRate, stateMean } from './util-data.js';
+
 
 const defaults = {
     container: '#chart',
@@ -26,50 +28,32 @@ const defaults = {
 
 export default class WealthAndHealthOfNations {
     constructor(props) {
-        this._init({...defaults, ...props });
-    }
-
-    _updateProps(props) {
-        this.props = {...this.props, ...props };
-        return this.props;
-    }
-    _init(props) {
-        const {
-            container,
-            height,
-            legendArray,
-            margin,
-            rDomain,
-            xDomain,
-            yDomain,
-            yearDomain,
-            width,
-        } = this._updateProps(props);
-
         let frames = `
-            <div id="main-container">
-                <div id="map-meta-container">
-                    <div id="map">
-                        <div id="filter-control"></div>
-                        <div id="vis">
-                            <div id="geo"></div>
-                            <div id="year-control"></div>
-                        </div>
-                        <div id="howto">
-                            Hover over an icon or click on a state. Use the filter for more specific results.
-                        </div>
-                    </div>
-                    <div id="meta">
-                        <div id="title"></div>
-                        <div id="vis"></div>
-                        <div id="howto">
-                            Hover over the chart or select a specific case.
-                        </div>
-                    </div> 
-                </div> 
-            </div>
+          <div id="main-container">
+              <div id="map-meta-container">
+                  <div id="map">
+                      <div id="title">Abuse Cases by Region</div>
+                      <div id="vis">
+                          <div id="geo">
+                            <div id="filter-legend"></div>
+                          </div>
+                          <div id="year-control"></div>
+                      </div>
+                      <div id="howto">
+                          Hover over an icon or click on a state. Use the filter for more specific results.
+                      </div>
+                  </div>
+                  <div id="meta">
+                      <div id="title"></div>
+                      <div id="vis"></div>
+                      <div id="howto">
+                          Hover over the chart or select a specific case.
+                      </div>
+                  </div> 
+              </div> 
+          </div>
         `
-        var d1 = document.querySelector(container);
+        var d1 = document.querySelector(props.container);
         d1.insertAdjacentHTML('beforeend', frames);
 
         props.data.forEach(g => {
@@ -83,86 +67,107 @@ export default class WealthAndHealthOfNations {
 
         this.allData = props.data;
         props.data = props.data[0];
+        props.crNAME1 = 'Pakistan';
 
-        let initFcns = [{ fcn: 'initGeo', sel: '#map #vis #geo' }];
+        this._init({...defaults, ...props });
+    }
+
+    _updateProps(props) {
+        this.props = {...this.props, ...props };
+        return this.props;
+    }
+
+    _init(props) {
+        this._updateProps(props);
+
+        let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
+
+        let initFcns = [{ fcn: 'initMapTitle', sel: '#map #title' },
+            { fcn: 'initGeo', sel: '#map #vis #geo' },
+            { fcn: 'initInMap', sel: '#map #vis #filter-legend' }
+        ];
         initFcns.forEach(d => {
-            let el = document.querySelector(container + ` ${d.sel}`);
-            this[d.fcn]({...props, containerEl: el, width: el.clientWidth, height: el.clientHeight })
+            let el = document.querySelector(this.props.container + ` ${d.sel}`);
+            this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight, isResize })
         });
     }
 
+    initMapTitle(props) {}
+
+    initInMap(props) {
+        let sel = abuseData;
+        if (props.crNAME1 != 'Pakistan') {
+            sel = abuseData.filter(d => d.n1 == props.crNAME1);
+        }
+
+        let tot = d3.sum(sel.map(d => d.incidents.length));
+        select(props.containerEl).text(`${props.crNAME1} Total: ${tot}`);
+    }
+
     initGeo(props) {
-        var randomColor = (function() {
-            var golden_ratio_conjugate = 0.618033988749895;
-            var h = Math.random();
-
-            var hslToRgb = function(h, s, l) {
-                var r, g, b;
-
-                if (s == 0) {
-                    r = g = b = l; // achromatic
-                } else {
-                    function hue2rgb(p, q, t) {
-                        if (t < 0) t += 1;
-                        if (t > 1) t -= 1;
-                        if (t < 1 / 6) return p + (q - p) * 6 * t;
-                        if (t < 1 / 2) return q;
-                        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                        return p;
-                    }
-
-                    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-                    var p = 2 * l - q;
-                    r = hue2rgb(p, q, h + 1 / 3);
-                    g = hue2rgb(p, q, h);
-                    b = hue2rgb(p, q, h - 1 / 3);
-                }
-
-                return '#' + Math.round(r * 255).toString(16) + Math.round(g * 255).toString(16) + Math.round(b * 255).toString(16);
-            };
-
-            return function() {
-                h += golden_ratio_conjugate;
-                h %= 1;
-                return hslToRgb(h, 0.5, 0.60);
-            };
-        })();
-
-        /** build svg */
-        this.svg = select(props.containerEl)
-            .append('svg')
-            .attr('width', props.width)
-            .attr('height', props.height)
-            .on("click", function() {
-                changeRegion(null, props);
-            })
-
+        let dur = props.isResize ? 0 : 500;
         let proj = geoMercator().fitSize([props.width, props.height], props.data)
         let changeRegion = this.changeRegion.bind(this);
-        const t = this.svg.transition().duration(2000);
 
-        this.svg.append("g")
+        /** build svg */
+        if (!this.geo) {
+            this.geo = select(props.containerEl)
+                .append('svg')
+                .on("click", function() {
+                    let width = props.containerEl.clientWidth;
+                    let height = props.containerEl.clientHeight;
+                    changeRegion(null, {...props, width, height });
+                })
+        }
+
+        const t = this.geo.transition().duration(dur);
+
+        this.geo
+            .attr('width', props.width)
+            .attr('height', props.height)
+
+        this.geo.selectAll("g") // remove old features
+            //.selectAll('path:not([data-name1="Northern Areas"])')
+            .transition()
+            .duration(dur * .6)
+            .style("opacity", 0)
+            .remove();
+
+        this.geo.append("g")
             .selectAll("path")
             .data(props.data.features)
             .join(
                 enter => enter.append("path")
-                .attr("fill", randomColor)
+                .attr("fill", d => {
+                    let g2 = d.properties.GID_2;
+                    let rate = 0;
+                    if (g2) // using second geopath data
+                        rate = getRate(g2);
+                    else { // add em up
+                        rate = stateMean[d.properties.NAME_1];
+                    }
+                    let s = d3.scaleLinear().domain(extent);
+                    console.log(`${g2}, ${rate}, ${s(rate)} %cXXX`, `color:${d3.interpolateViridis(s(rate))};`);
+                    return d3.interpolateViridis(s(rate));
+                })
                 .attr("data-name1", d => d.properties.NAME_1)
                 .attr("data-name2", d => d.properties.NAME_2)
                 .attr("data-name3", d => d.properties.NAME_3)
+                .attr("data-gid2", d => d.properties.GID_2)
                 .attr("stroke", "black")
                 .style("cursor", "pointer")
                 .attr("d", geoPath(proj))
                 .on("click", function() {
                     changeRegion(this, props);
-                    select(this)
-                        .attr("fill", randomColor);
                 })
-                // .attr("x", (d, i) => i * 16)
-                // .attr("y", -30)
                 .attr("opacity", 0)
                 .call(enter => enter.transition(t).attr("opacity", 1))
-                .append("title").text(d => `${d.properties.NAME_1}: X cases`),
+                .append("title").text(d => {
+                    if (d.properties.GID_2)
+                        return `${d.properties.GID_2}: ${abuseData.filter(ad => ad.g2 == d.properties.GID_2)[0].incidents.length} cases`
+                    else
+                        return `${d.properties.NAME_1}: Mean ${stateMean[d.properties.NAME_1]} cases`
+                }),
 
                 update => update
                 .attr("opacity", "1")
@@ -173,31 +178,14 @@ export default class WealthAndHealthOfNations {
                 .call(exit => exit.transition(t)
                     .attr("opacity", 0)
                     .remove())
-            )
-            // .attr("fill", randomColor) // color by intensity
-            // .attr("data-name1", d => d.properties.NAME_1)
-            // .attr("data-name2", d => d.properties.NAME_2)
-            // .attr("data-name3", d => d.properties.NAME_3)
-            // .attr("stroke", "black")
-            // .style("cursor", "pointer")
-            // .attr("d", geoPath(proj))
-            // .on("click", function() {
-            //     changeRegion(this, props);
-            //     select(this)
-            //         .attr("fill", randomColor);
-            // })
-            // .attr("opacity", 0),
-            // .call(enter => enter.transition(t).attr("opacity", 1));
-
-        // this.svg.selectAll("path")
-        //     .append("title").text(d => `${d.properties.NAME_1}: X cases`);
+            );
     }
 
     changeRegion(el, props) {
-        let data;
+        let data, name;
 
         if (el) {
-            let name = select(el).attr("data-name1");
+            name = select(el).attr("data-name1");
             data = this.allData[1];
             data.features = data.allFeatures.filter(d => d.properties.NAME_1 == name);
         } else {
@@ -205,17 +193,19 @@ export default class WealthAndHealthOfNations {
             data.features = data.allFeatures;
         }
 
+        let crNAME1 = name ? name : 'Pakistan';
+
         event.stopPropagation();
-        document.querySelector('svg').remove();
-        this.initGeo({...props, data })
+        this._init({...props, data, crNAME1 });
+        // this.initInMap(props, select(el).attr("data-gid2"), name)
     }
 
-    render(props) {
+    render(props) { // receives new scroll updates
+        console.log('update called');
         // update
     }
 
     resize(props) {
-        this.svg.remove();
         this._init(props);
     }
 }

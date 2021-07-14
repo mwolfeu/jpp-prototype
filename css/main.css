@@ -165,7 +165,8 @@ body {
     width: 100%;
 }
 
-#graph_visualization_container #map {
+#graph_visualization_container #map,
+#graph_visualization_container #map #filter-legend {
     width: 60%;
 }
 
@@ -181,9 +182,12 @@ body {
     height: 100%;
 }
 
-#graph_visualization_container #map #filter-control,
+#graph_visualization_container #map #title,
 #graph_visualization_container #meta #title {
     height: 10%;
+    font-size: 2.5rem;
+    padding: .5rem;
+    border-bottom: 1px solid black;
 }
 
 #graph_visualization_container #map #vis,
@@ -199,9 +203,11 @@ body {
     padding-top: .5rem;
 }
 
-#graph_visualization_container #map #filter-control {
-    width: 100%;
-    border-bottom: 1px solid black;
+#graph_visualization_container #map #filter-legend {
+    height: 5%;
+    position: absolute;
+    font-size: 2rem;
+    padding: .5rem;
 }
 
 #graph_visualization_container #map #vis {
