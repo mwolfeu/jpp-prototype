@@ -81,22 +81,26 @@ export default class WealthAndHealthOfNations {
     legend(s, target) {
         target.append("g")
             .attr("class", "legendLinear")
-            .attr("transform", `translate(10,${target.node().clientHeight-30})`)
-            .style("font-size", "16px");
+            .attr("transform", `translate(10,${target.node().clientHeight-40})`)
 
         var sc = d3.scaleLinear()
             .domain([0, 10])
             .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
 
-        let i = 0;
+        let labels = Array(81).fill("");
+        labels[0] = 20;
+        labels[40] = 10;
+        labels[80] = 0;
+
         var legendLinear = legendColor()
-            .shapeWidth(30)
+            .shapeWidth(2)
             .title('Cases')
             .shapeHeight(10)
             .ascending(true)
-            .labelFormat('r')
-            // .labels(s.domain()) // d => d.i
-            // .cells([0, 5, 10, 15, 20])
+            .labelFormat('d')
+            .shapePadding(-.2)
+            .labels(labels)
+            .cells(81)
             .orient('horizontal')
             .scale(s);
 
@@ -133,19 +137,28 @@ export default class WealthAndHealthOfNations {
 
     initGeo(props) {
         let dur = props.isResize ? 0 : 500;
-        let proj = geoMercator().fitSize([props.width, props.height], props.data)
+        let proj = geoMercator().fitSize([props.width, props.height - 30], props.data)
         let changeRegion = this.changeRegion.bind(this);
 
-        /** build svg */
+        // feature color scale
+        let steps = 6;
+        let sc = d3.scaleLinear().domain(extent);
+        let colorScale = d3.scaleLinear().domain(sc.ticks(steps)).range(d3.quantize(d3.interpolateViridis, steps));
+
+        // add features
         if (!this.geo) {
             this.geo = select(props.containerEl)
                 .append('svg')
+                .attr('width', props.width)
+                .attr('height', props.height)
                 .on("click", (function() {
                     if (this.props.crNAME1 == "Pakistan") return;
                     let width = props.containerEl.clientWidth;
                     let height = props.containerEl.clientHeight;
                     changeRegion(null, {...props, width, height });
                 }).bind(this))
+
+            this.legend(colorScale, this.geo);
         }
 
         const t = this.geo.transition().duration(dur);
@@ -154,19 +167,15 @@ export default class WealthAndHealthOfNations {
             .attr('width', props.width)
             .attr('height', props.height)
 
-        this.geo.selectAll("g") // remove old features
+        this.geo.selectAll("g.features") // remove old features
             //.selectAll('path:not([data-name1="Northern Areas"])')
             .transition()
             .duration(dur * .6)
             .style("opacity", 0)
             .remove();
 
-        let steps = 6;
-        let sc = d3.scaleLinear().domain(extent);
-        let colorScale = d3.scaleLinear().domain(sc.ticks(steps)).range(d3.quantize(d3.interpolateViridis, steps));
-        this.legend(colorScale, this.geo);
-
         this.geo.append("g")
+            .attr('class', 'features')
             .selectAll("path")
             .data(props.data.features)
             .join(
@@ -205,8 +214,8 @@ export default class WealthAndHealthOfNations {
                 }),
 
                 update => update
-                .attr("opacity", "1")
-                .call(update => update.transition(t).attr("opacity", 0)),
+                .attr("opacity", "0")
+                .call(update => update.transition(t).attr("opacity", 1)),
 
                 exit => exit
                 .attr("opacity", "1")
@@ -214,6 +223,8 @@ export default class WealthAndHealthOfNations {
                     .attr("opacity", 0)
                     .remove())
             );
+
+
     }
 
     changeRegion(el, props) {
