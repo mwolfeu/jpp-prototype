@@ -57,7 +57,7 @@ export default class WealthAndHealthOfNations {
                                 >
 
                                 <template v-slot:trigger>
-                                    <span title="Filters", id="filter-button" class="material-icons-outlined">filter_list</span>
+                                    <span title="Filters" id="filter-button" class="material-icons-outlined">filter_list</span>
                                 </template>
 
                                 <span style='text-align:left;'>
@@ -65,6 +65,8 @@ export default class WealthAndHealthOfNations {
 
                                   <div>Years: {{ soptions.value }}</div>
                                   <vue-slider
+                                    :min="2000"
+                                    :max="2020"
                                     ref="slider"
                                     v-on:change="myChange"
                                     v-model="soptions.value"
@@ -141,7 +143,7 @@ export default class WealthAndHealthOfNations {
                     value: '',
                     first: 0,
                     // aoptions: { value: [2000, 2020] },
-                    soptions: { value: [20, 500] },
+                    soptions: { value: [2000, 2020] },
                     msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
                 }
             },
