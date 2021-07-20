@@ -13,6 +13,13 @@ import { geoPath, geoMercator } from 'd3-geo';
 import { random } from 'lodash-es';
 import { abuseData, extent, getRate, stateMean } from './util-data.js';
 
+// import Vue from "vue";
+import VueTippy, { TippyComponent } from "vue-tippy";
+
+// import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // optional for styling
+import 'tippy.js/themes/light.css'; // optional for styling
+import 'tippy.js/themes/light-border.css'; // optional for styling
 
 const defaults = {
     container: '#chart',
@@ -35,7 +42,51 @@ export default class WealthAndHealthOfNations {
                       <div id="title">Abuse Cases by Region</div>
                       <div id="vis">
                           <div id="geo">
-                            <span id="filter-button" class="material-icons-outlined">filter_list</span>
+                            <span id="filter-button" class="material-icons-outlined">
+                              filter_list
+
+
+                              <tippy
+                                interactive 
+                                :animate-fill="false" 
+                                distant="7" 
+                                animation="fade" 
+                                trigger="click" 
+                                placement = 'bottom-start'
+                                theme="light"
+                                arrow="false"
+                                >
+
+                                <template v-slot:trigger>
+                                  <button>
+                                  HTML Content using component (click)
+                                  </button>
+                                </template>
+
+                                <span style='text-align:left;'>
+                                  <div style='margin-bottom:20px;'>Filter Examples</div>
+
+                                  <div>Years: {{ soptions.value }}</div>
+                                  <vue-slider
+                                    ref="slider"
+                                    v-on:change="myChange"
+                                    v-model="soptions.value"
+                                    v-bind="first"
+                                    v-bind="soptions"
+                                  ></vue-slider>
+                                  <div style='display:none'>{{ soptions.value }}{{ first }}{ { aoptions.value }} </div>
+
+                                  <div style='margin:10px 0px;'>Toggle Attribute: {{ gend }}</div>
+                                  <button @click="gend = gend=='false'?'true':'false'" style="display:block; margin-bottom:5px;">Toggle</button>
+
+                                  <div>Religion</div>
+                                  <multiselect style='width:300px; z-index:10;' v-model="value" :options="msoptions" :multiple="true" :searchable="true" :close-on-select="false" :show-labels="false" placeholder="Pick a value"></multiselect>
+                                  <pre style='display:none' class="language-json"><code>{{ value  }}</code></pre>
+                                </span>
+                              </tippy>
+
+
+                            </span>
                             <div id="filter-legend"></div>
                           </div>
                           <div id="year-control"></div>
@@ -69,6 +120,46 @@ export default class WealthAndHealthOfNations {
         this.allData = props.data;
         props.data = props.data[0];
         props.crNAME1 = 'Pakistan';
+
+        // tippy('#filter-button', {
+        //     content: '<b>My tooltip!</b>',
+        //     allowHTML: true,
+        //     animation: 'fade',
+        //     arrow: false,
+        //     interactive: true,
+        //     interactiveBorder: 20,
+        //     interactiveDebounce: 75,
+        //     maxWidth: 350,
+        //     offset: [0, 5],
+        //     placement: 'bottom-start',
+        //     theme: 'light-border',
+        //     trigger: 'click',
+        // });
+
+        new Vue({
+            el: '#filter-button',
+            data(d) {
+                return {
+                    gend: 'false',
+                    value: '',
+                    first: 0,
+                    // aoptions: { value: [2000, 2020] },
+                    soptions: { value: [20, 500] },
+                    msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                }
+            },
+            methods: {
+                myChange: function(a, b, c, d) {
+                    this.first = this.soptions.value[0]
+                }
+            },
+            mounted() {},
+            components: {
+                multiselect: window.VueMultiselect.Multiselect,
+                'vueSlider': window['vue-slider-component'],
+            }
+        })
+
 
         this._init({...defaults, ...props });
     }
