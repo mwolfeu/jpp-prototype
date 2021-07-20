@@ -211,6 +211,7 @@ body {
     position: absolute;
     font-size: 1.5rem;
     padding: .5rem;
+    padding-top: 0px;
 }
 
 #graph_visualization_container #map #filter-button {

@@ -43,8 +43,7 @@ export default class WealthAndHealthOfNations {
                       <div id="vis">
                           <div id="geo">
                             <span id="filter-button" class="material-icons-outlined">
-                              filter_list
-
+                              
 
                               <tippy
                                 interactive 
@@ -58,9 +57,7 @@ export default class WealthAndHealthOfNations {
                                 >
 
                                 <template v-slot:trigger>
-                                  <button>
                                     <span id="filter-button" class="material-icons-outlined">filter_list</span>
-                                  </button>
                                 </template>
 
                                 <span style='text-align:left;'>
