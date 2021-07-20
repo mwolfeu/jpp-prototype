@@ -59,7 +59,7 @@ export default class WealthAndHealthOfNations {
 
                                 <template v-slot:trigger>
                                   <button>
-                                  HTML Content using component (click)
+                                    <span id="filter-button" class="material-icons-outlined">filter_list</span>
                                   </button>
                                 </template>
 
