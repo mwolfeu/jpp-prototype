@@ -57,7 +57,7 @@ export default class WealthAndHealthOfNations {
                                 >
 
                                 <template v-slot:trigger>
-                                    <span id="filter-button" class="material-icons-outlined">filter_list</span>
+                                    <span title="Filters", id="filter-button" class="material-icons-outlined">filter_list</span>
                                 </template>
 
                                 <span style='text-align:left;'>
