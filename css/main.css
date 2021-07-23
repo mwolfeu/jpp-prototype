@@ -105,7 +105,8 @@ body {
     font-family: "News Cycle", sans-serif;
 }
 
-.chapeau-accent {
+.chapeau-accent,
+#map #title #location {
     font-weight: 700;
     color: #da8f8f;
 }
@@ -222,6 +223,7 @@ body {
 #graph_visualization_container #map #filter-legend {
     padding-left: 1rem;
     z-index: -1;
+    margin-left: 1.5rem;
 }
 
 #graph_visualization_container #map #vis {
@@ -253,7 +255,7 @@ body {
 #graph_visualization_container #meta #vis {
     width: 100%;
     /* border-left: 1px solid black; */
-    background: #f3d3b38c;
+    background: #f3d3b326;
 }
 
 #graph_visualization_container #meta #howto {
@@ -281,4 +283,24 @@ body {
 .tippy-content {
     hheight: 20vh;
     ooverflow-y: scroll;
+}
+
+.pielayer path.surface:hover {
+    opacity: .9;
+    transform: scale(.995);
+    transition-duration: .2s;
+}
+
+.hovertext {
+    display: none;
+}
+
+#meta svg {
+    background: none !important;
+}
+
+#meta span.meta-select {
+    width: 44%;
+    display: inline-block;
+    transform: translateY(-40px);
 }

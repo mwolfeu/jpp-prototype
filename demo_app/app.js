@@ -19,7 +19,7 @@ export default class App {
             /** build an array of story sections
              * Each section object should be a valid ScrollyTeller section configuration */
             sectionList: [
-                // intro,
+                intro,
                 vis,
                 endnotes
             ],

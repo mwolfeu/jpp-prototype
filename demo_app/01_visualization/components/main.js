@@ -20,6 +20,7 @@ import VueTippy, { TippyComponent } from "vue-tippy";
 import 'tippy.js/dist/tippy.css'; // optional for styling
 import 'tippy.js/themes/light.css'; // optional for styling
 import 'tippy.js/themes/light-border.css'; // optional for styling
+import { color } from 'd3';
 
 const defaults = {
     container: '#chart',
@@ -39,7 +40,7 @@ export default class WealthAndHealthOfNations {
           <div id="main-container">
               <div id="map-meta-container">
                   <div id="map">
-                      <div id="title">Abuse Cases by Region</div>
+                      <div id="title"></div>
                       <div id="vis">
                           <div id="geo">
                             <span id="filter-button" class="material-icons-outlined">
@@ -96,7 +97,16 @@ export default class WealthAndHealthOfNations {
                   </div>
                   <div id="meta">
                       <div id="title"></div>
-                      <div id="vis"></div>
+                      <div id="vis">
+                        <span id="filter">
+                          <span class="meta-select">
+                            <multiselect v-model="mftValue" v-on:input="eventMFT" :close-on-select="true" :options="metaFilterTypes" :preselect-first="true" :multiple="false" :close-on-select="false" :show-labels="false"></multiselect>
+                          </span>
+                          <span class="meta-select">
+                            <multiselect v-model="mfcValue" :close-on-select="true" :options="metaFilterCategories" :preselect-first="true" :multiple="false" :searchable="true" :close-on-select="false" :show-labels="false"></multiselect>
+                          </span>
+                        </span>
+                      </div>
                       <div id="howto">
                           Hover over the chart or select a specific case.
                       </div>
@@ -135,8 +145,8 @@ export default class WealthAndHealthOfNations {
         //     trigger: 'click',
         // });
 
-        new Vue({
-            el: '#filter-button',
+        this.vui = new Vue({
+            el: props.container + ' #main-container',
             data(d) {
                 return {
                     gend: 'false',
@@ -144,13 +154,33 @@ export default class WealthAndHealthOfNations {
                     first: 0,
                     // aoptions: { value: [2000, 2020] },
                     soptions: { value: [2000, 2020] },
-                    msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                    msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                    metaFilterTypes: ["Show by Category", "Download Case"],
+                    mftValue: "Show by Category",
+                    metaFilterCases: ["Name 1", "Name 2", "Name 3"],
+                    mfcValue: "Religion",
+                    metaFilterCategories: ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
                 }
             },
             methods: {
                 myChange: function(a, b, c, d) {
                     this.first = this.soptions.value[0]
-                }
+                },
+                eventMFT: (function(val, id) {
+                    if (val == "Show by Category") {
+                        this.vui.metaFilterCategories = ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
+                        this.vui.mfcValue = "Religion";
+                        d3.selectAll('#meta svg *')
+                            .attr("opacity", 1)
+                            .style("pointer-events", "auto");
+                    } else {
+                        this.vui.metaFilterCategories = ["Case 1", "Case 2", "Case 3"];
+                        this.vui.mfcValue = "";
+                        d3.selectAll('#meta svg *')
+                            .attr("opacity", .5)
+                            .style("pointer-events", "none");
+                    }
+                }).bind(this)
             },
             mounted() {},
             components: {
@@ -203,9 +233,11 @@ export default class WealthAndHealthOfNations {
 
         let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
 
-        let initFcns = [{ fcn: 'initMapTitle', sel: '#map #title' },
+        let initFcns = [
+            { fcn: 'initMapTitle', sel: '#map #title' },
             { fcn: 'initGeo', sel: '#map #vis #geo' },
-            { fcn: 'initInMap', sel: '#map #vis #filter-legend' }
+            { fcn: 'initInMap', sel: '#map #vis #filter-legend' },
+            { fcn: 'initRHS', sel: '#meta #vis' }
         ];
         initFcns.forEach(d => {
             let el = document.querySelector(this.props.container + ` ${d.sel}`);
@@ -213,17 +245,13 @@ export default class WealthAndHealthOfNations {
         });
     }
 
-    initMapTitle(props) {}
+    initMapTitle(props) {
+        let title = `Incident View: <span id="location">${props.crNAME1}</span>`;
 
-    initInMap(props) {
-        let sel = abuseData;
-        if (props.crNAME1 != 'Pakistan') {
-            sel = abuseData.filter(d => d.n1 == props.crNAME1);
-        }
-
-        let tot = d3.sum(sel.map(d => d.incidents.length));
-        select(props.containerEl).text(`${props.crNAME1} Total: ${tot}`);
+        select(props.containerEl).html(title); // ${tot}`);
     }
+
+    initInMap(props) {}
 
     initGeo(props) {
         let dur = props.isResize ? 0 : 500;
@@ -333,6 +361,103 @@ export default class WealthAndHealthOfNations {
 
         this._init({...props, data, crNAME1 });
         // this.initInMap(props, select(el).attr("data-gid2"), name)
+    }
+
+    initRHS(props) {
+        let sel = props.containerEl; // document.querySelector(props.container);
+
+        var data = [{
+            values: [16, 15, 12, 6, 5, 4],
+            labels: ["Muslim", "Hindu", "Christian", "Ahmadiyya", "Sikh", "Other"],
+            domain: { column: 0 },
+            name: 'NAME',
+            hoverinfo: '', //'label+percent+name',
+            hole: .4,
+            type: 'pie',
+            marker: {
+                colors: ['#6388b4', '#ef6f6a', '#8cc2ca', '#55ad89', '#c3bc3f', '#bb7693', '#baa094', '#a9b5ae', '#767676', '#ffae34'],
+            },
+        }];
+
+
+        let selRows = abuseData;
+        if (props.crNAME1 != 'Pakistan') {
+            selRows = abuseData.filter(d => d.n1 == props.crNAME1);
+        }
+        let tot = d3.sum(selRows.map(d => d.incidents.length));
+
+        var layout = {
+            xtitle: 'CASES OF ABUSE',
+            annotations: [{
+                font: {
+                    size: 40
+                },
+                showarrow: false,
+                text: tot,
+                x: 0.5,
+                y: 0.52
+            }, {
+                font: {
+                    size: 12
+                },
+                showarrow: false,
+                text: 'cases',
+                x: 0.5,
+                y: 0.45
+            }],
+            xheight: 400,
+            xwidth: 600,
+            showlegend: true,
+            grid: { rows: 1, columns: 1 }
+        };
+
+        var config = { responsive: true }
+
+        if (!this.metaVis) {
+            this.metaVis = Plotly.newPlot(sel, data, layout, config);
+
+            sel.on('plotly_hover', function(data) {
+                console.log(data);
+                d3.selectAll("#meta #vis svg .surface").attr('opacity', .4);
+
+                let curFill = d3.select(data.event.currentTarget).select('path')
+                    .attr('opacity', 1)
+                    .style('fill');
+
+                this.geo.selectAll('path')
+                    .attr('data-fill', function() { return d3.select(this).attr("fill") })
+                    .attr('fill', curFill)
+                    .attr('fill-opacity', d => Math.random())
+
+                let swatches = d3.selectAll('.legendCells .swatch')
+                let swatchNum = swatches.nodes().length;
+                let color = d3.interpolateRgb('rgb(255,255,255)', curFill);
+
+                swatches
+                    .attr('data-fill', function() {
+                        return d3.select(this).style('fill')
+                    })
+                    .style('fill', (d, i) => color(i / swatchNum));
+
+            }.bind(this))
+
+            sel.on('plotly_unhover', function(data) {
+                console.log(data);
+                d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
+
+                this.geo.selectAll('path')
+                    .attr('fill', function() { return d3.select(this).attr("data-fill") })
+                    .attr('fill-opacity', 1)
+
+                d3.selectAll('.legendCells .swatch')
+                    .style('fill', function() { return d3.select(this).attr("data-fill") });
+            }.bind(this))
+
+            document.querySelector(props.container + ' .modebar-container').remove();
+
+        } else {
+            Plotly.react(sel, data, layout, config);
+        }
     }
 
     render(props) { // receives new scroll updates
