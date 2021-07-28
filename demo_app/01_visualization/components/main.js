@@ -155,8 +155,8 @@ export default class WealthAndHealthOfNations {
                     // aoptions: { value: [2000, 2020] },
                     soptions: { value: [2000, 2020] },
                     msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-                    metaFilterTypes: ["Show by Category", "Download Case"],
-                    mftValue: "Show by Category",
+                    metaFilterTypes: ["Category View", "Case View"],
+                    mftValue: "Category View",
                     metaFilterCases: ["Name 1", "Name 2", "Name 3"],
                     mfcValue: "Religion",
                     metaFilterCategories: ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
@@ -167,7 +167,7 @@ export default class WealthAndHealthOfNations {
                     this.first = this.soptions.value[0]
                 },
                 eventMFT: (function(val, id) {
-                    if (val == "Show by Category") {
+                    if (val == "Category View") {
                         this.vui.metaFilterCategories = ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
                         this.vui.mfcValue = "Religion";
                         d3.selectAll('#meta svg *')
