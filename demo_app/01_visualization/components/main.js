@@ -103,7 +103,7 @@ export default class WealthAndHealthOfNations {
                             <multiselect v-model="mftValue" v-on:input="eventMFT" :close-on-select="true" :options="metaFilterTypes" :preselect-first="true" :multiple="false" :close-on-select="false" :show-labels="false"></multiselect>
                           </span>
                           <span class="meta-select">
-                            <multiselect v-model="mfcValue" :close-on-select="true" :options="metaFilterCategories" :preselect-first="true" :multiple="false" :searchable="true" :close-on-select="false" :show-labels="false"></multiselect>
+                            <multiselect v-model="mfcValue" v-on:input="eventMFC" :close-on-select="true" :options="metaFilterCategories" :preselect-first="true" :multiple="false" :searchable="true" :close-on-select="false" :show-labels="false"></multiselect>
                           </span>
                         </span>
                       </div>
@@ -180,7 +180,10 @@ export default class WealthAndHealthOfNations {
                             .attr("opacity", .5)
                             .style("pointer-events", "none");
                     }
-                }).bind(this)
+                }).bind(this),
+                eventMFC: (function(val, id) {
+                    alert('Test data not yet delivered.')
+                })
             },
             mounted() {},
             components: {
