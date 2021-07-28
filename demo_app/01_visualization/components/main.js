@@ -406,7 +406,7 @@ export default class WealthAndHealthOfNations {
                 showarrow: false,
                 text: 'cases',
                 x: 0.5,
-                y: 0.45
+                y: 0.43
             }],
             xheight: 400,
             xwidth: 600,
