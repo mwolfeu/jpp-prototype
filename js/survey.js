@@ -37,7 +37,7 @@ class SurveyUtil {
     }
 
     let fillSurvey = (function(d, e) {
-      console.log(e.value || "New Survey")
+      console.log("Selected:", e.value || "New")
       let idx = choices.indexOf(e.value);
       if (idx == -1) {
         this.surveyObj.data = {};
@@ -62,7 +62,7 @@ class SurveyUtil {
       // SURVEY
       let json = {
         title: "Torture Incident Survey.",
-        "completedHtml": "<h3>Thank you for your submission.</h3> <h5>We would be happy to send you more information, hear about a case referral, or get you involved!</h5><h6 style='cursor: pointer; transform:translateY(3rem);''>Click here to return.</h6>",
+        "completedHtml": "<h3>Thank you for your submission.</h3> <h5>We would be happy to send you more information, hear about a case referral, or get you involved!</h5><h6 style='cursor: pointer; transform:translateY(3rem);''>Click here to return home.</h6>",
         showProgressBar: "top",
         "pages": [],
         "showQuestionNumbers": "on"
@@ -82,6 +82,7 @@ class SurveyUtil {
           this.init();
         }).bind(this));
 
+        console.log("Pushed:", sender.data);
       }).bind(this);
 
       this.addItems(json, json.pages, json.pages, dataObj.template, dataObj.template.Main)
@@ -107,7 +108,7 @@ class SurveyUtil {
     let element = {
       "type": "paneldynamic",
       "name": d.name,
-      minPanelCount: 1,
+      "minPanelCount": 1,
       "title": d.description,
       "renderMode": "list",
       "templateTitle": `${d.values} #{panelIndex}`,
@@ -175,16 +176,29 @@ class SurveyUtil {
 
       }
 
+      // if (d.input == 'multiple') {
+      //   item = {
+      //     type: "checkbox",
+      //     name: d.name,
+      //     title: d.description,
+      //     hasNone: true,
+      //     colCount: 3,
+      //     choices: this.valPrep[d.input](d)
+      //   }
+      // }
+
       if (d.input == 'multiple') {
         item = {
-          type: "checkbox",
+          "type": "tagbox",
           name: d.name,
           title: d.description,
-          hasNone: true,
-          colCount: 3,
           choices: this.valPrep[d.input](d)
+            // "choicesByUrl": {
+            //   "url": "https://restcountries.eu/rest/v2/all"
+            // },
         }
       }
+
 
       if (item) {
         item.indent = indent;
