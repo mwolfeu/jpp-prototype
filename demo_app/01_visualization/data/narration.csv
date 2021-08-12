@@ -1,7 +1,0 @@
-narrationId,narrationClass,marginTopVh,marginBottomVh,minHeightVh,h2Text,paragraphText,hRef,hRefText,trigger,graphTitle,graphCaption
-,intro,40,40,50,,"",,,"{
-	""containerStyle"": {
-		""opacity"": 1
-	},
-	""year"": 1950
-}",,""

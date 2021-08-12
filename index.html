@@ -1,90 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Abuse Tracker - Justice Project Pakistan</title>
-    <link type="text/css" rel="stylesheet" href="dist/bundle.css" />
-    <link type="text/css" rel="stylesheet" href="css/main.css" />
+    <meta name="author" content="Michael Wolf" />
+    <meta name="description" content="Justice Project Pakistan Abuse Visualization and Database." />
+    <!-- <meta name="keywords"  content="torture, pakistan, visualization" /> -->
+    <meta name="Resource-type" content="Document" />
+
+
+    <link rel="stylesheet" type="text/css" href="/css/fullpage.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/css/examples.css" /> -->
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- <link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@300&family=Newsreader:wght@700&display=swap" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- <script src="//d3js.org/topojson.v1.min.js"></script> -->
-    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
-    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-
-
-    <script src='https://cdn.plot.ly/plotly-2.2.0.min.js'></script>
 </head>
 
 <body>
-    <div class="app-container" id="scrolly-teller-app">
-        <!-- <div class="title-area">
-                <div class="title left">Abuse Tracker</div>
-                <h3 class="intro left">Justice Project Pakistan.</h3>
-                <p class="intro left"><strong>Scroll down</strong> to learn how to create a data story using
-                    ScrollyTeller. The <strong>spacebar</strong> and <strong>arrow keys</strong> also advance the
-                    story.</p>
-                <p class="intro left">Use the <span class="navbar" style="display: inline; padding: 0; margin: 0;">
-                    <span class="navButton" style="padding: 5px;">buttons</span></span> to jump to different parts of the
-                    story.</p>
-            </div> -->
-        <div class="landing-page-inner">
-            <h1 class="title">Tracking Abuse</h1>
+
+    <!-- <ul id="menu">
+        <!-- <li data-menuanchor="a"><a href="#a">Home</a></li> - ->
+    <li data-menuanchor="b"><a href="#b">Torture</a></li>
+    <li data-menuanchor="c"><a href="#c">The Change</a></li>
+    <li data-menuanchor="d"><a href="#d">Be Informed</a></li>
+    <li data-menuanchor="e"><a href="#e">Analysis</a></li>
+    <li data-menuanchor="f"><a href="#f">Visualization</a></li>
+    <li data-menuanchor="g"><a href="#g">About Us</a></li>
+    </ul> -->
+
+    <div id="fullpage">
+        <div class="section" id="section0">
+            <h2 class="title">Tracking Abuse</h2>
             <hr class="title-bar">
-            <h2 class="subtitle">Identifying, and Uncovering Human Rights Violations</h2>
-            <h2 class="subtitle">by Pakistani Authorities</h2>
+            <h5 class="subtitle">Uncovering Human Rights Violations by Pakistani Authorities</h5>
         </div>
-        <div id="scroll-down-wrapper" class="">
-            <h2 id="scroll-down-title"> Scroll For The Story</h2>
-            <div id="scroll-down-icon"><span class="material-icons">expand_more</span></div>
+        <div class="section" id="section1">
+            <div class="slide" id="slide1">
+                <div class="narration-question">
+                    <div class='chapeau'>What is the <span class='chapeau-accent'>problem</span>?</div>
+                    <p>Police brutality and torture are widespread and systematic in Pakistan. The violence takes many forms. Police beat victims, hang them by their arms or feet for hours on end, force them to witness the torture of others, and strip them
+                        naked and parade them in public, damaging their basic human dignity. This conduct amounts to torture. In Pakistan, there has been a lack of documentation that would allow for a rigorous assessment of the prevalence of torture by
+                        the police.</p>
+                    <p>Learn more about their methods by swiping right.</p>
+                </div>
+            </div>
+            <div class="slide" id="method1"></div>
+            <div class="slide" id="method2"></div>
+            <div class="slide" id="method3"></div>
+            <div class="slide" id="method4"></div>
+            <div class="slide" id="method5"></div>
+            <div class="slide" id="method6"></div>
+            <div class="slide" id="method7"></div>
+            <div class="slide" id="method8"></div>
         </div>
-        <nav class="navbar">
-            <!-- <div data-section="introduction" data-narrationtarget="introStart" class="navButton intro">
-                <h3>Overview</h3>
+        <div class="section" id="section2">
+            <div class="narration-question">
+                <div class='chapeau'>What needs to <span class='chapeau-accent'>change</span>?</div>
+                <p>JPP envisions a future where all Pakistanis “both at home and abroad“ know their legal rights, are entitled to a fair trial, and provided with adequate legal representation. JPP advocates for a change in both public perception and awareness
+                    of Pakistani prisoners as well as a judicial system which treats the accused and detain with fairness and dignity.</p>
             </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="storyConfigStart" class="navButton storyConfig">
-                <h3>Story Config</h3>
+        </div>
+        <div class="section" id="section3">
+            <div class="narration-question">
+                <div class='chapeau'>How can you stay <span class='chapeau-accent'>informed</span>?</div>
+                <p>Critical to this mission is the dissemination of credible and accurate information. In our ongoing work for the Torture Watch project, JPP's staff has documented hundreds of cases of abuse and made them accessable to the community via
+                    a simple yet powerful web interface. This tool will not only allow the communities we serve to track, search, and organize cases in the most relevant and useful ways available, but provide support for our continued advocacy and education
+                    efforts.
+                    <br><br>Read more in our end notes about how you can submit your experiences to be included here and how to use our data in your own work.</p>
             </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="sectionConfigStart" class="navButton sectionConfig">
-                <h3>Section Config</h3>
+        </div>
+        <div class="section" id="section4">
+            <div class="narration-question">
+                <div class='chapeau'>What does the data show<span class='chapeau-accent'></span>?</div>
+                <p>With the introduction done, this is where the narrative we spoke about begins. It should bring a handful of important datapoints to the users attention and be supported by smaller side-visualizations.<br><br>I will need appropriate copy
+                    from you once we get any data to work with.</p>
             </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="fetchNarrationStart" class="navButton fetchNarration">
-                <h3>Fetch Narration</h3>
+        </div>
+        <div class="section" id="section5">
+            <h1>Visualization</h1>
+        </div>
+        <div class="section" id="section6">
+            <div class="narration-question">
+                <div class='chapeau'>End Notes</div>
+                <p>This is the summation copy provided by JPP and an invitation to use the data. Rights and restrictions should be provided as well as links to the current dataset and data-dictionary.</p>
+                <p>If you or someone you know has been the victim of torture by Pakistani authorities please <a class="link" href="/html/survey.html">add your experience</a> to our database.</p>
             </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="fetchDataStart" class="navButton fetchData">
-                <h3>Fetch Data</h3>
+        </div>
+        <div class="section" id="section7">
+            <div class="narration-question">
+                <div class='chapeau'>Attributions:</div>
+                <p>Illustrations in this story were modified from the open collection of <a class="link" href="https://harvardartmuseums.org/" target="" _blank "">The Harvard Art Museum</a> and <a class="link" href="https://unsplash.com/" target="" _blank
+                        "">Unsplash.com</a>.</p>
             </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="renderGraphStart" class="navButton renderGraph">
-                <h3>Render Graph</h3>
-            </div>
-            <div data-section="wealthAndHealth" data-narrationtarget="eventHandlersStart" class="navButton eventHandlers">
-                <h3>Event Handlers</h3>
-            </div>
-            <div data-section="builtInTriggers" data-narrationtarget="builtInTriggersStart" class="navButton builtInTriggers">
-                <h3>Built-in Triggers</h3>
-            </div> -->
-        </nav>
-        <div id="app"></div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify/loader/run_prettify.js"></script>
-    <script type="text/javascript" src="dist/bundle.js"></script>
-    <script>
-        // avoid being in the middle on reload
-        window.onbeforeunload = function() {
-            window.scrollTo(0, 0);
-        }
+
+
+    <script type="text/javascript" src="/js/vendor/fullpage.js"></script>
+    <!-- <script type="text/javascript" src="examples.js"></script> -->
+    <script type="text/javascript">
+        var myFullpage = new fullpage('#fullpage', {
+            paddingTop: "30px",
+            paddingBottom: "30px",
+            // sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
+            // anchors: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+            // menu: '#menu',
+            controlArrows: false,
+            navigation: true,
+            navigationPosition: "right",
+            navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+            slidesNavigation: true,
+            slidesNavPosition: "top",
+        });
     </script>
+
 </body>
 
 </html>

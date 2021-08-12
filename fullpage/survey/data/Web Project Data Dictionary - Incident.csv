@@ -1,8 +1,0 @@
-Name,Input,Required,Description-en,Values-en,Description-ur,Values-ur
-date,date,,Date of incident,DD-MM-YYYY,,
-incident_type,single,,Type of incident,"torture, custodial_death, custodial_rape",,
-place,single,,place of occurence,"police_lock_up, private_torture_cell, detention_centres, internment_camp, check_post, other",,
-during,single,,What was happening at the time of the incident,"arrest, interrogation, search_or_checking, other",,
-torture_type,multiple,,Type of torture,"physical, psychological, cultural_humiliation, sexual_violence",,
-torture_methods,multiple,,Method of Torture,"beating, cheera, chittar, danda, dolli, falaka, jack, manji, rolla, roller, strappado, sleep_deprivation, water_boarding, solitary_confinement, light_deprivation, sexual_violence, witnessing_other_people_being_tortured",,
-perpetrators,array,,Perpetrators Description,Perpetrator,,
