@@ -123,54 +123,54 @@ p {
 }
 
 #section0 {
-    background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), #e8545b75), url(/img/landing.png);
+    background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), #e8545b75), url(../img/landing.png);
     background-size: contain;
 }
 
 #section1 {
-    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(/img/aftrab/6._Torture_Cell.png);
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/6._Torture_Cell.png);
 }
 
 #section2 {
-    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(/img/aftrab/4._Aftab%27s_Wife_.png);
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/4._Aftab%27s_Wife_.png);
     background-position-x: left;
 }
 
 #section3 {
-    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(/img/aftrab/8._Courtroom.png);
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/8._Courtroom.png);
     background-position-x: right;
 }
 
 #method1 {
-    background-image: url(/img/methods/001_Chittar.png);
+    background-image: url(../img/methods/001_Chittar.png);
 }
 
 #method2 {
-    background-image: url(/img/methods/002_Cheera.png);
+    background-image: url(../img/methods/002_Cheera.png);
 }
 
 #method3 {
-    background-image: url(/img/methods/003_Danda.png);
+    background-image: url(../img/methods/003_Danda.png);
 }
 
 #method4 {
-    background-image: url(/img/methods/004_Dolli.png);
+    background-image: url(../img/methods/004_Dolli.png);
 }
 
 #method5 {
-    background-image: url(/img/methods/005_Falaka.png);
+    background-image: url(../img/methods/005_Falaka.png);
 }
 
 #method6 {
-    background-image: url(/img/methods/006_Manji.png);
+    background-image: url(../img/methods/006_Manji.png);
 }
 
 #method7 {
-    background-image: url(/img/methods/007_Roola.png);
+    background-image: url(../img/methods/007_Roola.png);
 }
 
 #method8 {
-    background-image: url(/img/methods/008_Strappado.png);
+    background-image: url(../img/methods/008_Strappado.png);
 }
 
 
