@@ -21,6 +21,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Roboto&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <script src='https://cdn.jsdelivr.net/npm/d3@7.0.0/dist/d3.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js'></script>
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css"> -->
+
+    <script src='https://cdn.plot.ly/plotly-2.2.0.min.js'></script>
 </head>
 
 <body>
@@ -83,9 +95,7 @@
                     from you once we get any data to work with.</p>
             </div>
         </div>
-        <div class="section" id="section5">
-            <h1>Visualization</h1>
-        </div>
+        <div class="section" id="tortureVis"></div>
         <div class="section" id="section6">
             <div class="narration-question">
                 <div class='chapeau'>End Notes</div>
@@ -102,23 +112,65 @@
         </div>
     </div>
 
-
+    <link rel="stylesheet" type="text/css" href="css/tortureVis.css" />
+    <script type="text/javascript" src="js/tortureVisData.js"></script>
+    <script type="text/javascript" src="js/visualization.js"></script>
     <script type="text/javascript" src="js/vendor/fullpage.js"></script>
     <!-- <script type="text/javascript" src="examples.js"></script> -->
     <script type="text/javascript">
-        var myFullpage = new fullpage('#fullpage', {
-            paddingTop: "30px",
-            paddingBottom: "30px",
-            // sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
-            // anchors: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-            // menu: '#menu',
-            controlArrows: false,
-            navigation: true,
-            navigationPosition: "right",
-            navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-            slidesNavigation: true,
-            slidesNavPosition: "top",
-        });
+        const debounce = (fn, delay) => { // debounce events
+            let timeOutId;
+            return function(...args) {
+                if (timeOutId) {
+                    clearTimeout(timeOutId);
+                }
+                timeOutId = setTimeout(() => {
+                    fn(...args);
+                }, delay);
+            }
+        }
+
+        function initFullpage() {
+            let fp = new fullpage('#fullpage', {
+                // paddingTop: "30px",
+                // paddingBottom: "30px",
+                // sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
+                // anchors: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                // menu: '#menu',
+                controlArrows: false,
+                navigation: true,
+                navigationPosition: "right",
+                // navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                slidesNavigation: true,
+                slidesNavPosition: "top",
+                // scrollOverflow: true
+            });
+        }
+
+        function initTortureVis(data) {
+            let tv = new tortureVis({
+                container: "#tortureVis",
+                data: data
+            });
+        }
+
+        let dataPath = "../data/";
+        let promises = [];
+        let files = [
+            // "PAK_adm0.json",
+            "PAK_adm1.json",
+            "PAK_adm2.json",
+            // "PAK_adm3.json",
+        ]
+
+        files.forEach(d =>
+            promises.push(d3.json(dataPath + d))
+        );
+
+        Promise.all(promises).then(d => {
+            initTortureVis(d);
+            initFullpage();
+        })
     </script>
 
 </body>

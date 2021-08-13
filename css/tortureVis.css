@@ -1,0 +1,159 @@
+#tortureVis #main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    position: absolute;
+    text-align: left
+}
+
+
+/* VISUALIZATION */
+
+#tortureVis #map-meta-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+#tortureVis #map,
+#tortureVis #map #filter-legend {
+    width: 55%;
+    margin-left: 2%;
+    margin-right: 1%;
+}
+
+#tortureVis #meta {
+    width: 40%;
+}
+
+#tortureVis #map,
+#tortureVis #meta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+#tortureVis #map #title,
+#tortureVis #meta #title {
+    height: 5%;
+    font-size: 2.5rem;
+    padding: .5rem;
+    /* border-bottom: 1px solid black; */
+}
+
+#tortureVis #map #vis,
+#tortureVis #meta #vis {
+    height: 85%;
+}
+
+#tortureVis #map #howto,
+#tortureVis #meta #howto {
+    height: 5%;
+    font-size: 1rem;
+    padding-left: .5rem;
+    padding-top: .5rem;
+}
+
+#tortureVis #map #filter-legend,
+#tortureVis #map #filter-button {
+    height: 5%;
+    position: absolute;
+    font-size: 1.5rem;
+    padding: .5rem;
+    padding-top: 0px;
+}
+
+#tortureVis #map #filter-button {
+    font-family: "Material Icons";
+    cursor: pointer;
+}
+
+#tortureVis #map #filter-legend {
+    padding-left: 1rem;
+    z-index: -1;
+    margin-left: 1.5rem;
+}
+
+#tortureVis #map #vis {
+    width: 100%;
+    background: #ffe0001f;
+}
+
+
+/* #tortureVis #map #year-control {
+    height: 5%;
+    width: 100%;
+} */
+
+#tortureVis #map #geo {
+    height: 100%;
+    width: 100%;
+}
+
+#tortureVis #map #howto {
+    width: 100%;
+    /* border-top: 1px solid black; */
+}
+
+#tortureVis #meta #title {
+    width: 100%;
+    /* border-bottom: 1px solid black;
+  border-left: 1px solid black; */
+}
+
+#tortureVis #meta #vis {
+    width: 100%;
+    /* border-left: 1px solid black; */
+    background: #f3d3b326;
+}
+
+#tortureVis #meta #howto {
+    width: 100%;
+    /* border-top: 1px solid black;
+border-left: 1px solid black; */
+}
+
+.legendLinear .legendTitle {
+    font-size: 16px;
+    transform: translateY(10px);
+}
+
+.legendLinear .legendCells .cell .label {
+    font-size: 12px;
+    transform: translateY(22px);
+}
+
+.tippy-tooltip {
+    color: black;
+    background: #f2f2f2;
+    border: solid 1px #b3b3b3;
+}
+
+.tippy-content {
+    hheight: 20vh;
+    ooverflow-y: scroll;
+}
+
+.pielayer path.surface:hover {
+    opacity: .9;
+    transform: scale(.995);
+    transition-duration: .2s;
+}
+
+.hovertext {
+    display: none;
+}
+
+#meta svg {
+    background: none !important;
+}
+
+#meta span.meta-select {
+    width: 44%;
+    display: inline-block;
+    transform: translateY(-40px);
+}
