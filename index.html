@@ -102,6 +102,7 @@
                 <p>This is the summation copy provided by JPP and an invitation to use the data. Rights and restrictions should be provided as well as links to the current dataset and data-dictionary.</p>
                 <p>If you or someone you know has been the victim of torture by Pakistani authorities please <a class="link" href="html/survey.html">add your experience</a> to our database.</p>
             </div>
+            <img src="img/logo.png">
         </div>
         <div class="section" id="section7">
             <div class="narration-question">
@@ -118,17 +119,17 @@
     <script type="text/javascript" src="js/vendor/fullpage.js"></script>
     <!-- <script type="text/javascript" src="examples.js"></script> -->
     <script type="text/javascript">
-        const debounce = (fn, delay) => { // debounce events
-            let timeOutId;
-            return function(...args) {
-                if (timeOutId) {
-                    clearTimeout(timeOutId);
-                }
-                timeOutId = setTimeout(() => {
-                    fn(...args);
-                }, delay);
-            }
-        }
+        // const debounce = (fn, delay) => { // debounce events
+        //     let timeOutId;
+        //     return function(...args) {
+        //         if (timeOutId) {
+        //             clearTimeout(timeOutId);
+        //         }
+        //         timeOutId = setTimeout(() => {
+        //             fn(...args);
+        //         }, delay);
+        //     }
+        // }
 
         function initFullpage() {
             let fp = new fullpage('#fullpage', {
@@ -143,12 +144,20 @@
                 // navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
                 slidesNavigation: true,
                 slidesNavPosition: "top",
-                // scrollOverflow: true
+                // scrollOverflow: true,
+                afterResize: function(width, height) {
+                    // var fullpageContainer = this;
+                    window.tv._init({
+                        width,
+                        height
+                    });
+                    console.log('Resize:', width, height)
+                }
             });
         }
 
         function initTortureVis(data) {
-            let tv = new tortureVis({
+            window.tv = new tortureVis({
                 container: "#tortureVis",
                 data: data
             });

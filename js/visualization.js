@@ -20,7 +20,7 @@ class tortureVis {
                         </div>
                     </div>
                     <div id="howto">
-                        Hover over an icon or click on a state. Use the filter for more specific results.
+                        Select a state or filter for more specific results.
                     </div>
                 </div>
                 <div id="meta">
@@ -36,7 +36,7 @@ class tortureVis {
                       </span>
                     </div>
                     <div id="howto">
-                        Hover over the chart or select a specific case.
+                        Select a subgroup or view specific case.
                     </div>
                 </div> 
             </div> 
@@ -120,7 +120,7 @@ class tortureVis {
     //   }
     // })
 
-    window.addEventListener('resize', debounce(d => this.resize(props)), 100);
+    // window.addEventListener('resize', debounce(d => this.resize(props)), 50); // do w fullpage cb
     this._init(props);
   }
 
@@ -338,8 +338,8 @@ class tortureVis {
         x: 0.5,
         y: 0.43
       }],
-      xheight: 400,
-      xwidth: 600,
+      height: props.height,
+      width: props.width,
       showlegend: true,
       grid: { rows: 1, columns: 1 }
     };
