@@ -175,6 +175,19 @@ class tortureVis {
       let el = document.querySelector(this.props.container + ` ${d.sel}`);
       this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight, isResize })
     });
+
+    d3.selectAll('.section').each(function(d) {
+      let child = d3.select(this).select('.narration-question').node();
+      d3.select(child).select('#scrollBuffer').remove();
+
+      // if (checkOverflow(this)) {
+      if (child && (child.clientHeight > this.scrollHeight)) {
+        d3.select(child).append('div')
+          .attr('id', 'scrollBuffer')
+          .style('height', '30vh')
+          .style('width', '1px');
+      }
+    });
   }
 
   initMapTitle(props) {

@@ -116,6 +116,8 @@
     <link rel="stylesheet" type="text/css" href="css/tortureVis.css" />
     <script type="text/javascript" src="js/tortureVisData.js"></script>
     <script type="text/javascript" src="js/visualization.js"></script>
+
+    <script type="text/javascript" src="js/vendor/scrolloverflow.js"></script>
     <script type="text/javascript" src="js/vendor/fullpage.js"></script>
     <!-- <script type="text/javascript" src="examples.js"></script> -->
     <script type="text/javascript">
@@ -131,8 +133,36 @@
         //     }
         // }
 
+        function checkOverflow(el) { // checks overflow state
+            var curOverflow = el.style.overflow;
+
+            if (!curOverflow || curOverflow === "visible")
+                el.style.overflow = "hidden";
+
+            var isOverflowing = el.clientWidth < el.scrollWidth ||
+                el.clientHeight < el.scrollHeight;
+
+            el.style.overflow = curOverflow;
+            return isOverflowing;
+        }
+
+        function addTextBuffers() {
+            d3.selectAll('.section').each(function(d) {
+                let child = d3.select(this).select('.narration-question').node();
+                d3.select(child).select('#scrollBuffer').remove();
+
+                // if (checkOverflow(this)) {
+                if (child && (child.clientHeight > this.scrollHeight)) {
+                    d3.select(child).append('div')
+                        .attr('id', 'scrollBuffer')
+                        .style('height', '30vh')
+                        .style('width', '1px');
+                }
+            });
+        }
+
         function initFullpage() {
-            let fp = new fullpage('#fullpage', {
+            fp = new fullpage('#fullpage', {
                 // paddingTop: "30px",
                 // paddingBottom: "30px",
                 // sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
@@ -144,14 +174,19 @@
                 // navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
                 slidesNavigation: true,
                 slidesNavPosition: "top",
-                // scrollOverflow: true,
+                scrollOverflow: true,
                 afterResize: function(width, height) {
                     // var fullpageContainer = this;
                     window.tv._init({
                         width,
                         height
                     });
-                    console.log('Resize:', width, height)
+                    console.log('Resize:', width, height);
+                    fullpage_api.reBuild();
+                },
+                afterRender: function() {
+                    addTextBuffers();
+                    fullpage_api.reBuild();
                 }
             });
         }
