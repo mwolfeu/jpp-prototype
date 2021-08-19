@@ -1,4 +1,17 @@
 .sv-question {
-  background: #80808014;
-  border-radius: 2%;
+    background: #80808014;
+    border-radius: 2%;
+}
+
+
+/* when portrait... */
+
+@media (max-aspect-ratio: 1/1) {
+    /* Phone width issues */
+    .sv-question__content {
+        margin-left: 0em !important;
+    }
+    .sv-btn {
+        padding: 0.5em 1em !important;
+    }
 }

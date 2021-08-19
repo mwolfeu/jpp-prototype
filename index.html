@@ -9,7 +9,18 @@
     <!-- <meta name="keywords"  content="torture, pakistan, visualization" /> -->
     <meta name="Resource-type" content="Document" />
 
+    <!-- SURVEY -->
+    <script src="https://unpkg.com/knockout@3.5.1/build/output/knockout-latest.js"></script>
+    <script src="https://unpkg.com/survey-knockout@1.8.58/survey.ko.min.js"></script>
+    <link href="https://unpkg.com/survey-core@1.8.58/modern.min.css" type="text/css" rel="stylesheet" />
 
+    <!-- SURVEY TAG BOX -->
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/surveyjs-widgets@1.8.59/surveyjs-widgets.min.js"></script>
+
+    <!-- FULLPAGE -->
     <link rel="stylesheet" type="text/css" href="css/fullpage.css" />
     <!-- <link rel="stylesheet" type="text/css" href="/css/examples.css" /> -->
     <link rel="stylesheet" type="text/css" href="css/normalize.css" />
@@ -19,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- <link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@300&family=Newsreader:wght@700&display=swap" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
     <script src='https://cdn.jsdelivr.net/npm/d3@7.0.0/dist/d3.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js'></script>
@@ -46,6 +57,14 @@
     <li data-menuanchor="f"><a href="#f">Visualization</a></li>
     <li data-menuanchor="g"><a href="#g">About Us</a></li>
     </ul> -->
+
+    <div id="filter-container" style="transform:translateX(-100vh);">
+        <div id="filter-title">
+            <div id="filter-hide" class="material-icons-outlined">close</div>
+            Filters:
+        </div>
+        <div id="filters"></div>
+    </div>
 
     <div id="fullpage">
         <div class="section" id="section0">
@@ -114,108 +133,13 @@
     </div>
 
     <link rel="stylesheet" type="text/css" href="css/tortureVis.css" />
-    <script type="text/javascript" src="js/tortureVisData.js"></script>
-    <script type="text/javascript" src="js/visualization.js"></script>
+    <!-- <script type="text/javascript" src="js/tortureVisData.js"></script> -->
+    <!-- <script type="text/javascript" src="js/visualization.js"></script> -->
 
     <script type="text/javascript" src="js/vendor/scrolloverflow.js"></script>
     <script type="text/javascript" src="js/vendor/fullpage.js"></script>
     <!-- <script type="text/javascript" src="examples.js"></script> -->
-    <script type="text/javascript">
-        // const debounce = (fn, delay) => { // debounce events
-        //     let timeOutId;
-        //     return function(...args) {
-        //         if (timeOutId) {
-        //             clearTimeout(timeOutId);
-        //         }
-        //         timeOutId = setTimeout(() => {
-        //             fn(...args);
-        //         }, delay);
-        //     }
-        // }
-
-        function checkOverflow(el) { // checks overflow state
-            var curOverflow = el.style.overflow;
-
-            if (!curOverflow || curOverflow === "visible")
-                el.style.overflow = "hidden";
-
-            var isOverflowing = el.clientWidth < el.scrollWidth ||
-                el.clientHeight < el.scrollHeight;
-
-            el.style.overflow = curOverflow;
-            return isOverflowing;
-        }
-
-        function addTextBuffers() {
-            d3.selectAll('.section').each(function(d) {
-                let child = d3.select(this).select('.narration-question').node();
-                d3.select(child).select('#scrollBuffer').remove();
-
-                // if (checkOverflow(this)) {
-                if (child && (child.clientHeight > this.scrollHeight)) {
-                    d3.select(child).append('div')
-                        .attr('id', 'scrollBuffer')
-                        .style('height', '30vh')
-                        .style('width', '1px');
-                }
-            });
-        }
-
-        function initFullpage() {
-            fp = new fullpage('#fullpage', {
-                // paddingTop: "30px",
-                // paddingBottom: "30px",
-                // sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
-                // anchors: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-                // menu: '#menu',
-                controlArrows: false,
-                navigation: true,
-                navigationPosition: "right",
-                // navigationTooltips: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-                slidesNavigation: true,
-                slidesNavPosition: "top",
-                scrollOverflow: true,
-                afterResize: function(width, height) {
-                    // var fullpageContainer = this;
-                    window.tv._init({
-                        width,
-                        height
-                    });
-                    console.log('Resize:', width, height);
-                    fullpage_api.reBuild();
-                },
-                afterRender: function() {
-                    addTextBuffers();
-                    fullpage_api.reBuild();
-                }
-            });
-        }
-
-        function initTortureVis(data) {
-            window.tv = new tortureVis({
-                container: "#tortureVis",
-                data: data
-            });
-        }
-
-        let dataPath = "data/";
-        let promises = [];
-        let files = [
-            // "PAK_adm0.json",
-            "PAK_adm1.json",
-            "PAK_adm2.json",
-            // "PAK_adm3.json",
-        ]
-
-        files.forEach(d =>
-            promises.push(d3.json(dataPath + d))
-        );
-
-        Promise.all(promises).then(d => {
-            initTortureVis(d);
-            initFullpage();
-        })
-    </script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 

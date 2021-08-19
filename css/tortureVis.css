@@ -64,7 +64,8 @@
 }
 
 #tortureVis #map #filter-legend,
-#tortureVis #map #filter-button {
+#tortureVis #map #filter-show,
+#tortureVis #map #filter-title {
     height: 5%;
     position: absolute;
     font-size: 1.5rem;
@@ -72,9 +73,13 @@
     padding-top: 0px;
 }
 
-#tortureVis #map #filter-button {
-    font-family: "Material Icons";
+#tortureVis #map #filter-show,
+#tortureVis #map #filter-hide {
     cursor: pointer;
+}
+
+#tortureVis #map #filter-show {
+    top: 6px;
 }
 
 #tortureVis #map #filter-legend {
@@ -97,11 +102,35 @@
 #tortureVis #map #geo {
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 #tortureVis #map #howto {
     width: 100%;
     /* border-top: 1px solid black; */
+}
+
+#filter-container {
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    background: #fbf8dbe6;
+    border: 1px solid #bfbfbf;
+    opacity: 0;
+    /* z-index: 1; */
+    border-radius: .5%;
+    display: flex;
+    flex-direction: column;
+}
+
+#filter-container #filter-title {
+    font-size: .7em;
+}
+
+#filter-container #filters {
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: scroll;
 }
 
 #tortureVis #meta #title {
@@ -132,7 +161,8 @@ border-left: 1px solid black; */
     transform: translateY(22px);
 }
 
-.tippy-tooltip {
+
+/* .tippy-tooltip {
     color: black;
     background: #f2f2f2;
     border: solid 1px #b3b3b3;
@@ -141,7 +171,7 @@ border-left: 1px solid black; */
 .tippy-content {
     hheight: 20vh;
     ooverflow-y: scroll;
-}
+} */
 
 .pielayer path.surface:hover {
     opacity: .9;

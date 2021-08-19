@@ -500,4 +500,4 @@ states.forEach(n1 => {
   stateMean[n1] = d3.mean(gid2s.map(d => getRate(d.g2)));
 });
 
-// export { stateMean, extent, abuseData, getRate }
+export { stateMean, extent, abuseData, getRate }

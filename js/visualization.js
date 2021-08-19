@@ -1,4 +1,5 @@
-// import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
+import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
+import SurveyUtil from "../js/survey.js"
 
 class tortureVis {
   constructor(props) {
@@ -9,13 +10,9 @@ class tortureVis {
                     <div id="title"></div>
                     <div id="vis">
                         <div id="geo">
-                          <span id="filter-button" class="material-icons-outlined">
-                            
-
-                            <tippy></tippy>
 
 
-                          </span>
+                          <span id="filter-show" class="material-icons-outlined">filter_alt</span>
                           <div id="filter-legend"></div>
                         </div>
                     </div>
@@ -121,7 +118,39 @@ class tortureVis {
     // })
 
     // window.addEventListener('resize', debounce(d => this.resize(props)), 50); // do w fullpage cb
+    d3.select('#tortureVis #map #geo #filter-show').on("click", d => {
+      d3.select('#filter-container')
+        .style("transform", "translateX(0vh)")
+        .style("z-index", 1)
+        .style("opacity", 1);
+    });
+
+    d3.select('#filter-hide').on("click", d => {
+      d3.select('#filter-container')
+        .style("transform", "translateX(-100vh)")
+        .style("z-index", -1)
+        .style("opacity", 0);
+    });
+
     this._init(props);
+
+    let survey = new SurveyUtil();
+    survey.filter();
+  }
+
+  addTextBuffers() {
+    d3.selectAll('.section').each(function(d) {
+      let child = d3.select(this).select('.narration-question').node();
+      d3.select(child).select('#scrollBuffer').remove();
+
+      // if (checkOverflow(this)) {
+      if (child && (child.clientHeight > this.scrollHeight)) {
+        d3.select(child).append('div')
+          .attr('id', 'scrollBuffer')
+          .style('height', '30vh')
+          .style('width', '1px');
+      }
+    });
   }
 
   _updateProps(props) {
@@ -176,18 +205,7 @@ class tortureVis {
       this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight, isResize })
     });
 
-    d3.selectAll('.section').each(function(d) {
-      let child = d3.select(this).select('.narration-question').node();
-      d3.select(child).select('#scrollBuffer').remove();
-
-      // if (checkOverflow(this)) {
-      if (child && (child.clientHeight > this.scrollHeight)) {
-        d3.select(child).append('div')
-          .attr('id', 'scrollBuffer')
-          .style('height', '30vh')
-          .style('width', '1px');
-      }
-    });
+    this.addTextBuffers();
   }
 
   initMapTitle(props) {
@@ -325,7 +343,6 @@ class tortureVis {
       },
     }];
 
-
     let selRows = abuseData;
     if (props.crNAME1 != 'Pakistan') {
       selRows = abuseData.filter(d => d.n1 == props.crNAME1);
@@ -415,3 +432,5 @@ class tortureVis {
     this._init(props);
   }
 }
+
+export { tortureVis as default };

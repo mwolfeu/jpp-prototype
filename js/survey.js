@@ -55,6 +55,7 @@ class SurveyUtil {
     d3.selectAll(`#${chooserEl} .sv-body .sv-footer`).remove(); // remove submit button
   }
 
+  // Build Chooser & Survey
   init() {
     let build = (function(dataObj) {
       this.chooser(dataObj);
@@ -108,14 +109,14 @@ class SurveyUtil {
     let element = {
       "type": "paneldynamic",
       "name": d.name,
-      "minPanelCount": 1,
       "title": d.description,
       "renderMode": "list",
       "templateTitle": `${d.values} #{panelIndex}`,
       "templateElements": [],
       "panelCount": 1,
+      "minPanelCount": 1,
       "panelAddText": `Add New ${d.values}`,
-      "panelRemoveText": `Remove ${d.values}`
+      "panelRemoveText": `Remove ${d.values}`,
     }
     elements.push(element);
     return element.templateElements;
@@ -127,11 +128,12 @@ class SurveyUtil {
     rows.forEach(d => {
       let item;
 
-      if (d.page != undefined && d.page.length) {
+      // indent == -1 for filter build
+      if (indent >= 0 && d.page != undefined && d.page.length) {
         let page = {
           title: d.page,
           "name": d.page,
-          "elements": []
+          "elements": [],
         };
         pages.push(page);
         elements = page.elements;
@@ -199,17 +201,25 @@ class SurveyUtil {
         }
       }
 
-
-      if (item) {
-        item.indent = indent;
-        item.isRequired = d.required == "TRUE",
-          //item.maxWidth = "800px";
+      if (indent >= 0) { // survey
+        if (item) {
+          item.indent = indent;
+          item.isRequired = d.required == "TRUE";
+          // item.maxWidth = "50vh";
+          // item.minWidth = "200px";
           elements.push(item);
-      }
-      if (d.input == 'array') {
-        let newElements = this.addPanelDynamic(elements, d);
-        let newRows = templates[d.values];
-        this.addItems(d.values, pages, newElements, templates, newRows, indent + 1);
+        }
+        if (d.input == 'array') {
+          let newElements = this.addPanelDynamic(elements, d);
+          let newRows = templates[d.values];
+          this.addItems(d.values, pages, newElements, templates, newRows, indent + 1);
+        }
+      } else { // filter
+        if (item) elements.push(item);
+        if (d.input == 'array') {
+          let newRows = templates[d.values];
+          this.addItems(d.values, pages, elements, templates, newRows, indent);
+        }
       }
     });
   }
@@ -224,6 +234,46 @@ class SurveyUtil {
     return JSON.parse(`[${vals.join(',')}]`)
   }
 
+
+  filter() {
+    let build = (function(dataObj) {
+      var json = {
+        questions: [],
+        "focusFirstQuestionAutomatic": false,
+        "showQuestionNumbers": "off"
+      }
+
+      this.addItems(json, json.questions, json.questions, dataObj.template, dataObj.template.Main, -1);
+      this.surveyObj = this.render("filters", json, { onComplete: setFilters });
+    }).bind(this);
+
+    let setFilters = (function(d) {
+      console.log(d);
+    }).bind(this);
+
+    // window.survey = new Survey.Model(json, "filters");
+
+    // Survey
+    //   .StylesManager
+    //   .applyTheme("modern");
+
+
+    let searchParam = undefined;
+    this.data.loadSurvey(searchParam, build);
+    // survey
+    //   .onComplete
+    //   .add(function(sender) {
+    //     document
+    //       .querySelector('#surveyResult')
+    //       .textContent = "Result JSON:\n" + JSON.stringify(sender.data, null, 3);
+    //   });
+
+    // window.survey.render("#filters");
+
+    // survey.onAfterRenderSurvey.add(cb);
+    // survey.scrollElementToTop({ options: { cancel: true } })
+    // survey.render("filters");
+  }
 }
 
 export { SurveyUtil as default };
