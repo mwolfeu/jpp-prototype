@@ -49,6 +49,7 @@ p {
     background: #f5f5f596;
     padding: 1em;
     border-radius: 10px;
+    margin: 1em;
     /* height: fit-content(20em); */
     /* max-height: 80%;
     overflow-y: auto; */
@@ -144,6 +145,11 @@ p {
 #section0 {
     background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), #e8545b75), url(../img/landing.png);
     background-size: contain;
+    min-height: 100vh;
+}
+
+#section0 .fp-tableCell {
+    min-height: 100vh;
 }
 
 #section1 {
@@ -173,41 +179,49 @@ p {
 #method1 {
     background-image: url(../img/methods/001_Chittar.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method2 {
     background-image: url(../img/methods/002_Cheera.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method3 {
     background-image: url(../img/methods/003_Danda.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method4 {
     background-image: url(../img/methods/004_Dolli.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method5 {
     background-image: url(../img/methods/005_Falaka.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method6 {
     background-image: url(../img/methods/006_Manji.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method7 {
     background-image: url(../img/methods/007_Roola.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 #method8 {
     background-image: url(../img/methods/008_Strappado.png);
     background-color: #786b4b;
+    min-height: 100vh;
 }
 
 

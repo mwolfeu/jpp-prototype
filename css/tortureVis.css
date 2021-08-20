@@ -8,6 +8,10 @@
     text-align: left
 }
 
+#tortureVis .fp-tableCell {
+    min-height: 90vh;
+}
+
 
 /* VISUALIZATION */
 

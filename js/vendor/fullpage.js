@@ -540,7 +540,7 @@
             isResizing = false;
 
             if(isFunction( options.afterResize ) && resizing){
-                options.afterResize.call(container, window.innerWidth, window.innerHeight);
+                options.afterResize.call(container, document.documentElement.clientWidth, document.documentElement.clientHeight);
             }
             if(isFunction( options.afterReBuild ) && !resizing){
                 options.afterReBuild.call(container);
@@ -1347,7 +1347,7 @@
             var bottom = rect.bottom;
 
             //sometimes there's a 1px offset on the bottom of the screen even when the 
-            //section's height is the window.innerHeight one. I guess because pixels won't allow decimals.
+            //section's height is the document.documentElement.clientHeight one. I guess because pixels won't allow decimals.
             //using this prevents from lazyLoading the section that is not yet visible 
             //(only 1 pixel offset is)
             var pixelOffset = 2;
@@ -1461,7 +1461,7 @@
                 else if(options.autoScrolling && canScroll){
 
                     //is the movement greater than the minimum resistance to scroll?
-                    if (Math.abs(touchStartY - touchEndY) > (window.innerHeight / 100 * options.touchSensitivity)) {
+                    if (Math.abs(touchStartY - touchEndY) > (document.documentElement.clientHeight / 100 * options.touchSensitivity)) {
                         if (touchStartY > touchEndY) {
                             scrolling('down');
                         } else if (touchEndY > touchStartY) {
@@ -2726,8 +2726,8 @@
             var heightLimit = options.responsiveHeight;
 
             //only calculating what we need. Remember its called on the resize event.
-            var isBreakingPointWidth = widthLimit && window.innerWidth < widthLimit;
-            var isBreakingPointHeight = heightLimit && window.innerHeight < heightLimit;
+            var isBreakingPointWidth = widthLimit && document.documentElement.clientWidth < widthLimit;
+            var isBreakingPointHeight = heightLimit && document.documentElement.clientHeight < heightLimit;
 
             if(widthLimit && heightLimit){
                 setResponsive(isBreakingPointWidth || isBreakingPointHeight);
@@ -3706,14 +3706,14 @@
     * Gets the window height. Crossbrowser.
     */
     function getWindowHeight(){
-        return 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
+        return 'innerHeight' in window ? document.documentElement.clientHeight : document.documentElement.offsetHeight;
     }
 
     /**
     * Gets the window width.
     */
     function getWindowWidth(){
-        return window.innerWidth;
+        return document.documentElement.clientWidth;
     }
 
     /**
