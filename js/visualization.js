@@ -1,338 +1,136 @@
-import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
+// import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
+import { cloudStore, frames, adm1Keys, adm2Keys } from './tortureVisData.js';
 import SurveyUtil from "../js/survey.js"
 
 class tortureVis {
   constructor(props) {
-    let frames = `
-        <div id="main-container">
-            <div id="map-meta-container">
-                <div id="map">
-                    <div id="title"></div>
-                    <div id="vis">
-                        <div id="geo">
+    this.cloudStore = new cloudStore();
 
+    this.hasMouse = matchMedia('(pointer:fine)').matches;
 
-                          <span id="filter-show" class="material-icons-outlined">filter_alt</span>
-                          <div id="filter-legend"></div>
-                        </div>
-                    </div>
-                    <div id="howto">
-                        Select a state or filter for more specific results.
-                    </div>
-                </div>
-                <div id="meta">
-                    <div id="title"></div>
-                    <div id="vis">
-                      <span id="filter">
-                        <span class="meta-select">
-                          <multiselect v-model="mftValue" v-on:input="eventMFT" :close-on-select="true" :options="metaFilterTypes" :preselect-first="true" :multiple="false" :close-on-select="false" :show-labels="false"></multiselect>
-                        </span>
-                        <span class="meta-select">
-                          <multiselect v-model="mfcValue" v-on:input="eventMFC" :close-on-select="true" :options="metaFilterCategories" :preselect-first="true" :multiple="false" :searchable="true" :close-on-select="false" :show-labels="false"></multiselect>
-                        </span>
-                      </span>
-                    </div>
-                    <div id="howto">
-                        Select a subgroup or view specific case.
-                    </div>
-                </div> 
-            </div> 
-        </div>
-      `
     var d1 = document.querySelector(props.container);
     d1.insertAdjacentHTML('beforeend', frames);
 
-    props.data.forEach(g => {
-      // d3 has a non-spec winding issue.  Rewind it and we are good.
-      // https://stackoverflow.com/questions/49311001/d3-js-drawing-geojson-incorrectly
-      g.features = g.features.map(function(feature) {
-        return turf.rewind(feature, { reverse: true });
-      })
-      g.allFeatures = g.features; // for filtering
-    });
-
-    this.allData = props.data;
-    props.data = props.data[0];
-    props.crNAME1 = 'Pakistan';
-
-    // tippy('#filter-button', {
-    //     content: '<b>My tooltip!</b>',
-    //     allowHTML: true,
-    //     animation: 'fade',
-    //     arrow: false,
-    //     interactive: true,
-    //     interactiveBorder: 20,
-    //     interactiveDebounce: 75,
-    //     maxWidth: 350,
-    //     offset: [0, 5],
-    //     placement: 'bottom-start',
-    //     theme: 'light-border',
-    //     trigger: 'click',
+    // props.data.forEach(g => {
+    //   // d3 has a non-spec winding issue.  Rewind it and we are good.
+    //   // https://stackoverflow.com/questions/49311001/d3-js-drawing-geojson-incorrectly
+    //   g.features = g.features.map(function(feature) {
+    //     return turf.rewind(feature, { reverse: true });
+    //   })
+    //   g.allFeatures = g.features; // for filtering
     // });
 
-    // this.vui = new Vue({
-    //   el: props.container + ' #main-container',
-    //   data(d) {
-    //     return {
-    //       gend: 'false',
-    //       value: '',
-    //       first: 0,
-    //       // aoptions: { value: [2000, 2020] },
-    //       soptions: { value: [2000, 2020] },
-    //       msoptions: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-    //       metaFilterTypes: ["Category View", "Case View"],
-    //       mftValue: "Category View",
-    //       metaFilterCases: ["Name 1", "Name 2", "Name 3"],
-    //       mfcValue: "Religion",
-    //       metaFilterCategories: ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
-    //     }
-    //   },
-    //   methods: {
-    //     myChange: function(a, b, c, d) {
-    //       this.first = this.soptions.value[0]
-    //     },
-    //     eventMFT: (function(val, id) {
-    //       if (val == "Category View") {
-    //         this.vui.metaFilterCategories = ["Religion", "during", "torture_type", "torture_methods", "hosp_med", "reason", "constituency", "complaint_filed", "mlc_conducted", "mlc_law", "outcome", "gender", "societal_background", "religion", "ethnicity", "action"]
-    //         this.vui.mfcValue = "Religion";
-    //         d3.selectAll('#meta svg *')
-    //           .attr("opacity", 1)
-    //           .style("pointer-events", "auto");
-    //       } else {
-    //         this.vui.metaFilterCategories = ["Case 1", "Case 2", "Case 3"];
-    //         this.vui.mfcValue = "";
-    //         d3.selectAll('#meta svg *')
-    //           .attr("opacity", .5)
-    //           .style("pointer-events", "none");
-    //       }
-    //     }).bind(this),
-    //     eventMFC: (function(val, id) {
-    //       alert('Test data not yet delivered.')
-    //     })
-    //   },
-    //   mounted() {},
-    //   components: {
-    //     multiselect: window.VueMultiselect.Multiselect,
-    //     'vueSlider': window['vue-slider-component'],
-    //   }
-    // })
+    // this.allData = props.data;
+    // props.data = props.data[0];
+    // props.crNAME1 = 'Pakistan';
 
-    // window.addEventListener('resize', debounce(d => this.resize(props)), 50); // do w fullpage cb
     d3.select('#tortureVis #map #geo #filter-show').on("click", d => {
-      d3.select('#filter-container')
-        .style("transform", "translateX(0vh)")
-        .style("z-index", 1)
-        .style("opacity", 1);
+      window.fullpage_api.moveSlideRight();
     });
 
-    d3.select('#filter-hide').on("click", d => {
-      d3.select('#filter-container')
-        .style("transform", "translateX(-100vh)")
-        .style("z-index", -1)
-        .style("opacity", 0);
+    d3.select('#tortureVis #filter-hide').on("click", d => {
+      window.fullpage_api.moveSlideLeft();
     });
 
-    this._init(props);
+
+    this.tipWidth = 200;
+    const tipPad = 5;
+    let clientRect = () => {
+      let rect = d3.select('#tortureVis #map #geo ').node().getClientRects()[0];
+      return ({
+        width: this.tipWidth,
+        height: 1,
+        left: rect.left + rect.width - this.tipWidth - tipPad,
+        top: rect.bottom - tipPad
+      })
+    }
+
+    this.tippy = tippy('#tortureVis #map #geo', {
+      placement: 'top',
+      content: "content",
+      allowHTML: true,
+      arrow: false,
+      hideOnClick: false,
+      // showOnCreate: true,
+      maxWidth: this.tipWidth,
+      trigger: 'manual',
+      getReferenceClientRect: clientRect,
+    });
+
+    this.tip = this.tippy[0];
+    this.setTip(); // Defaults
+
+    d3.select('#tortureVis #map #geo').on("click", (d => {
+      if (this.map.data[0].geojson.includes("adm2")) {
+        this.setGeo();
+        this.build(); // reset scope to country
+      }
+      this.setTip();
+    }).bind(this));
+
+    this.cfgGeoMeta();
+    this.build(props);
 
     let survey = new SurveyUtil();
     survey.filter();
   }
 
-  addTextBuffers() {
-    d3.selectAll('.section').each(function(d) {
-      let child = d3.select(this).select('.narration-question').node();
-      d3.select(child).select('#scrollBuffer').remove();
+  cfgGeoMeta() {
+    this.map = {};
+    this.info = {};
+    this.GID_1Keys = adm1Keys.map(d => d.GID_1);
 
-      // if (checkOverflow(this)) {
-      if (child && (child.clientHeight > this.scrollHeight)) {
-        d3.select(child).append('div')
-          .attr('id', 'scrollBuffer')
-          .style('height', '30vh')
-          .style('width', '1px');
-      }
-    });
-  }
+    this.map.data = [{
+      "type": "choropleth",
+      "name": "PAK",
+      // "geojson": "../data/PAK_adm1.json",
+      // locations: this.GID_1Keys,
+      // "z": this.cloudStore.getMapData(this.GID_1Keys),
+      // featureidkey: "properties.GID_1",
+      // text: "hi",
+      // hovertext: "ho",
+      // hovertemplate: "%{location} %{z} %{text}",
+      // hoverinfo: "location+z",
+      "colorbar": {
+        xanchor: "left",
+        bgcolor: "rgba(255,255,255,.8)",
+        thickness: 15,
+        // "x": 1,
+        "y": .95,
+        // xanchor: "left",
+        "yanchor": "top",
+        "len": 0.45,
+        "title": {
+          "text": "Cases",
+          "side": "right"
+        }
+      },
+      colorscale: 'Viridis',
+      "reversescale": true,
+    }];
 
-  _updateProps(props) {
-    this.props = {...this.props, ...props };
-    return this.props;
-  }
-
-  legend(s, target) {
-    target.append("g")
-      .attr("class", "legendLinear")
-      // .attr("transform", `translate(10,${target.node().clientHeight-40})`)
-      .style("transform", `translate(10px,calc(100% - 45px))`);
-
-    var sc = d3.scaleLinear()
-      .domain([0, 10])
-      .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
-
-    let labels = Array(81).fill("");
-    labels[0] = 20;
-    labels[40] = 10;
-    labels[80] = 0;
-
-    var legendLinear = d3.legendColor()
-      .shapeWidth(2)
-      .title('Cases')
-      .shapeHeight(10)
-      .ascending(true)
-      .labelFormat('d')
-      .shapePadding(-.2)
-      .labels(labels)
-      .cells(81)
-      .orient('horizontal')
-      .scale(s);
-
-    target.select(".legendLinear")
-      .call(legendLinear);
-  }
-
-  _init(props) {
-    this._updateProps(props);
-
-    let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
-
-    let initFcns = [
-      { fcn: 'initMapTitle', sel: '#map #title' },
-      { fcn: 'initGeo', sel: '#map #vis #geo' },
-      { fcn: 'initInMap', sel: '#map #vis #filter-legend' },
-      { fcn: 'initRHS', sel: '#meta #vis' }
-    ];
-    initFcns.forEach(d => {
-      let el = document.querySelector(this.props.container + ` ${d.sel}`);
-      this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight, isResize })
-    });
-
-    this.addTextBuffers();
-  }
-
-  initMapTitle(props) {
-    let title = `Incident View: <span id="location">${props.crNAME1}</span>`;
-
-    d3.select(props.containerEl).html(title); // ${tot}`);
-  }
-
-  initInMap(props) {}
-
-  initGeo(props) {
-    let dur = props.isResize ? 0 : 500;
-    let proj = d3.geoMercator().fitSize([props.width, props.height - 30], props.data)
-    let changeRegion = this.changeRegion.bind(this);
-
-    // feature color scale
-    let steps = 6;
-
-    let sc = d3.scaleLinear().domain(extent);
-    let colorScale = d3.scaleLinear().domain(sc.ticks(steps)).range(d3.quantize(d3.interpolateViridis, steps));
-
-    // add features
-    if (!this.geo) {
-      this.geo = d3.select(props.containerEl)
-        .append('svg')
-        .attr('width', props.width)
-        .attr('height', props.height)
-        .on("click", (function() {
-          if (this.props.crNAME1 == "Pakistan") return;
-          let width = props.containerEl.clientWidth;
-          let height = props.containerEl.clientHeight;
-          changeRegion(null, {...props, width, height });
-        }).bind(this))
-
-      this.legend(colorScale, this.geo);
+    this.map.layout = {
+      "geo": {
+        "projection": {
+          "type": "mercator"
+        },
+        bgcolor: 'rgba(0,0,0,0)',
+        fitbounds: "locations",
+        showframe: false,
+        showcountries: false,
+        showcoastlines: false,
+      },
+      // bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: "rgba(0,0,0,0)",
+      // "width": props.width,
+      // "height": props.height,
+      "margin": { "t": 10, "b": 10, "l": 10 },
+      dragmode: false,
     }
 
-    const t = this.geo.transition().duration(dur);
-
-    this.geo
-      .attr('width', props.width)
-      .attr('height', props.height)
-
-    this.geo.selectAll("g.features") // remove old features
-      //.selectAll('path:not([data-name1="Northern Areas"])')
-      .transition()
-      .duration(dur * .6)
-      .style("opacity", 0)
-      .remove();
-
-    this.geo.append("g")
-      .attr('class', 'features')
-      .selectAll("path")
-      .data(props.data.features)
-      .join(
-        enter => enter.append("path")
-        .attr("fill", d => {
-          let g2 = d.properties.GID_2;
-          let rate = 0;
-          if (g2) // using second geopath data
-            rate = getRate(g2);
-          else { // add em up
-            rate = stateMean[d.properties.NAME_1];
-          }
-
-          //console.log(`${g2}, ${rate}, ${s(rate)} %cXXX`, `color:${d3.interpolateViridis(s(rate))};`);
-          return colorScale(rate);
-        })
-        .attr("data-name1", d => d.properties.NAME_1)
-        .attr("data-name2", d => d.properties.NAME_2)
-        .attr("data-name3", d => d.properties.NAME_3)
-        .attr("data-gid2", d => d.properties.GID_2)
-        .attr("stroke", "black")
-        .style("cursor", "pointer")
-        .attr("d", d3.geoPath(proj))
-        .on("click", function() {
-          event.stopPropagation();
-          if (props.crNAME1 != 'Pakistan') return;
-          changeRegion(this, props);
-        })
-        .attr("opacity", 0)
-        .call(enter => enter.transition(t).attr("opacity", 1))
-        .append("title").text(d => {
-          if (d.properties.GID_2)
-            return `${d.properties.GID_2}: ${abuseData.filter(ad => ad.g2 == d.properties.GID_2)[0].incidents.length} cases`
-          else
-            return `${d.properties.NAME_1}: Mean ${stateMean[d.properties.NAME_1]} cases`
-        }),
-
-        update => update
-        .attr("opacity", "0")
-        .call(update => update.transition(t).attr("opacity", 1)),
-
-        exit => exit
-        .attr("opacity", "1")
-        .call(exit => exit.transition(t)
-          .attr("opacity", 0)
-          .remove())
-      );
-
-
-  }
-
-  changeRegion(el, props) {
-    let data, name;
-
-    if (el) {
-      name = d3.select(el).attr("data-name1");
-      data = this.allData[1];
-      data.features = data.allFeatures.filter(d => d.properties.NAME_1 == name);
-    } else {
-      data = this.allData[0];
-      data.features = data.allFeatures;
-    }
-
-    let crNAME1 = name ? name : 'Pakistan';
-
-    this._init({...props, data, crNAME1 });
-    // this.initInMap(props, d3.select(el).attr("data-gid2"), name)
-  }
-
-  initRHS(props) {
-    let sel = props.containerEl; // document.querySelector(props.container);
-
-    var data = [{
-      values: [16, 15, 12, 6, 5, 4],
-      labels: ["Muslim", "Hindu", "Christian", "Ahmadiyya", "Sikh", "Other"],
+    this.info.data = [{
+      // values: [16, 15, 12, 6, 5, 4],
+      // labels: ["Muslim", "Hindu", "Christian", "Ahmadiyya", "Sikh", "Other"],
       domain: { column: 0 },
       name: 'NAME',
       hoverinfo: '', //'label+percent+name',
@@ -343,20 +141,14 @@ class tortureVis {
       },
     }];
 
-    let selRows = abuseData;
-    if (props.crNAME1 != 'Pakistan') {
-      selRows = abuseData.filter(d => d.n1 == props.crNAME1);
-    }
-    let tot = d3.sum(selRows.map(d => d.incidents.length));
-
-    var layout = {
+    this.info.layout = {
       xtitle: 'CASES OF ABUSE',
       annotations: [{
         font: {
-          size: 40
+          size: 30 // 40 if landscape
         },
         showarrow: false,
-        text: tot,
+        // text: tot,
         x: 0.5,
         y: 0.52
       }, {
@@ -368,16 +160,151 @@ class tortureVis {
         x: 0.5,
         y: 0.43
       }],
-      height: props.height,
-      width: props.width,
+      // height: props.height,
+      // width: props.width,
       showlegend: true,
       grid: { rows: 1, columns: 1 }
     };
+  }
 
-    var config = { responsive: true }
+  _updateProps(props) {
+    this.props = {...this.props, ...props };
+    return this.props;
+  }
+
+  build(props) {
+    this._updateProps(props);
+
+    // // let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
+    // let initFcns = [
+    //   // { fcn: 'initMapTitle', sel: '#map #title' },
+    //   { fcn: 'geo', sel: '#map #vis #geo' },
+    //   // { fcn: 'initInMap', sel: '#map #vis #filter-legend' },
+    //   // { fcn: 'initRHS', sel: '#meta #vis' }
+    // ];
+
+    // initFcns.forEach(d => {
+    //   let el = document.querySelector(this.props.container + ` ${d.sel}`);
+    //   this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight })
+    // });
+
+    // this.addTextBuffers();
+
+    let el = document.querySelector(this.props.container + ' #map #vis #geo');
+    this.geo({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
+    el = document.querySelector(this.props.container + ' #meta #vis');
+    this.meta({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
+
+    if (!this.hasMouse) {
+      d3.select('#tortureVis #map #howto').text('Touch once for region details, twice for the province view. Swipe left for filters.')
+        // d3.select('#map #vis #meta #howto').html('')
+    }
+  }
+
+  setMapTitle(location) {
+    let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span>`;
+    d3.select(this.props.container + ` #map #title`).html(title);
+  }
+
+  // initInMap(props) {}
+
+  // changeRegion(el, props) {
+  //   let data, name;
+
+  //   if (el) {
+  //     name = d3.select(el).attr("data-name1");
+  //     data = this.allData[1];
+  //     data.features = data.allFeatures.filter(d => d.properties.NAME_1 == name);
+  //   } else {
+  //     data = this.allData[0];
+  //     data.features = data.allFeatures;
+  //   }
+
+  //   let crNAME1 = name ? name : 'Pakistan';
+
+  //   this.build({...props, data, crNAME1 });
+  //   // this.initInMap(props, d3.select(el).attr("data-gid2"), name)
+  // }
+
+  setGeo(loc) {
+    let root = this.map.data[0];
+    let geojsonPath = "../data/PAK_admX.json";
+
+    if ((root.geojson || "").includes("adm1")) {
+      root.geojson = geojsonPath.replace("X", 2);
+      root.featureidkey = "properties.GID_2";
+      root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
+      root.z = this.cloudStore.getMapData(root.locations);
+    } else {
+      root.geojson = geojsonPath.replace("X", 1);
+      root.featureidkey = "properties.GID_1";
+      root.locations = this.GID_1Keys;
+      root.z = this.cloudStore.getMapData(root.locations);
+      // let ext = d3.extent(root.z);
+      root.zmin = 0; //ext[0];
+      root.zmax = d3.max(root.z); //ext[1];
+      this.setTip();
+    }
+
+    this.setMapTitle(this.cloudStore.getMapName(root.locations));
+  }
+
+  setTip(key, value, color) {
+    if (!key) { // Defaults
+      key = "Pakistan"
+      value = this.cloudStore.getMapData(['0']);
+    }
+    this.tip.setContent(`<div style="width:${this.tipWidth-(this.tipWidth*.1)}px;">${key}<hr>${value} Cases</div>`);
+    // this.tip.show();
+  }
+
+  geo(props) {
+    let el = props.containerEl;
+    let cfg = { displayModeBar: false, responsive: true };
+    let layout = {...this.map.layout, width: props.width, height: props.height };
+
+    if (this.map.ran) {
+      Plotly.react(el, this.map.data, this.map.layout, cfg);
+    } else {
+      this.setGeo();
+      Plotly.newPlot(el, this.map.data, layout, cfg);
+
+      el.on("plotly_hover", (function(data) {
+        let key = data.points[0].location;
+        let val = this.cloudStore.getMapData([key]);
+        let name = this.cloudStore.regionIdToName(key);
+        this.setTip(name, val);
+      }).bind(this));
+
+      el.on("plotly_click", (function(data) { // get loc and data
+        if (this.hasMouse) { // plotly promotes hover to click on mobiles
+          this.setGeo(data.points[0].location);
+          this.geo(props); // rebuild
+        } else {
+          if (this.currentRegion == data.points[0].location) {
+            this.setGeo(data.points[0].location);
+            this.geo(props); // rebuild 
+          }
+          this.currentRegion = data.points[0].location;
+        }
+      }).bind(this));
+    }
+    this.map.ran = true;
+  }
+
+  meta(props) {
+    let sel = props.containerEl; // document.querySelector(props.container);
+    let root = this.info.data[0];
+
+    let catRv = this.cloudStore.byCategorical('Region', this.map.data[0].locations);
+    root.labels = catRv.pie.labels;
+    root.values = catRv.pie.values;
+    // root.layout.annotations[0].text = catRv.pie.total;
+
+    var config = { displayModeBar: false, responsive: true }
 
     if (!this.metaVis) {
-      this.metaVis = Plotly.newPlot(sel, data, layout, config);
+      this.metaVis = Plotly.newPlot(sel, this.info.data, this.info.layout, config);
 
       sel.on('plotly_hover', function(data) {
         console.log(data);
@@ -419,17 +346,13 @@ class tortureVis {
       document.querySelector(props.container + ' .modebar-container').remove();
 
     } else {
-      Plotly.react(sel, data, layout, config);
+      Plotly.react(sel, this.info.data, this.info.layout, config);
     }
   }
 
-  render(props) { // receives new scroll updates
-    console.log('update called');
-    // update
-  }
 
   resize(props) {
-    this._init(props);
+    this.build(props);
   }
 }
 

@@ -1,3 +1,16 @@
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+    height: 7px;
+    -webkit-overflow-scrolling: auto;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
 :root {
     --jpp-red: #e8545c;
 }
@@ -178,8 +191,11 @@ p {
 
 #method1 {
     background-image: url(../img/methods/001_Chittar.png);
-    background-color: #786b4b;
     min-height: 100vh;
+    background-color: #786b4b;
+    /* min-height: 80vh;
+    max-height: 80vh;
+    border: 10vh solid green; */
 }
 
 #method2 {
@@ -296,4 +312,14 @@ p {
     width: 100%;
     padding: 0;
     margin: 0;
+}
+
+
+/* if vertical */
+
+@media (max-aspect-ratio: 1/1) {
+    /* does not work on desktop debugger */
+    #section1 #slide1 .fp-tableCell {
+        margin-top: 20vh;
+    }
 }

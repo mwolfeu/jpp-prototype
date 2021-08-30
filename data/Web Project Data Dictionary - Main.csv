@@ -11,11 +11,11 @@ Victim,,first_name,string,TRUE,First Name,,,,,,
 ,,,,,,,,,,,
 Incident,,hosp_med,single,,Was hospitalization or medical care needed,"true, false",,,,,
 ,,reason,multiple,,Reason for torture,"confession, information, recovery, others",,,,,
-,,constituency,single,,Constituency: Provincial and national,table:Constituencies,,,"I shared a list with you earlier, pasting the list here again: For NA: https://www.ecp.gov.pk/Documents/delimitation2018/reports/02.National%20Assembly%20of%20Pakistan.pdf",for PA: https://www.ecp.gov.pk/Documents/delimitation2018/COMPRESSED%20FILES/03.Provincial%20Assemblies%20of%20Pakistan.compressed.pdf,We just need to use the names and numbers given in the left most column
+,,constituency,single,,Constituency: Provincial and national,*Constituencies,,,"I shared a list with you earlier, pasting the list here again: For NA: https://www.ecp.gov.pk/Documents/delimitation2018/reports/02.National%20Assembly%20of%20Pakistan.pdf",for PA: https://www.ecp.gov.pk/Documents/delimitation2018/COMPRESSED%20FILES/03.Provincial%20Assemblies%20of%20Pakistan.compressed.pdf,We just need to use the names and numbers given in the left most column
 ,,rep_name,string,,Name of representative,,,,To be filled manually as it may or may not change after every five years or so,,
 ,,rep_number,undefined,,???,???,,,"Can you clarify, i don't understand",,
 ,,complaint_filed,single,,Was a complaint filed,"true, false",,,,,
-,,complaint_date,date,,When was a complaint filed,"DD-MM-YYYY, YYYY-MM, YYYY",,,,,
+,,complaint_date,date,,Complaint date,"DD-MM-YYYY, YYYY-MM, YYYY",,,,,
 ,,mlc_conducted,single,,Was an MLC conducted,"true, false",,,,,
 ,,mlc_law,undefined,,Under what section of the law was the MLC ordered,unformed?,,,Will need to update,,
 ,,mlc_reason_notfiled,undefined,,Reason for not filing an MLC,unformed?,,,,,

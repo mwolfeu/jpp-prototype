@@ -1,0 +1,273 @@
+constituencies
+NA-1 Chitral
+NA-2 Swat-I
+NA-3 Swat-II
+NA-4 Swat-III
+NA-5 Upper Dir
+NA-6 Lower Dir-I
+NA-7 Lowe Dir-II
+NA-8 Malakand Protected Area
+NA-9 Buner
+NA-10 Shangla
+NA-11 Kohistan-cum-Lower Kohistan-cum-Kolai Pallas Kohistan
+NA-12 Batgram
+NA-13 Mansehra-I
+NA-14 Mansehra-cum-Torghar
+NA-15 Abbotabad-I
+NA-16 Abbotabad-II
+NA-17 Haripur
+NA-18 Swabi-I
+NA-19 Swabi-II
+NA-20 Mardan-I
+NA-21 Mardan-II
+NA-22 Mardan-III
+NA-23 Charsada-I
+NA-24 Charsada-II
+NA-25 Nowshehra-I
+NA-26 Nowshehra-II
+NA-27 Peshawar-I
+NA-28 Peshawar-II
+NA-29 Peshawar-III
+NA-30 Peshawar-IV
+NA-31 Peshawar-V
+NA-32 Kohat
+NA-33 Hangu
+NA-34 Karak
+NA-35 Bannu
+NA-36 Lakki Marwat
+NA-37 Tank
+NA-38 Dera Ismail Khan-I
+NA-39 Dera Ismail Khan-II
+NA-40 Bajaur-I
+NA-41 Bajaur-II
+NA-42 Bajaur-III
+NA-43 Mohmand
+NA-44 Khyber-I
+NA-45 Khyber-II
+NA-46 Kurram-VII
+NA-47 Orakzai
+NA-48 North Wazirastan
+NA-49 South Wazirastan-I
+NA-50 South Wazirastan-II
+NA-51 FR Tribal Areas
+NA-52 ITC-I
+NA-53 ITC-II
+NA-54 ITC-III
+NA-55 Attock-I
+NA-56 Attock-II
+NA-57 Rawalpindi-I
+NA-58 Rawalpindi-II
+NA-59 Rawalpindi-III
+NA-60 Rawalpindi-IV
+NA-61 Rawalpindi-V
+NA-62 Rawalpindi-VI
+NA-63 Rawalpindi-VII
+NA-64 Chakwal-I
+NA-65 Chakwal-II
+NA-66 Jehlum-I
+NA-67 Jhelum-II
+NA-68 Gujrat-I
+NA-69 Gujrat-II
+NA-70 Gujrat-III
+NA-71 Gujrat-IV
+NA-72 Sialkot-I
+NA-73 Sialkot-II
+NA-74 Sialkot-III
+NA-75 Sialkot-IV
+NA-76 Sialkot-V
+NA-77 Narowal-I
+NA-78 Narowal-II
+NA-79 Gujranwala-I
+NA-80 Gujranwala-II
+NA-81 Gujranwala-III
+NA-82 Gujranwala-IV
+NA-83 Gujranwala-V
+NA-84 Gujranwala-VI
+NA-85 M.B.Din-I
+NA-86 M.B.Din-II
+NA-87 Hafizabad
+NA-88 Sargodha-I
+NA-89 Sargodha-II
+NA-90 Sargodha-III
+NA-91 Sargodha-IV
+NA-92 Sargodha-V
+NA-93 Khushab-I
+NA-94 Khushab-II
+NA-95 Mianwali-I
+NA-96 Mianwali-II
+NA-97 Bhakkar-I
+NA-98 Bhakkar-II
+NA-99 Chiniot-I
+NA-100 Chiniot-II
+NA-101 Faisalabad-I
+NA-102 Faisalabad-II
+NA-103 Faisalabad-III
+NA-104 Faisalabad-IV
+NA-105 Faisalabad-V
+NA-106 Faisalabad-VI
+NA-107 Faisalabad-VII
+NA-108 Faisalabad-VIII
+NA-109 Faisalabad-IX
+NA-110 Faisalabad-X
+NA-111 Toba Tek Singh-I
+NA-112 Toba Tek Singh-II
+NA-113 Toba Tek Singh-III
+NA-114 Jhang-I
+NA-115 Jhang-II
+NA-116 Jhang-III
+NA-117 Nankana-Sahib-I
+NA-118 Nankana-Sahib-II
+NA-119 Sheikhupura-I
+NA-120 Sheikhupura-II
+NA-121 Sheikhupura-III
+NA-122 Sheikhupura-IV
+NA-123 Lahore-I
+NA-124 Lahore-II
+NA-125 Lahore-III
+NA-126 Lahore-IV
+NA-127 Lahore-V
+NA-128 Lahore-VI
+NA-129 Lahore-VII
+NA-130 Lahore-VIII
+NA-131 Lahore-IX
+NA-132 Lahore-X
+NA-133 Lahore-XI
+NA-134 Lahore-XII
+NA-135 Lahore-XIII
+NA-136 Lahore-XIV
+NA-137 Kasur-I
+NA-138 Kasur-II
+NA-139 Kasur-III
+NA-140 Kasur-IV
+NA-141 Okara-I
+NA-142 Okara-II
+NA-143 Okara-III
+NA-144 Okara-IV
+NA-145 Pakpattan-I
+NA-146 Pakpattan-II
+NA-147 Sahiwal-I
+NA-148 Sahiwal-II
+NA-149 Sahiwal-III
+NA-150 Khanewal-I
+NA-151 Khanewal-II
+NA-152 Khanewal-III
+NA-153 Khanewal-IV
+NA-154 Multan-I
+NA-155 Multan-II
+NA-156 Multan-III
+NA-157 Multan-IV
+NA-158 Multan-V
+NA-159 Multan-VI
+NA-160 Lodhran-I
+NA-161 Lodhran-II
+NA-162 Vehari-I
+NA-163 Vehari-II
+NA-164 Vehari-III
+NA-165 Vehari-IV
+NA-166 Bahawalnagar-I
+NA-167 Bahawalnagar-II
+NA-168 Bahawalnagar-III
+NA-169 Bahawalnagar-IV
+NA-170 Bahawalpur-I
+NA-171 Bahawalpur-II
+NA-172 Bahawalpur-III
+NA-173 Bahawalpur-IV
+NA-174 Bahawalpur-V
+NA-175 Rahim Yar Khan-I
+NA-176 Rahim Yar Khan-II
+NA-177 Rahim Yar Khan-III
+NA-178 Rahim Yar Khan-IV
+NA-179 Rahim Yar Khan-V
+NA-180 Rahim Yar Khan-VI
+NA-181 Muzaffargarh-I
+NA-182 Muzaffargarh-II
+NA-183 Muzaffargarh-III
+NA-184 Muzaffargarh-IV
+NA-185 Muzaffargarh-V
+NA-186 Muzafargarh-VI
+NA-187 Layyah-I
+NA-188 Layyah-II
+NA-189 Dera Ghazi Khan-I
+NA-190 Dera Ghazi Khan-II
+NA-191 Dera Ghazi Khan-III
+NA-192 Dera Ghazi Khan-IV
+NA-193 Rajanpur-I
+NA-194 Rajanpur-II
+NA-195 Rajanpur-III
+NA-196 Jacobabad
+NA-197 Kashmor
+NA-198 Shikarpur-I
+NA-199 Shikarpur-II
+NA-200 Larkana-I
+NA-201 Larkana-II
+NA-202 Kambar Shahdadkot-I
+NA-203 Kambar Shahdadkot-II
+NA-204 Ghotki-I
+NA-205 Ghotki-II
+NA-206 Sukkur-I
+NA-207 Sukkurr-II
+NA-208 Khairpur-I
+NA-209 Khairpur-II
+NA-210 Khairpur-III
+NA-211 Naushahro Feroze-I
+NA-212 Naushahro Feroze-II
+NA-213 Shaheed Benazirabadr-I
+NA-214 Shaheed Benazirabadr-II
+NA-215 Sanghar-I
+NA-216 Sanghar-II
+NA-217 Sanghar-III
+NA-218 Mirpurkhas-I
+NA-219 Mirpurkhas-II
+NA-220 Umarkot
+NA-221 Tharparkar-I
+NA-222 Tharparkar-II
+NA-223 Matiari
+NA-224 Tando Alahyar
+NA-225 Hyderabad-I
+NA-226 Hyderabad-II
+NA-227 Hyderabad-III
+NA-228 Tando Muhammad Khan
+NA-229 Badin-I
+NA-230 Badin-II
+NA-231 Sajawal
+NA-232 Thatta
+NA-233 Jamshoro
+NA-234 Dadu-I
+NA-235 Dadu-II
+NA-236 Malir-I
+NA-237 Malir-II
+NA-238 Malir-III
+NA-239 Korangi Karachi-I
+NA-240 Korangi Karachi-II
+NA-241 Korangi Karachi-III
+NA-242 East Karachi-I
+NA-243 East Karachi-II
+NA-244 East Karachi-III
+NA-245 East Karachi-IV
+NA-246 South Karachi-I
+NA-247 South Karachi-II
+NA-248 West Karachi-I
+NA-249 West Karachi-II
+NA-250 West Karachi-III
+NA-251 West Karachi-IV
+NA-252 West Karachi-V
+NA-253 Central Karachi-I
+NA-254 Central Karachi-II
+NA-255 Central Karachi-III
+NA-256 Central Karachi-IV
+NA-257 Kila Saifullah-cum-zhob-cum-Sherani
+NA-258 Loralai-cum-Musakhel-cum-Ziarat-cum-Dukki-cum-Harnai
+NA-259 Dera Bhugti-cum-Kohlu-cum-Barkhan-cum-Sibi-cum-Lehri
+NA-260 Nasirabad
+NA-261 Jafarabad-cum-Sohbatpur
+NA-262 Kachhi-cum-Jhal Magsi
+NA-263 Pishin
+NA-264 Kila Abdullah
+NA-265 Quetta-I
+NA-266 Quetta-II
+NA-267 Quetta-III
+NA-268 Mastung-cum-Chaghai-cum-Kalat-cum-Shaheed Sikandarabad-cum-Nushki
+NA-269 Khuzdar
+NA-270 Panjgorh-cum-Washuk-cum-Awaran
+NA-271 Kech
+NA-272 Lasbela-cum-Gwadar

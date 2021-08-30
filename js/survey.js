@@ -123,7 +123,20 @@ class SurveyUtil {
   }
 
   addItems(fn, pages, elements, templates, rows, indent) {
+    let type = indent < 0 ? 'filter' : 'survey';
+
     if (!indent) indent = 0;
+
+    let choicesByUrl = (function(d, item) {
+      let val = this.valPrep[d.input](d);
+      if (val[0].startsWith('*')) {
+        item.choicesByUrl = {
+          "url": `../data/Web Project Data Dictionary - ${val[0].slice(1)}.json`
+        }
+      } else {
+        item.choices = val;
+      }
+    }).bind(this);
 
     rows.forEach(d => {
       let item;
@@ -139,23 +152,22 @@ class SurveyUtil {
         elements = page.elements;
       }
 
-      if (d.input == 'single' && d.name != 'constituency') {
+      if (d.input == 'single' && type == "survey") {
         item = {
           type: "dropdown",
           name: d.name,
           title: d.description,
           optionsCaption: "Select...", // otherwise gets from localization
           colCount: 0,
-          choices: d.values
+          // choices: d.values
         }
 
         // if it needs parsing
         if (typeof(d.values) == 'string')
-          item.choices = this.valPrep[d.input](d);
-
+          choicesByUrl(d, item);
       }
 
-      if (d.input == 'string') {
+      if (d.input == 'string' && type == "survey") {
         item = {
           type: "text",
           name: d.name,
@@ -175,7 +187,6 @@ class SurveyUtil {
           pplaceHolder: "Type Here",
           colCount: 0,
         }
-
       }
 
       // if (d.input == 'multiple') {
@@ -189,19 +200,20 @@ class SurveyUtil {
       //   }
       // }
 
-      if (d.input == 'multiple') {
+      if (d.input == 'multiple' || (d.input == "single" && type == "filter")) {
         item = {
           "type": "tagbox",
           name: d.name,
           title: d.description,
-          choices: this.valPrep[d.input](d)
-            // "choicesByUrl": {
-            //   "url": "https://restcountries.eu/rest/v2/all"
-            // },
+          // choices: this.valPrep[d.input](d)
+          // "choicesByUrl": {
+          //   "url": "../data/Web Project Data Dictionary - Constituencies.json"
+          // }
         }
+        choicesByUrl(d, item);
       }
 
-      if (indent >= 0) { // survey
+      if (type == "survey") {
         if (item) {
           item.indent = indent;
           item.isRequired = d.required == "TRUE";
@@ -214,11 +226,39 @@ class SurveyUtil {
           let newRows = templates[d.values];
           this.addItems(d.values, pages, newElements, templates, newRows, indent + 1);
         }
-      } else { // filter
+      }
+
+      if (type == "filter") {
         if (item) elements.push(item);
         if (d.input == 'array') {
           let newRows = templates[d.values];
           this.addItems(d.values, pages, elements, templates, newRows, indent);
+        }
+
+        if (item && d.input == "date") { // add extra date fields
+          item.minWidth = "1vw";
+          let range = {
+            type: "dropdown",
+            name: `${d.name}-range`,
+            title: "+/-",
+            // optionsCaption: "+/-", // otherwise gets from localization
+            colCount: 0,
+            choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            minWidth: "1vw",
+            startWithNewLine: false
+          };
+          let units = {
+            type: "dropdown",
+            name: `${d.name}-units`,
+            title: "Term",
+            // optionsCaption: "time", // otherwise gets from localization
+            colCount: 0,
+            choices: ["days", "weeks", "months", "years"],
+            minWidth: "1vw",
+            // width: "10vw",
+            startWithNewLine: false
+          };
+          elements.push(range, units);
         }
       }
     });
@@ -251,28 +291,8 @@ class SurveyUtil {
       console.log(d);
     }).bind(this);
 
-    // window.survey = new Survey.Model(json, "filters");
-
-    // Survey
-    //   .StylesManager
-    //   .applyTheme("modern");
-
-
     let searchParam = undefined;
     this.data.loadSurvey(searchParam, build);
-    // survey
-    //   .onComplete
-    //   .add(function(sender) {
-    //     document
-    //       .querySelector('#surveyResult')
-    //       .textContent = "Result JSON:\n" + JSON.stringify(sender.data, null, 3);
-    //   });
-
-    // window.survey.render("#filters");
-
-    // survey.onAfterRenderSurvey.add(cb);
-    // survey.scrollElementToTop({ options: { cancel: true } })
-    // survey.render("filters");
   }
 }
 
