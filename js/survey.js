@@ -275,24 +275,30 @@ class SurveyUtil {
   }
 
 
-  filter() {
-    let build = (function(dataObj) {
-      var json = {
-        questions: [],
-        "focusFirstQuestionAutomatic": false,
-        "showQuestionNumbers": "off"
-      }
+  filterUI() {
+    let promise = new Promise((function(resolveFcn, rejectFcn) {
+      let build = (function(dataObj) {
+        var json = {
+          questions: [],
+          "focusFirstQuestionAutomatic": false,
+          "showQuestionNumbers": "off"
+        }
 
-      this.addItems(json, json.questions, json.questions, dataObj.template, dataObj.template.Main, -1);
-      this.surveyObj = this.render("filters", json, { onComplete: setFilters });
-    }).bind(this);
+        this.addItems(json, json.questions, json.questions, dataObj.template, dataObj.template.Main, -1);
+        resolveFcn(json);
+        this.surveyObj = this.render("filters", json, { onComplete: setFilters });
+        this.filterJSON = json;
+      }).bind(this);
 
-    let setFilters = (function(d) {
-      console.log(d);
-    }).bind(this);
+      let setFilters = (function(d) {
+        console.log(d);
+      }).bind(this);
 
-    let searchParam = undefined;
-    this.data.loadSurvey(searchParam, build);
+      let searchParam = undefined;
+      this.data.loadSurvey(searchParam, build);
+    }.bind(this)));
+
+    return promise;
   }
 }
 

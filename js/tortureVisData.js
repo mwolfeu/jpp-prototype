@@ -1,5 +1,5 @@
 // this.allData[0].features.map(d => {return{GID_1:d.properties.GID_1, name:d.properties.NAME_1}})
-let adm1Keys = [{
+let adm1Index = [{
     "GID_1": "PAK.1_1",
     "name": "Azad Kashmir"
   },
@@ -34,7 +34,7 @@ let adm1Keys = [{
 ];
 
 // this.props.data[1].features.map(d => ({GID_1:d.properties.GID_1, GID_2:d.properties.GID_2, name:d.properties.NAME_2}))
-let adm2Keys = [{
+let adm2Index = [{
     "GID_1": "PAK.1_1",
     "GID_2": "PAK.1.1_1",
     "name": "Azad Kashmir"
@@ -235,26 +235,24 @@ let frames = `
   // }
 
 class cloudStore {
-  constructor() {
-    this.incidentData = { '0': 0 };
-    this.admNames = {};
-    adm2Keys.forEach(d => {
-      this.admNames[d.GID_2] = d.name;
-      this.incidentData[d.GID_2] = parseInt(Math.random() * 200)
-    });
-    adm1Keys.forEach(d => { // sum adm2Keys val
-      this.admNames[d.GID_1] = d.name;
-      let f = adm2Keys
-        .filter(e => e.GID_1 == d.GID_1)
-        .map(d => d.GID_2);
-      let sum = d3.sum(f, g => this.incidentData[g]);
-      this.incidentData[d.GID_1] = sum;
-      this.incidentData['0'] += sum;
-    });
+  constructor(filterOpts) {
+    this.filterOpts = filterOpts;
 
-    // get aws data
-    this.raw = {};
-    this.filtered = this.raw;
+    // this.incidentData = { '0': 0 };
+    this.admNames = { 0: 'Pakistan' };
+    adm2Index.forEach(d => {
+      this.admNames[d.GID_2] = d.name;
+      // this.incidentData[d.GID_2] = parseInt(Math.random() * 200)
+    });
+    adm1Index.forEach(d => { // sum adm2Keys val
+      this.admNames[d.GID_1] = d.name;
+      // let f = adm2Keys
+      //   .filter(e => e.GID_1 == d.GID_1)
+      //   .map(d => d.GID_2);
+      // let sum = d3.sum(f, g => this.incidentData[g]);
+      // this.incidentData[d.GID_1] = sum;
+      // this.incidentData['0'] += sum;
+    });
   }
 
   getMapData(targets) { // get region count
@@ -269,6 +267,10 @@ class cloudStore {
       return "Pakistan";
   }
 
+  regionLvl1ToLvl2(id) {
+    return adm2Index.filter(d => d.GID_1 == id).map(d => d.GID_2);
+  }
+
   regionIdToName(target) { // TODO combine w above
     if (Array.isArray(target))
       return target.map(d => this.admNames[d]);
@@ -276,37 +278,58 @@ class cloudStore {
       return this.admNames[target];
   }
 
-  filter(spec) { // filter pristine
-    console.log('filtering:', spec);
-    // this.filtered = ...filterFcn
+  genStats() { // on this.filtered
+    let categories = { region: ["all"], ...this.filterOpts };
+    this.stats = {};
+
+    // category stats
+    Object.keys(categories).forEach(d => { // per category
+      this.stats[d] = {};
+      categories[d].forEach(e => { // per opt
+        this.stats[d][e] = {};
+        Object.keys(this.admNames).forEach(f => { // for all map regions
+          this.stats[d][e][f] = parseInt(Math.random() * 30); // call stat fcn
+        });
+      });
+    });
   }
 
-  byCategorical(field, options) { // return precents of pristine by category
-    // Nest and rollup of this.filtered
-    // using existing or enumerated options
-    let fakeData = (function() { // per region case qty
-      let keys = Object.keys(this.incidentData);
-      let rv = {};
-      keys.forEach(d => {
-        rv[d] = parseInt(Math.random() * 30);
-      })
-      return rv;
-    }).bind(this);
+  getIncidentData(filterSpec) {
+    let promise = new Promise((function(resolveFcn, rejectFcn) {
+      console.log('filtering:', filterSpec);
+      this.raw = this.incidentData; // will be AWS objs
+      this.filtered = this.raw;
+      this.genStats();
+      resolveFcn(this.incidentData);
+    }.bind(this)));
+
+    return promise;
+  }
+
+  byCategorical(category, regions) { // return cases category
+
+    let options = Object.keys(this.stats[category]);
+    let optVals = options.map(o => { // by option
+      return d3.sum(regions, r => this.stats[category][o][r]);
+    });
+
+    let regVals = regions.map(r => { // by region
+      return d3.sum(options, o => this.stats[category][o][r]);
+    });
 
     let rv = {
-      pie: {
-        labels: this.regionIdToName(options),
-        values: Array(options.length).fill(null).map(d => parseInt(Math.random() * 30)) // does not have to == 100
-      },
-      map: {
-        'cat0': fakeData(),
-        'cat1': fakeData(),
-        'cat2': fakeData(),
-        'cat3': fakeData(),
-        'cat4': fakeData(),
-        'cat5': fakeData()
-      }
+      pie: { labels: options, values: optVals },
+      map: { labels: regions, values: regVals }
     };
+
+    if (category = "region") { // special case
+      rv.pie.labels = this.regionIdToName(rv.map.labels);
+      rv.pie.values = rv.map.values;
+    }
+    // stats
+    rv.total = d3.sum(rv.map.values);
+    rv.max = d3.max(rv.map.values);
+
     return rv;
   }
 }
@@ -809,4 +832,4 @@ class cloudStore {
 //   stateMean[n1] = d3.mean(gid2s.map(d => getRate(d.g2)));
 // });
 
-export { cloudStore, frames, adm1Keys, adm2Keys }
+export { cloudStore, frames, adm1Index, adm2Index }

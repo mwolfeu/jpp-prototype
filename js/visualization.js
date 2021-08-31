@@ -1,12 +1,16 @@
 // import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
-import { cloudStore, frames, adm1Keys, adm2Keys } from './tortureVisData.js';
+import { cloudStore, frames, adm1Index, adm2Index } from './tortureVisData.js';
 import SurveyUtil from "../js/survey.js"
 
 class tortureVis {
   constructor(props) {
-    this.cloudStore = new cloudStore();
 
     this.hasMouse = matchMedia('(pointer:fine)').matches;
+
+    this.GID_1Keys = adm1Index.map(d => d.GID_1);
+
+    this.curCategory = "region";
+    this.curLocations = this.GID_1Keys;
 
     var d1 = document.querySelector(props.container);
     d1.insertAdjacentHTML('beforeend', frames);
@@ -32,7 +36,25 @@ class tortureVis {
       window.fullpage_api.moveSlideLeft();
     });
 
+    this.initGeoMeta();
+    this.cfgTip();
 
+    this.survey = new SurveyUtil();
+    this.survey.filterUI()
+      .then((function(d) { // init filter UI get cfg
+        let filterUICfg = {}; // d; // {surveyFILTERS} 
+        this.cloudStore = new cloudStore(filterUICfg);
+        return this.cloudStore.getIncidentData();
+      }).bind(this)).then((function(d) {
+        // this.data = this.cloudStore.byCategorical(this.curCategory, this.GID_1Keys);
+        // this.buildMeta();
+        // this.setTip(); // Defaults
+        this.build();
+      }).bind(this));
+
+  }
+
+  cfgTip() {
     this.tipWidth = 200;
     const tipPad = 5;
     let clientRect = () => {
@@ -58,35 +80,24 @@ class tortureVis {
     });
 
     this.tip = this.tippy[0];
-    this.setTip(); // Defaults
-
-    d3.select('#tortureVis #map #geo').on("click", (d => {
-      if (this.map.data[0].geojson.includes("adm2")) {
-        this.setGeo();
-        this.build(); // reset scope to country
-      }
-      this.setTip();
-    }).bind(this));
-
-    this.cfgGeoMeta();
-    this.build(props);
-
-    let survey = new SurveyUtil();
-    survey.filter();
   }
 
-  cfgGeoMeta() {
+  getContainer(selector) {
+    return document.querySelector("#tortureVis #main-container " + selector);
+  }
+
+  initGeoMeta() {
+    this.mapScope = "0"; // Pakistan
     this.map = {};
     this.info = {};
-    this.GID_1Keys = adm1Keys.map(d => d.GID_1);
 
     this.map.data = [{
       "type": "choropleth",
       "name": "PAK",
-      // "geojson": "../data/PAK_adm1.json",
+      "geojson": "../data/PAK_adm1.json",
       // locations: this.GID_1Keys,
       // "z": this.cloudStore.getMapData(this.GID_1Keys),
-      // featureidkey: "properties.GID_1",
+      featureidkey: "properties.GID_1",
       // text: "hi",
       // hovertext: "ho",
       // hovertemplate: "%{location} %{z} %{text}",
@@ -167,13 +178,13 @@ class tortureVis {
     };
   }
 
-  _updateProps(props) {
-    this.props = {...this.props, ...props };
-    return this.props;
-  }
+  // _updateProps(props) {
+  //   this.props = {...this.props, ...props };
+  //   return this.props;
+  // }
 
-  build(props) {
-    this._updateProps(props);
+  build() {
+    // this._updateProps(props);
 
     // // let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
     // let initFcns = [
@@ -190,10 +201,19 @@ class tortureVis {
 
     // this.addTextBuffers();
 
-    let el = document.querySelector(this.props.container + ' #map #vis #geo');
-    this.geo({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
-    el = document.querySelector(this.props.container + ' #meta #vis');
-    this.meta({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
+    // let el = document.querySelector(this.props.container + ' #map #vis #geo');
+    // this.geo({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
+    // el = document.querySelector(this.props.container + ' #meta #vis');
+    // this.meta({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
+    // this.buildMeta
+
+    // change category and locations before this.
+    this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+    this.buildMeta();
+
+    let name = this.cloudStore.regionIdToName(this.mapScope);
+    this.setMapTitle(name);
+    this.setTip(name, this.data.total);
 
     if (!this.hasMouse) {
       d3.select('#tortureVis #map #howto').text('Touch once for region details, twice for the province view. Swipe left for filters.')
@@ -203,7 +223,8 @@ class tortureVis {
 
   setMapTitle(location) {
     let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span>`;
-    d3.select(this.props.container + ` #map #title`).html(title);
+    let el = this.getContainer("#map title");
+    d3.select(el).html(title);
   }
 
   // initInMap(props) {}
@@ -226,87 +247,165 @@ class tortureVis {
   //   // this.initInMap(props, d3.select(el).attr("data-gid2"), name)
   // }
 
-  setGeo(loc) {
-    let root = this.map.data[0];
-    let geojsonPath = "../data/PAK_admX.json";
+  // ssetGeoProps(loc) {
+  //   let root = this.map.data[0];
+  //   // let geojsonPath = "../data/PAK_admX.json";
 
-    if ((root.geojson || "").includes("adm1")) {
-      root.geojson = geojsonPath.replace("X", 2);
-      root.featureidkey = "properties.GID_2";
-      root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
-      root.z = this.cloudStore.getMapData(root.locations);
-    } else {
-      root.geojson = geojsonPath.replace("X", 1);
-      root.featureidkey = "properties.GID_1";
-      root.locations = this.GID_1Keys;
-      root.z = this.cloudStore.getMapData(root.locations);
-      // let ext = d3.extent(root.z);
-      root.zmin = 0; //ext[0];
-      root.zmax = d3.max(root.z); //ext[1];
-      this.setTip();
-    }
+  //   if (loc == "l2") {
+  //     root.geojson = geojsonPath.replace("X", 2);
+  //     root.featureidkey = "properties.GID_2";
+  //     // root.locations = this.data.map.labels;
+  //     // root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
+  //     // root.z = this.cloudStore.getMapData(root.locations);
+  //   }
 
-    this.setMapTitle(this.cloudStore.getMapName(root.locations));
-  }
+  //   if (loc == "l1") {
+  //     root.geojson = geojsonPath.replace("X", 1);
+  //     root.featureidkey = "properties.GID_1";
+  //     // root.locations = this.GID_1Keys;
+  //     // root.z = this.cloudStore.getMapData(root.locations);
+  //     // let ext = d3.extent(root.z);
+  //     //ext[0];
+  //     // root.zmax = d3.max(root.z); //ext[1];
+
+  //   }
+
+  //   root.locations = this.data.map.labels;
+  //   root.z = this.data.map.values;
+  //   root.zmin = 0;
+  //   root.zmax = this.data.max;
+  // }
+
+  // resetMapClick() {
+  //   let name = this.cloudStore.regionIdToName("0");
+  //   this.setMapTitle(name);
+  //   this.setTip(name, this.data.total);
+  // }
 
   setTip(key, value, color) {
-    if (!key) { // Defaults
-      key = "Pakistan"
-      value = this.cloudStore.getMapData(['0']);
-    }
+    // if (!key) { // Defaults
+    //   key = "Pakistan"
+    //   value = this.cloudStore.getMapData(['0']);
+    // }
     this.tip.setContent(`<div style="width:${this.tipWidth-(this.tipWidth*.1)}px;">${key}<hr>${value} Cases</div>`);
     // this.tip.show();
   }
 
-  geo(props) {
-    let el = props.containerEl;
+  buildGeo() {
+    let el = this.getContainer("#geo");
+
+
+    let root = this.map.data[0];
+    // let geojsonPath = "../data/PAK_admX.json";
+
+    // if (loc == "l2") {
+    //   root.geojson = geojsonPath.replace("X", 2);
+    //   root.featureidkey = "properties.GID_2";
+    //   // root.locations = this.data.map.labels;
+    //   // root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
+    //   // root.z = this.cloudStore.getMapData(root.locations);
+    // }
+
+    // if (loc == "l1") {
+    //   root.geojson = geojsonPath.replace("X", 1);
+    //   root.featureidkey = "properties.GID_1";
+    //   // root.locations = this.GID_1Keys;
+    //   // root.z = this.cloudStore.getMapData(root.locations);
+    //   // let ext = d3.extent(root.z);
+    //   //ext[0];
+    //   // root.zmax = d3.max(root.z); //ext[1];
+
+    // }
+
+    root.locations = this.data.map.labels;
+    root.z = this.data.map.values;
+    root.zmin = 0;
+    root.zmax = this.data.max;
+
     let cfg = { displayModeBar: false, responsive: true };
-    let layout = {...this.map.layout, width: props.width, height: props.height };
+    let layout = {...this.map.layout }; //, width: props.width, height: props.height };
 
     if (this.map.ran) {
       Plotly.react(el, this.map.data, this.map.layout, cfg);
     } else {
-      this.setGeo();
       Plotly.newPlot(el, this.map.data, layout, cfg);
 
+      // update tip
       el.on("plotly_hover", (function(data) {
         let key = data.points[0].location;
-        let val = this.cloudStore.getMapData([key]);
+        let idx = this.map.data[0].locations.indexOf(key);
+        let val = this.map.data[0].z[idx];
+
         let name = this.cloudStore.regionIdToName(key);
         this.setTip(name, val);
       }).bind(this));
 
+      let geojsonPath = "../data/PAK_admX.json";
+      let currentRegion;
+
+      // change view level
       el.on("plotly_click", (function(data) { // get loc and data
-        if (this.hasMouse) { // plotly promotes hover to click on mobiles
-          this.setGeo(data.points[0].location);
-          this.geo(props); // rebuild
-        } else {
-          if (this.currentRegion == data.points[0].location) {
-            this.setGeo(data.points[0].location);
-            this.geo(props); // rebuild 
+
+        let setScope = (function() {
+          if (this.curLocations === this.GID_1Keys) {
+            let location = data.points[0].location.slice(0, 5) + '_1'; // Plotly BUG: lvl2 locations w lvl1 geojson EG: PAK.7.5_1 should be PAK.7_1
+            this.curLocations = this.cloudStore.regionLvl1ToLvl2(location);
+            root.geojson = geojsonPath.replace("X", 2);
+            root.featureidkey = "properties.GID_2";
+            this.mapScope = location;
+          } else {
+            this.curLocations = this.GID_1Keys;
+            root.geojson = geojsonPath.replace("X", 1);
+            root.featureidkey = "properties.GID_1";
+            this.mapScope = "0";
           }
-          this.currentRegion = data.points[0].location;
+
+          this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+          this.build();
+        }).bind(this);
+
+        if (this.hasMouse) { // plotly promotes hover to click on mobiles
+          setScope();
+        } else {
+          if (currentRegion == data.points[0].location) { // make not this
+            setScope();
+          }
+          currentRegion = data.points[0].location;
         }
       }).bind(this));
+
+      // reset scope
+      d3.select('#tortureVis #map #geo').on("click", (d => { // reset scope to country
+        // if (this.map.data[0].geojson.includes("adm2")) {
+        this.curLocations = this.GID_1Keys;
+        root.geojson = geojsonPath.replace("X", 1);
+        root.featureidkey = "properties.GID_1";
+
+        this.mapScope = "0";
+        this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+        this.build();
+        // }
+      }).bind(this));
+
     }
     this.map.ran = true;
   }
 
-  meta(props) {
-    let sel = props.containerEl; // document.querySelector(props.container);
+  buildMeta() {
+
+    let el = this.getContainer("#meta"); // props.containerEl; // document.querySelector(props.container);
     let root = this.info.data[0];
 
-    let catRv = this.cloudStore.byCategorical('Region', this.map.data[0].locations);
-    root.labels = catRv.pie.labels;
-    root.values = catRv.pie.values;
-    // root.layout.annotations[0].text = catRv.pie.total;
+    root.labels = this.data.pie.labels;
+    root.values = this.data.pie.values;
+    this.info.layout.annotations[0].text = this.data.total;
 
     var config = { displayModeBar: false, responsive: true }
 
     if (!this.metaVis) {
-      this.metaVis = Plotly.newPlot(sel, this.info.data, this.info.layout, config);
+      this.metaVis = Plotly.newPlot(el, this.info.data, this.info.layout, config);
 
-      sel.on('plotly_hover', function(data) {
+      el.on('plotly_hover', function(data) {
         console.log(data);
         d3.selectAll("#meta #vis svg .surface").attr('opacity', .4);
 
@@ -331,7 +430,7 @@ class tortureVis {
 
       }.bind(this))
 
-      sel.on('plotly_unhover', function(data) {
+      el.on('plotly_unhover', function(data) {
         console.log(data);
         d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
 
@@ -342,12 +441,12 @@ class tortureVis {
         d3.selectAll('.legendCells .swatch')
           .style('fill', function() { return d3.select(this).attr("data-fill") });
       }.bind(this))
-
-      document.querySelector(props.container + ' .modebar-container').remove();
-
     } else {
-      Plotly.react(sel, this.info.data, this.info.layout, config);
+      Plotly.react(el, this.info.data, this.info.layout, config);
     }
+
+    this.buildGeo();
+    // this.setGeoProps('l1');
   }
 
 
