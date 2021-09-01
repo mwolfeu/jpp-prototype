@@ -10,6 +10,8 @@ class tortureVis {
     this.GID_1Keys = adm1Index.map(d => d.GID_1);
 
     this.curCategory = "region";
+    this.curCategory = "Caste";
+
     this.curLocations = this.GID_1Keys;
 
     var d1 = document.querySelector(props.container);
@@ -42,7 +44,8 @@ class tortureVis {
     this.survey = new SurveyUtil();
     this.survey.filterUI()
       .then((function(d) { // init filter UI get cfg
-        let filterUICfg = {}; // d; // {surveyFILTERS} 
+        let filters = d.questions.filter(d => d.type == "tagbox" && d.name != "constituency");
+        let filterUICfg = d3.rollup(filters, d => d[0].choices, d => d.title); // map obj
         this.cloudStore = new cloudStore(filterUICfg);
         return this.cloudStore.getIncidentData();
       }).bind(this)).then((function(d) {
@@ -145,7 +148,7 @@ class tortureVis {
       domain: { column: 0 },
       name: 'NAME',
       hoverinfo: '', //'label+percent+name',
-      hole: .4,
+      hole: .2,
       type: 'pie',
       marker: {
         colors: ['#6388b4', '#ef6f6a', '#8cc2ca', '#55ad89', '#c3bc3f', '#bb7693', '#baa094', '#a9b5ae', '#767676', '#ffae34'],
@@ -154,23 +157,23 @@ class tortureVis {
 
     this.info.layout = {
       xtitle: 'CASES OF ABUSE',
-      annotations: [{
-        font: {
-          size: 30 // 40 if landscape
-        },
-        showarrow: false,
-        // text: tot,
-        x: 0.5,
-        y: 0.52
-      }, {
-        font: {
-          size: 12
-        },
-        showarrow: false,
-        text: 'cases',
-        x: 0.5,
-        y: 0.43
-      }],
+      // annotations: [{
+      //   font: {
+      //     size: 30 // 40 if landscape
+      //   },
+      //   showarrow: false,
+      //   // text: tot,
+      //   x: 0.5,
+      //   y: 0.52
+      // }, {
+      //   font: {
+      //     size: 12
+      //   },
+      //   showarrow: false,
+      //   text: 'cases',
+      //   x: 0.5,
+      //   y: 0.43
+      // }],
       // height: props.height,
       // width: props.width,
       showlegend: true,
@@ -217,105 +220,27 @@ class tortureVis {
 
     if (!this.hasMouse) {
       d3.select('#tortureVis #map #howto').text('Touch once for region details, twice for the province view. Swipe left for filters.')
-        // d3.select('#map #vis #meta #howto').html('')
     }
   }
 
   setMapTitle(location) {
-    let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span>`;
-    let el = this.getContainer("#map title");
+    let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span><span id="option"></span>`;
+    let el = this.getContainer("#map #title");
     d3.select(el).html(title);
   }
 
-  // initInMap(props) {}
-
-  // changeRegion(el, props) {
-  //   let data, name;
-
-  //   if (el) {
-  //     name = d3.select(el).attr("data-name1");
-  //     data = this.allData[1];
-  //     data.features = data.allFeatures.filter(d => d.properties.NAME_1 == name);
-  //   } else {
-  //     data = this.allData[0];
-  //     data.features = data.allFeatures;
-  //   }
-
-  //   let crNAME1 = name ? name : 'Pakistan';
-
-  //   this.build({...props, data, crNAME1 });
-  //   // this.initInMap(props, d3.select(el).attr("data-gid2"), name)
-  // }
-
-  // ssetGeoProps(loc) {
-  //   let root = this.map.data[0];
-  //   // let geojsonPath = "../data/PAK_admX.json";
-
-  //   if (loc == "l2") {
-  //     root.geojson = geojsonPath.replace("X", 2);
-  //     root.featureidkey = "properties.GID_2";
-  //     // root.locations = this.data.map.labels;
-  //     // root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
-  //     // root.z = this.cloudStore.getMapData(root.locations);
-  //   }
-
-  //   if (loc == "l1") {
-  //     root.geojson = geojsonPath.replace("X", 1);
-  //     root.featureidkey = "properties.GID_1";
-  //     // root.locations = this.GID_1Keys;
-  //     // root.z = this.cloudStore.getMapData(root.locations);
-  //     // let ext = d3.extent(root.z);
-  //     //ext[0];
-  //     // root.zmax = d3.max(root.z); //ext[1];
-
-  //   }
-
-  //   root.locations = this.data.map.labels;
-  //   root.z = this.data.map.values;
-  //   root.zmin = 0;
-  //   root.zmax = this.data.max;
-  // }
-
-  // resetMapClick() {
-  //   let name = this.cloudStore.regionIdToName("0");
-  //   this.setMapTitle(name);
-  //   this.setTip(name, this.data.total);
-  // }
+  setMapTitleOption(cat) {
+    let el = this.getContainer("#map #title #option");
+    d3.select(el).html(cat);
+  }
 
   setTip(key, value, color) {
-    // if (!key) { // Defaults
-    //   key = "Pakistan"
-    //   value = this.cloudStore.getMapData(['0']);
-    // }
     this.tip.setContent(`<div style="width:${this.tipWidth-(this.tipWidth*.1)}px;">${key}<hr>${value} Cases</div>`);
-    // this.tip.show();
   }
 
   buildGeo() {
     let el = this.getContainer("#geo");
-
-
     let root = this.map.data[0];
-    // let geojsonPath = "../data/PAK_admX.json";
-
-    // if (loc == "l2") {
-    //   root.geojson = geojsonPath.replace("X", 2);
-    //   root.featureidkey = "properties.GID_2";
-    //   // root.locations = this.data.map.labels;
-    //   // root.locations = adm2Keys.filter(d => d.GID_1 == loc).map(d => d.GID_2);
-    //   // root.z = this.cloudStore.getMapData(root.locations);
-    // }
-
-    // if (loc == "l1") {
-    //   root.geojson = geojsonPath.replace("X", 1);
-    //   root.featureidkey = "properties.GID_1";
-    //   // root.locations = this.GID_1Keys;
-    //   // root.z = this.cloudStore.getMapData(root.locations);
-    //   // let ext = d3.extent(root.z);
-    //   //ext[0];
-    //   // root.zmax = d3.max(root.z); //ext[1];
-
-    // }
 
     root.locations = this.data.map.labels;
     root.z = this.data.map.values;
@@ -367,7 +292,7 @@ class tortureVis {
         if (this.hasMouse) { // plotly promotes hover to click on mobiles
           setScope();
         } else {
-          if (currentRegion == data.points[0].location) { // make not this
+          if (currentRegion == data.points[0].location) {
             setScope();
           }
           currentRegion = data.points[0].location;
@@ -376,7 +301,6 @@ class tortureVis {
 
       // reset scope
       d3.select('#tortureVis #map #geo').on("click", (d => { // reset scope to country
-        // if (this.map.data[0].geojson.includes("adm2")) {
         this.curLocations = this.GID_1Keys;
         root.geojson = geojsonPath.replace("X", 1);
         root.featureidkey = "properties.GID_1";
@@ -384,7 +308,6 @@ class tortureVis {
         this.mapScope = "0";
         this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
         this.build();
-        // }
       }).bind(this));
 
     }
@@ -398,48 +321,80 @@ class tortureVis {
 
     root.labels = this.data.pie.labels;
     root.values = this.data.pie.values;
-    this.info.layout.annotations[0].text = this.data.total;
+    // this.info.layout.annotations[0].text = this.data.total;
 
     var config = { displayModeBar: false, responsive: true }
 
     if (!this.metaVis) {
       this.metaVis = Plotly.newPlot(el, this.info.data, this.info.layout, config);
+      let prevData, prevMax, prevColor; // for hovers
 
-      el.on('plotly_hover', function(data) {
-        console.log(data);
-        d3.selectAll("#meta #vis svg .surface").attr('opacity', .4);
+      el.on('plotly_hover', (function(data) {
+        if (this.curCategory != "region") {
+          console.log("viewing category")
+        }
 
-        let curFill = d3.select(data.event.currentTarget).select('path')
-          .attr('opacity', 1)
-          .style('fill');
+        let color = data.points[0].color;
+        let option = data.points[0].label;
+        let optData = this.cloudStore.byOption(this.curCategory, option, this.curLocations)
 
-        this.geo.selectAll('path')
-          .attr('data-fill', function() { return d3.select(this).attr("fill") })
-          .attr('fill', curFill)
-          .attr('fill-opacity', d => Math.random())
+        prevData = this.data.map.values;
+        prevMax = this.data.max;
+        prevColor = this.map.data[0].colorscale;
+        this.data.map.values = optData.values;
+        this.data.max = optData.max; // max for all options
+        this.map.data[0].colorscale = [
+          [0, color],
+          [1, 'rgb(255,255,255)'],
+        ];
+        this.buildGeo();
+        this.setMapTitleOption("/" + option);
 
-        let swatches = d3.selectAll('.legendCells .swatch')
-        let swatchNum = swatches.nodes().length;
-        let color = d3.interpolateRgb('rgb(255,255,255)', curFill);
+        console.log("Category: ", this.curCategory, color, option);
+        // d3.selectAll("#meta #vis svg .surface").attr('opacity', .4);
 
-        swatches
-          .attr('data-fill', function() {
-            return d3.select(this).style('fill')
-          })
-          .style('fill', (d, i) => color(i / swatchNum));
+        // let curFill = d3.select(data.event.currentTarget).select('path')
+        //   .attr('opacity', 1)
+        //   .style('fill');
 
-      }.bind(this))
+        // this.geo.selectAll('path')
+        //   .attr('data-fill', function() { return d3.select(this).attr("fill") })
+        //   .attr('fill', curFill)
+        //   .attr('fill-opacity', d => Math.random())
+
+        // let swatches = d3.selectAll('.legendCells .swatch')
+        // let swatchNum = swatches.nodes().length;
+        // let color = d3.interpolateRgb('rgb(255,255,255)', curFill);
+
+        // swatches
+        //   .attr('data-fill', function() {
+        //     return d3.select(this).style('fill')
+        //   })
+        //   .style('fill', (d, i) => color(i / swatchNum));
+
+      }).bind(this))
 
       el.on('plotly_unhover', function(data) {
-        console.log(data);
-        d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
+        if (this.curCategory != "region") {
+          console.log("resetting to region")
+        }
 
-        this.geo.selectAll('path')
-          .attr('fill', function() { return d3.select(this).attr("data-fill") })
-          .attr('fill-opacity', 1)
+        this.data.map.values = prevData;
+        this.data.max = prevMax;
+        this.map.data[0].colorscale = prevColor;
+        this.buildGeo();
 
-        d3.selectAll('.legendCells .swatch')
-          .style('fill', function() { return d3.select(this).attr("data-fill") });
+        this.setMapTitleOption("");
+
+        // console.log(data);
+        // d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
+
+        // this.geo.selectAll('path')
+        //   .attr('fill', function() { return d3.select(this).attr("data-fill") })
+        //   .attr('fill-opacity', 1)
+
+        // d3.selectAll('.legendCells .swatch')
+        //   .style('fill', function() { return d3.select(this).attr("data-fill") });
       }.bind(this))
     } else {
       Plotly.react(el, this.info.data, this.info.layout, config);

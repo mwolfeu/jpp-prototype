@@ -236,6 +236,7 @@ let frames = `
 
 class cloudStore {
   constructor(filterOpts) {
+    filterOpts.set('region', ['all'])
     this.filterOpts = filterOpts;
 
     // this.incidentData = { '0': 0 };
@@ -279,18 +280,19 @@ class cloudStore {
   }
 
   genStats() { // on this.filtered
-    let categories = { region: ["all"], ...this.filterOpts };
-    this.stats = {};
+    // let categories = { region: ["all"], ...this.filterOpts };
 
+
+    this.stats = {};
     // category stats
-    Object.keys(categories).forEach(d => { // per category
-      this.stats[d] = {};
-      categories[d].forEach(e => { // per opt
-        this.stats[d][e] = {};
-        Object.keys(this.admNames).forEach(f => { // for all map regions
-          this.stats[d][e][f] = parseInt(Math.random() * 30); // call stat fcn
+    this.filterOpts.forEach((vals, key) => {
+      this.stats[key] = {};
+      vals.forEach(v => {
+        this.stats[key][v] = {};
+        Object.keys(this.admNames).forEach(r => { // for all map regions
+          this.stats[key][v][r] = parseInt(Math.random() * 30); // call stat fcn
         });
-      });
+      })
     });
   }
 
@@ -322,7 +324,7 @@ class cloudStore {
       map: { labels: regions, values: regVals }
     };
 
-    if (category = "region") { // special case
+    if (category == "region") { // special case
       rv.pie.labels = this.regionIdToName(rv.map.labels);
       rv.pie.values = rv.map.values;
     }
@@ -331,6 +333,18 @@ class cloudStore {
     rv.max = d3.max(rv.map.values);
 
     return rv;
+  }
+
+  byOption(category, option, regions) {
+    let values;
+    let all = Object.keys(this.stats[category]).flatMap(o => {
+        let rv = regions.map(r => this.stats[category][o][r]);
+        if (o == option) values = rv;
+        return rv;
+      })
+      // let values = regions.map(r => this.stats[category][option][r]);
+    let max = d3.max(all);
+    return { values, max };
   }
 }
 

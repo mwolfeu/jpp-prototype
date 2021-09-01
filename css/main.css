@@ -90,7 +90,8 @@ p {
 }
 
 .chapeau-accent,
-#map #title #location {
+#map #title #location,
+#map #title #option {
     font-weight: 700;
     color: var(--jpp-red);
 }
