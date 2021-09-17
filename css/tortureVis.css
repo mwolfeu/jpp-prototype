@@ -212,11 +212,12 @@ border-left: 1px solid black; */
     ooverflow-y: scroll;
 } */
 
-.pielayer path.surface:hover {
+
+/* .pielayer path.surface:hover {
     opacity: .9;
     transform: scale(.995);
     transition-duration: .2s;
-}
+} */
 
 .hovertext {
     display: none;

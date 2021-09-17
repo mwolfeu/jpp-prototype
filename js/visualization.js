@@ -211,12 +211,12 @@ class tortureVis {
     // this.buildMeta
 
     // change category and locations before this.
-    this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+    this.data = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
     this.buildMeta();
 
-    let name = this.cloudStore.regionIdToName(this.mapScope);
-    this.setMapTitle(name);
-    this.setTip(name, this.data.total);
+    // let name = this.cloudStore.regionIdToName(this.mapScope);
+    // this.setMapTitle(name);
+    // this.setTip(name, this.data.total);
 
     if (!this.hasMouse) {
       d3.select('#tortureVis #map #howto').text('Touch once for region details, twice for the province view. Swipe left for filters.')
@@ -224,7 +224,7 @@ class tortureVis {
   }
 
   setMapTitle(location) {
-    let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span><span id="option"></span>`;
+    let title = `Incident&nbsp;View:&nbsp;<span id="location">${location}</span><span id="option">${this.curOption?"/"+this.curOption:""}</span>`;
     let el = this.getContainer("#map #title");
     d3.select(el).html(title);
   }
@@ -241,6 +241,11 @@ class tortureVis {
   buildGeo() {
     let el = this.getContainer("#geo");
     let root = this.map.data[0];
+
+    let name = this.cloudStore.regionIdToName(this.mapScope);
+    this.setMapTitle(name);
+    this.setTip(name, this.data.total);
+    this.setTip(name, d3.sum(this.data.map.values));
 
     root.locations = this.data.map.labels;
     root.z = this.data.map.values;
@@ -285,7 +290,7 @@ class tortureVis {
             this.mapScope = "0";
           }
 
-          this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+          this.data = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
           this.build();
         }).bind(this);
 
@@ -306,7 +311,7 @@ class tortureVis {
         root.featureidkey = "properties.GID_1";
 
         this.mapScope = "0";
-        this.data = this.cloudStore.byCategorical(this.curCategory, this.curLocations);
+        this.data = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
         this.build();
       }).bind(this));
 
@@ -318,6 +323,7 @@ class tortureVis {
 
     let el = this.getContainer("#meta"); // props.containerEl; // document.querySelector(props.container);
     let root = this.info.data[0];
+    // let this.lastPieSliceClicked = null;
 
     root.labels = this.data.pie.labels;
     root.values = this.data.pie.values;
@@ -328,76 +334,120 @@ class tortureVis {
     if (!this.metaVis) {
       this.metaVis = Plotly.newPlot(el, this.info.data, this.info.layout, config);
       let prevData, prevMax, prevColor; // for hovers
+      prevData = this.data.map.values;
+      prevMax = this.data.max;
+      prevColor = this.map.data[0].colorscale;
+      // el.on('plotly_hover', (function(data) {
+      //   if (this.curCategory != "region") {
+      //     console.log("viewing category")
+      //   }
 
-      el.on('plotly_hover', (function(data) {
-        if (this.curCategory != "region") {
-          console.log("viewing category")
+      //   let color = data.points[0].color;
+      //   let option = data.points[0].label;
+      //   // let optData = this.cloudStore.byOption(this.curCategory, option, this.curLocations)
+      //   let rv = this.cloudStore.byCatOptReg(null, this.curCategory, [option], this.curLocations);
+      //   let optData = { values: rv.map.values, max: rv.max };
+
+      //   prevData = this.data.map.values;
+      //   prevMax = this.data.max;
+      //   prevColor = this.map.data[0].colorscale;
+      //   this.data.map.values = optData.values;
+      //   this.data.max = optData.max; // max for all options
+      //   this.map.data[0].colorscale = [
+      //     [0, color],
+      //     [1, 'rgb(255,255,255)'],
+      //   ];
+      //   this.buildGeo();
+      //   this.setMapTitleOption("/" + option);
+
+      //   console.log("Category: ", this.curCategory, color, option);
+
+      // }).bind(this))
+
+      // el.on('plotly_unhover', function(data) {
+      //   if (this.curCategory != "region") {
+      //     console.log("resetting to region")
+      //   }
+
+      //   this.data.map.values = prevData;
+      //   this.data.max = prevMax;
+      //   this.map.data[0].colorscale = prevColor;
+      //   this.buildGeo();
+
+      //   this.setMapTitleOption("");
+
+      //   // console.log(data);
+      //   // d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
+
+      //   // this.geo.selectAll('path')
+      //   //   .attr('fill', function() { return d3.select(this).attr("data-fill") })
+      //   //   .attr('fill-opacity', 1)
+
+      //   // d3.selectAll('.legendCells .swatch')
+      //   //   .style('fill', function() { return d3.select(this).attr("data-fill") });
+      // }.bind(this))
+
+      el.on('plotly_click', (function(data) {
+        let tipVal = -1;
+        if (this.lastPieSliceClicked != data.event.currentTarget) {
+          if (this.curCategory != "region") {
+            console.log("viewing category")
+          }
+
+          d3.selectAll('g .slice').style('opacity', 1);
+          let siblings = d3.selectAll('g .slice').nodes().filter(d => d != data.event.currentTarget);
+          d3.selectAll(siblings).transition().duration(200).style('opacity', .3)
+            //.select(data.event.currentTarget).style('opacity', 1);
+
+          let color = data.points[0].color;
+          this.curOption = data.points[0].label;
+          let rv = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
+          let optData = { values: rv.map.values, max: rv.max };
+
+          // prevData = this.data.map.values;
+          // prevMax = this.data.max;
+          // prevColor = this.map.data[0].colorscale;
+          this.data.map.values = optData.values;
+          this.data.max = optData.max; // max for all options
+          this.map.data[0].colorscale = [
+            [0, color],
+            [1, 'rgb(255,255,255)'],
+          ];
+          this.buildGeo();
+          // this.setMapTitleOption("/" + this.curOption);
+
+          console.log("Category: ", this.curCategory, color, this.curOption);
+          this.lastPieSliceClicked = data.event.currentTarget;
+        } else {
+          if (this.curCategory != "region") {
+            console.log("resetting to region")
+          }
+          this.curOption = null;
+
+          d3.selectAll('g .slice').style('opacity', 1);
+
+          this.data.map.values = prevData;
+          this.data.max = prevMax;
+          this.map.data[0].colorscale = prevColor;
+          this.buildGeo();
+
+          // this.setMapTitleOption("");
+          this.lastPieSliceClicked = null;
         }
 
-        let color = data.points[0].color;
-        let option = data.points[0].label;
-        let optData = this.cloudStore.byOption(this.curCategory, option, this.curLocations)
-
-        prevData = this.data.map.values;
-        prevMax = this.data.max;
-        prevColor = this.map.data[0].colorscale;
-        this.data.map.values = optData.values;
-        this.data.max = optData.max; // max for all options
-        this.map.data[0].colorscale = [
-          [0, color],
-          [1, 'rgb(255,255,255)'],
-        ];
-        this.buildGeo();
-        this.setMapTitleOption("/" + option);
-
-        console.log("Category: ", this.curCategory, color, option);
-        // d3.selectAll("#meta #vis svg .surface").attr('opacity', .4);
-
-        // let curFill = d3.select(data.event.currentTarget).select('path')
-        //   .attr('opacity', 1)
-        //   .style('fill');
-
-        // this.geo.selectAll('path')
-        //   .attr('data-fill', function() { return d3.select(this).attr("fill") })
-        //   .attr('fill', curFill)
-        //   .attr('fill-opacity', d => Math.random())
-
-        // let swatches = d3.selectAll('.legendCells .swatch')
-        // let swatchNum = swatches.nodes().length;
-        // let color = d3.interpolateRgb('rgb(255,255,255)', curFill);
-
-        // swatches
-        //   .attr('data-fill', function() {
-        //     return d3.select(this).style('fill')
-        //   })
-        //   .style('fill', (d, i) => color(i / swatchNum));
-
-      }).bind(this))
-
-      el.on('plotly_unhover', function(data) {
-        if (this.curCategory != "region") {
-          console.log("resetting to region")
-        }
-
-        this.data.map.values = prevData;
-        this.data.max = prevMax;
-        this.map.data[0].colorscale = prevColor;
-        this.buildGeo();
-
-        this.setMapTitleOption("");
-
-        // console.log(data);
-        // d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
-
-        // this.geo.selectAll('path')
-        //   .attr('fill', function() { return d3.select(this).attr("data-fill") })
-        //   .attr('fill-opacity', 1)
-
-        // d3.selectAll('.legendCells .swatch')
-        //   .style('fill', function() { return d3.select(this).attr("data-fill") });
-      }.bind(this))
+        // let name = this.cloudStore.regionIdToName(this.mapScope);
+        // this.setMapTitle(name);
+        // this.setTip(name, this.data.total);
+      }.bind(this)));
     } else {
       Plotly.react(el, this.info.data, this.info.layout, config);
+    }
+
+    // reselect after .react()
+    let selection = d3.selectAll('g .slice').nodes().filter(d => d.__data__.label == this.curOption);
+    if (selection.length) {
+      this.lastPieSliceClicked = null;
+      d3.selectAll(selection).node().dispatchEvent(new Event("click"));
     }
 
     this.buildGeo();

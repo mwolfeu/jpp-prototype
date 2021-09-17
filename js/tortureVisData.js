@@ -308,7 +308,9 @@ class cloudStore {
     return promise;
   }
 
-  byCategorical(category, regions) { // return cases category
+  // return results for a set of region by a filter spec
+  byCatOptReg(filterSpec, category, option, regions) {
+    // THIS.STATS is returned after filterSpec is applied
 
     let options = Object.keys(this.stats[category]);
     let optVals = options.map(o => { // by option
@@ -316,7 +318,9 @@ class cloudStore {
     });
 
     let regVals = regions.map(r => { // by region
-      return d3.sum(options, o => this.stats[category][o][r]);
+      let opts = options;
+      if (option) opts = [option];
+      return d3.sum(opts, o => this.stats[category][o][r]);
     });
 
     let rv = {
@@ -329,23 +333,50 @@ class cloudStore {
       rv.pie.values = rv.map.values;
     }
     // stats
-    rv.total = d3.sum(rv.map.values);
+    // rv.total = d3.sum(rv.map.values);
     rv.max = d3.max(rv.map.values);
 
     return rv;
   }
 
-  byOption(category, option, regions) {
-    let values;
-    let all = Object.keys(this.stats[category]).flatMap(o => {
-        let rv = regions.map(r => this.stats[category][o][r]);
-        if (o == option) values = rv;
-        return rv;
-      })
-      // let values = regions.map(r => this.stats[category][option][r]);
-    let max = d3.max(all);
-    return { values, max };
-  }
+  // byCategorical(category, regions) { // return cases category
+
+  //   let options = Object.keys(this.stats[category]);
+  //   let optVals = options.map(o => { // by option
+  //     return d3.sum(regions, r => this.stats[category][o][r]);
+  //   });
+
+  //   let regVals = regions.map(r => { // by region
+  //     return d3.sum(options, o => this.stats[category][o][r]);
+  //   });
+
+  //   let rv = {
+  //     pie: { labels: options, values: optVals },
+  //     map: { labels: regions, values: regVals }
+  //   };
+
+  //   if (category == "region") { // special case
+  //     rv.pie.labels = this.regionIdToName(rv.map.labels);
+  //     rv.pie.values = rv.map.values;
+  //   }
+  //   // stats
+  //   rv.total = d3.sum(rv.map.values);
+  //   rv.max = d3.max(rv.map.values);
+
+  //   return rv;
+  // }
+
+  // byOption(category, option, regions) {
+  //   let values;
+  //   let all = Object.keys(this.stats[category]).flatMap(o => {
+  //       let rv = regions.map(r => this.stats[category][o][r]);
+  //       if (o == option) values = rv;
+  //       return rv;
+  //     })
+  //     // let values = regions.map(r => this.stats[category][option][r]);
+  //   let max = d3.max(all);
+  //   return { values, max };
+  // }
 }
 
 // let states = [
