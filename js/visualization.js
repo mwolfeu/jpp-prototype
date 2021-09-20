@@ -9,8 +9,7 @@ class tortureVis {
 
     this.GID_1Keys = adm1Index.map(d => d.GID_1);
 
-    this.curCategory = "region";
-    this.curCategory = "Caste";
+    this.curCategory = "Region";
 
     this.curLocations = this.GID_1Keys;
 
@@ -30,7 +29,7 @@ class tortureVis {
     // props.data = props.data[0];
     // props.crNAME1 = 'Pakistan';
 
-    d3.select('#tortureVis #map #geo #filter-show').on("click", d => {
+    d3.select('#tortureVis #meta #filter-show').on("click", d => {
       window.fullpage_api.moveSlideRight();
     });
 
@@ -46,15 +45,31 @@ class tortureVis {
       .then((function(d) { // init filter UI get cfg
         let filters = d.questions.filter(d => d.type == "tagbox" && d.name != "constituency");
         let filterUICfg = d3.rollup(filters, d => d[0].choices, d => d.title); // map obj
+        this.metaSelectInit(filterUICfg);
         this.cloudStore = new cloudStore(filterUICfg);
         return this.cloudStore.getIncidentData();
       }).bind(this)).then((function(d) {
-        // this.data = this.cloudStore.byCategorical(this.curCategory, this.GID_1Keys);
-        // this.buildMeta();
-        // this.setTip(); // Defaults
         this.build();
       }).bind(this));
 
+  }
+
+  metaSelectInit(map) {
+    let el = d3.select('#vis #metaSelect');
+    let origMapColor = this.map.data[0].colorscale;
+
+    map.forEach((v, k) =>
+      el.append('option').text(k)
+    )
+    el.on('change',
+      (d => {
+        this.curCategory = d.srcElement.value;
+        this.curOption = undefined;
+        this.map.data[0].colorscale = origMapColor;
+        d3.selectAll('g .slice').style('opacity', 1);
+        d3.selectAll('.legendtext').style('font-weight', "unset");
+        this.build();
+      }).bind(this));
   }
 
   cfgTip() {
@@ -187,36 +202,9 @@ class tortureVis {
   // }
 
   build() {
-    // this._updateProps(props);
-
-    // // let isResize = "width" in props && "height" in props && Object.keys(props).length == 2;
-    // let initFcns = [
-    //   // { fcn: 'initMapTitle', sel: '#map #title' },
-    //   { fcn: 'geo', sel: '#map #vis #geo' },
-    //   // { fcn: 'initInMap', sel: '#map #vis #filter-legend' },
-    //   // { fcn: 'initRHS', sel: '#meta #vis' }
-    // ];
-
-    // initFcns.forEach(d => {
-    //   let el = document.querySelector(this.props.container + ` ${d.sel}`);
-    //   this[d.fcn]({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight })
-    // });
-
-    // this.addTextBuffers();
-
-    // let el = document.querySelector(this.props.container + ' #map #vis #geo');
-    // this.geo({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
-    // el = document.querySelector(this.props.container + ' #meta #vis');
-    // this.meta({...this.props, containerEl: el, width: el.clientWidth, height: el.clientHeight });
-    // this.buildMeta
-
     // change category and locations before this.
     this.data = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
     this.buildMeta();
-
-    // let name = this.cloudStore.regionIdToName(this.mapScope);
-    // this.setMapTitle(name);
-    // this.setTip(name, this.data.total);
 
     if (!this.hasMouse) {
       d3.select('#tortureVis #map #howto').text('Touch once for region details, twice for the province view. Swipe left for filters.')
@@ -333,80 +321,28 @@ class tortureVis {
 
     if (!this.metaVis) {
       this.metaVis = Plotly.newPlot(el, this.info.data, this.info.layout, config);
-      let prevData, prevMax, prevColor; // for hovers
-      prevData = this.data.map.values;
-      prevMax = this.data.max;
-      prevColor = this.map.data[0].colorscale;
-      // el.on('plotly_hover', (function(data) {
-      //   if (this.curCategory != "region") {
-      //     console.log("viewing category")
-      //   }
-
-      //   let color = data.points[0].color;
-      //   let option = data.points[0].label;
-      //   // let optData = this.cloudStore.byOption(this.curCategory, option, this.curLocations)
-      //   let rv = this.cloudStore.byCatOptReg(null, this.curCategory, [option], this.curLocations);
-      //   let optData = { values: rv.map.values, max: rv.max };
-
-      //   prevData = this.data.map.values;
-      //   prevMax = this.data.max;
-      //   prevColor = this.map.data[0].colorscale;
-      //   this.data.map.values = optData.values;
-      //   this.data.max = optData.max; // max for all options
-      //   this.map.data[0].colorscale = [
-      //     [0, color],
-      //     [1, 'rgb(255,255,255)'],
-      //   ];
-      //   this.buildGeo();
-      //   this.setMapTitleOption("/" + option);
-
-      //   console.log("Category: ", this.curCategory, color, option);
-
-      // }).bind(this))
-
-      // el.on('plotly_unhover', function(data) {
-      //   if (this.curCategory != "region") {
-      //     console.log("resetting to region")
-      //   }
-
-      //   this.data.map.values = prevData;
-      //   this.data.max = prevMax;
-      //   this.map.data[0].colorscale = prevColor;
-      //   this.buildGeo();
-
-      //   this.setMapTitleOption("");
-
-      //   // console.log(data);
-      //   // d3.selectAll("#meta #vis svg .surface").attr('opacity', 1);
-
-      //   // this.geo.selectAll('path')
-      //   //   .attr('fill', function() { return d3.select(this).attr("data-fill") })
-      //   //   .attr('fill-opacity', 1)
-
-      //   // d3.selectAll('.legendCells .swatch')
-      //   //   .style('fill', function() { return d3.select(this).attr("data-fill") });
-      // }.bind(this))
+      let origColor = this.map.data[0].colorscale;
 
       el.on('plotly_click', (function(data) {
         let tipVal = -1;
-        if (this.lastPieSliceClicked != data.event.currentTarget) {
-          if (this.curCategory != "region") {
-            console.log("viewing category")
-          }
+        if (this.curCategory == "Region") return;
 
-          d3.selectAll('g .slice').style('opacity', 1);
-          let siblings = d3.selectAll('g .slice').nodes().filter(d => d != data.event.currentTarget);
-          d3.selectAll(siblings).transition().duration(200).style('opacity', .3)
-            //.select(data.event.currentTarget).style('opacity', 1);
+        if (this.lastPieSliceClicked != data.event.currentTarget) {
+          // if (this.curCategory != "Region") {
+          //   console.log("viewing category")
+          // }
 
           let color = data.points[0].color;
           this.curOption = data.points[0].label;
           let rv = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
           let optData = { values: rv.map.values, max: rv.max };
 
-          // prevData = this.data.map.values;
-          // prevMax = this.data.max;
-          // prevColor = this.map.data[0].colorscale;
+          d3.selectAll('g .slice').style('opacity', 1);
+          d3.selectAll('.legendtext').style('font-weight', "unset");
+          let siblings = d3.selectAll('g .slice').nodes().filter(d => d != data.event.currentTarget);
+          d3.selectAll(siblings).transition().duration(200).style('opacity', .3)
+          d3.select(`.legendtext[data-unformatted="${this.curOption}"]`).style('font-weight', 700);
+
           this.data.map.values = optData.values;
           this.data.max = optData.max; // max for all options
           this.map.data[0].colorscale = [
@@ -414,30 +350,28 @@ class tortureVis {
             [1, 'rgb(255,255,255)'],
           ];
           this.buildGeo();
-          // this.setMapTitleOption("/" + this.curOption);
-
           console.log("Category: ", this.curCategory, color, this.curOption);
           this.lastPieSliceClicked = data.event.currentTarget;
         } else {
-          if (this.curCategory != "region") {
-            console.log("resetting to region")
-          }
+          // if (this.curCategory != "Region") {
+          //   console.log("resetting to region")
+          // }
           this.curOption = null;
 
           d3.selectAll('g .slice').style('opacity', 1);
+          d3.selectAll('.legendtext').style('font-weight', "unset");
 
-          this.data.map.values = prevData;
-          this.data.max = prevMax;
-          this.map.data[0].colorscale = prevColor;
+          this.map.data[0].colorscale = origColor;
+          let rv = this.cloudStore.byCatOptReg(null, this.curCategory, this.curOption, this.curLocations);
+          let optData = { values: rv.map.values, max: rv.max };
+          this.data.map.values = optData.values;
+          this.data.max = optData.max; // max for all options
+
           this.buildGeo();
 
-          // this.setMapTitleOption("");
           this.lastPieSliceClicked = null;
         }
 
-        // let name = this.cloudStore.regionIdToName(this.mapScope);
-        // this.setMapTitle(name);
-        // this.setTip(name, this.data.total);
       }.bind(this)));
     } else {
       Plotly.react(el, this.info.data, this.info.layout, config);
@@ -451,7 +385,6 @@ class tortureVis {
     }
 
     this.buildGeo();
-    // this.setGeoProps('l1');
   }
 
 

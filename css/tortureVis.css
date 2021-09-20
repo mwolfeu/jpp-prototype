@@ -83,7 +83,7 @@
     padding-top: 0px;
 }
 
-#tortureVis #map #filter-show,
+#tortureVis #filter-show,
 #tortureVis #filter-hide {
     cursor: pointer;
 }
@@ -227,10 +227,17 @@ border-left: 1px solid black; */
     background: none !important;
 }
 
-#meta span.meta-select {
-    width: 44%;
-    display: inline-block;
-    transform: translateY(-40px);
+#meta #filter {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-top: 0.2em;
+    margin-left: 0.2em;
+    font-size: .5em;
+}
+
+#meta .metaSelect {
+    font-size: .5em;
 }
 
 #section6 .narration-question {

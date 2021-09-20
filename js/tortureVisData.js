@@ -203,7 +203,6 @@ let frames = `
             <div id="title"></div>
             <div id="vis">
                 <div id="geo">
-                  <span id="filter-show" class="material-icons-outlined">filter_alt</span>
                   <div id="filter-legend"></div>
                 </div>
             </div>
@@ -215,12 +214,10 @@ let frames = `
             <div id="title"></div>
             <div id="vis">
               <span id="filter">
-                <span class="meta-select">
-                  <multiselect v-model="mftValue" v-on:input="eventMFT" :close-on-select="true" :options="metaFilterTypes" :preselect-first="true" :multiple="false" :close-on-select="false" :show-labels="false"></multiselect>
-                </span>
-                <span class="meta-select">
-                  <multiselect v-model="mfcValue" v-on:input="eventMFC" :close-on-select="true" :options="metaFilterCategories" :preselect-first="true" :multiple="false" :searchable="true" :close-on-select="false" :show-labels="false"></multiselect>
-                </span>
+                <select id='metaSelect'>
+                  <option>Region</option>
+                </select>
+                <span id="filter-show" title="Advanced Filters" class="material-icons-outlined">filter_alt</span>
               </span>
             </div>
             <div id="howto">
@@ -311,29 +308,37 @@ class cloudStore {
   // return results for a set of region by a filter spec
   byCatOptReg(filterSpec, category, option, regions) {
     // THIS.STATS is returned after filterSpec is applied
+    let options, optVals, regVals;
 
-    let options = Object.keys(this.stats[category]);
-    let optVals = options.map(o => { // by option
-      return d3.sum(regions, r => this.stats[category][o][r]);
-    });
+    if (category == "Region") {
+      options = this.regionIdToName(regions);
+      let catKeys = Object.keys(this.stats);
+      optVals = regions.map(r => {
+        return d3.sum(catKeys.map(c => {
+          let optKeys = Object.keys(this.stats[c]);
+          return d3.sum(optKeys.map(o => this.stats[c][o][r]))
+        }))
+      });
+      regVals = optVals;
+    } else {
+      options = Object.keys(this.stats[category]);
+      optVals = options.map(o => { // by option
+        return d3.sum(regions, r => this.stats[category][o][r]);
+      });
 
-    let regVals = regions.map(r => { // by region
-      let opts = options;
-      if (option) opts = [option];
-      return d3.sum(opts, o => this.stats[category][o][r]);
-    });
+      regVals = regions.map(r => { // by region
+        let opts = options;
+        if (option) opts = [option];
+        return d3.sum(opts, o => this.stats[category][o][r]);
+      });
+    }
 
     let rv = {
       pie: { labels: options, values: optVals },
       map: { labels: regions, values: regVals }
     };
 
-    if (category == "region") { // special case
-      rv.pie.labels = this.regionIdToName(rv.map.labels);
-      rv.pie.values = rv.map.values;
-    }
     // stats
-    // rv.total = d3.sum(rv.map.values);
     rv.max = d3.max(rv.map.values);
 
     return rv;
