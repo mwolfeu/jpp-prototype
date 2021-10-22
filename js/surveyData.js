@@ -2,7 +2,7 @@ class SurveyData {
   constructor() {
     // AWS Init
     this.lang = "en";
-    this.dataPath = "../data/Web Project Data Dictionary - ";
+    this.dataPath = "data/Web Project Data Dictionary - ";
     this.data = [ // AWS Promises?
       { filed_timestamp: 1626506562000, "first_name": "test0", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-06-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
       { filed_timestamp: 1627507562000, "first_name": "test1", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-07-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
