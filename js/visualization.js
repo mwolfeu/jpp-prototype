@@ -58,7 +58,7 @@ class tortureVis {
   }
 
   cb(d) {
-    alert(d.message);
+    //alert(d.message);
   }
 
   metaSelectInit(map) {
