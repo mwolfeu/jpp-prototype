@@ -119,7 +119,7 @@ class tortureVis {
     this.map.data = [{
       "type": "choropleth",
       "name": "PAK",
-      "geojson": "../data/PAK_adm1.json",
+      "geojson": "/jpp-prototype/data/PAK_adm1.json",
       // locations: this.GID_1Keys,
       // "z": this.cloudStore.getMapData(this.GID_1Keys),
       featureidkey: "properties.GID_1",
@@ -265,7 +265,7 @@ class tortureVis {
         this.setTip(name, val);
       }).bind(this));
 
-      let geojsonPath = "../data/PAK_admX.json";
+      let geojsonPath = "/jpp-prototype/data/PAK_admX.json";
       let currentRegion;
 
       // change view level
