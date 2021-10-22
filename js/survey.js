@@ -131,7 +131,7 @@ class SurveyUtil {
       let val = this.valPrep[d.input](d);
       if (val[0].startsWith('*')) {
         item.choicesByUrl = {
-          "url": `../data/Web Project Data Dictionary - ${val[0].slice(1)}.json`
+          "url": `/jpp-prototype/data/Web Project Data Dictionary - ${val[0].slice(1)}.json`
         }
       } else {
         item.choices = val;
