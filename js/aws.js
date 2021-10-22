@@ -56,6 +56,7 @@ class awsBackend {
     // let id = params["#id_token"];
 
     // req.setRequestHeader("Authorization", id);
+    req.setRequestHeader("Access-Control-Allow-Origin", "*");
     return req;
   }
 
