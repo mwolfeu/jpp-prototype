@@ -1,9 +1,12 @@
 // import { abuseData, extent, getRate, stateMean } from './tortureVisData.js';
 import { cloudStore, frames, adm1Index, adm2Index } from './tortureVisData.js';
 import SurveyUtil from "../js/survey.js"
+import awsBackend from "../js/aws.js"
 
 class tortureVis {
   constructor(props) {
+    this.aws = new awsBackend({ byRegion: { POST: this.cb } });
+    this.aws.call('byRegion');
 
     this.hasMouse = matchMedia('(pointer:fine)').matches;
 
@@ -52,6 +55,10 @@ class tortureVis {
         this.build();
       }).bind(this));
 
+  }
+
+  cb(d) {
+    alert(d.message);
   }
 
   metaSelectInit(map) {

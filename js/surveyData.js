@@ -87,18 +87,18 @@ class SurveyData {
     cb(p);
   }
 
-  loadSurveys(cb) {
-    // get from db
-    this.incidents = [
-      { filed_timestamp: 1626506562000, "first_name": "test0", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-06-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
-      { filed_timestamp: 1627507562000, "first_name": "test1", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-07-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
-      { filed_timestamp: 1628508562000, "first_name": "test2", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-08-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] }
-    ];
+  // loadSurveys(cb) {
+  //   // get from db
+  //   this.incidents = [
+  //     { filed_timestamp: 1626506562000, "first_name": "test0", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-06-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
+  //     { filed_timestamp: 1627507562000, "first_name": "test1", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-07-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] },
+  //     { filed_timestamp: 1628508562000, "first_name": "test2", "last_ame": "person", "gender": " Male", "occupation": "worker", "caste": " Jutt", "religion": "Muslim", "ethnicity": " Pashtun", "hosp_med": "True", "reason": ["Confession"], "rep_name": "personname", "complaint_filed": " False", "complaint_date": "2021-08-12", "mlc_conducted": "True", "outcome": "Compromise", "incidents": [{ "perpetrators": [{ "force": "Counter_terrorism_department (CTD)", "action": "Temporary Suspension", "rank": "Constable", "posting": "stationplace", "superior": "perpsuper" }], "date": "2021-01-05", "incident_type": "Torture", "place": "Police_lock_up", "torture_type": ["Physical"], "torture_methods": ["Beating", " Jack"] }] }
+  //   ];
 
-    let incidents = this.incidents.map(d => "Incident from " + new Date(d.filed_timestamp).toLocaleString());
+  //   let incidents = this.incidents.map(d => "Incident from " + new Date(d.filed_timestamp).toLocaleString());
 
-    cb([...incidents, "New incident"]);
-  }
+  //   cb([...incidents, "New incident"]);
+  // }
 
   csvCleaner(d) {
     return { page: d[`Page-${this.lang}`], name: d.Name, input: d.Input, description: d[`Description-${this.lang}`], values: d[`Values-${this.lang}`], required: d.Required }
