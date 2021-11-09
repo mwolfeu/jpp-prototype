@@ -1,7 +1,9 @@
 import SurveyData from "./surveyData.js"
+import awsBackend from "../js/aws.js"
 
 class SurveyUtil {
   constructor() {
+
     this.dataOp = { type: "put", key: undefined };
     this.data = new SurveyData();
 
@@ -14,6 +16,10 @@ class SurveyUtil {
       .StylesManager
       .applyTheme("modern");
 
+  }
+
+  cb(d) {
+    console.log(d);
   }
 
   chooser(dataObj) {
@@ -58,7 +64,11 @@ class SurveyUtil {
   // Build Chooser & Survey
   init() {
     let build = (function(dataObj) {
-      this.chooser(dataObj);
+
+      this.aws = new awsBackend({ submitSurvey: { POST: this.cb }, byDistrictOption: { POST: this.cb } }, false); // create - true
+      this.aws.call('byDistrictOption');
+
+      // this.chooser(dataObj);
 
       // SURVEY
       let json = {
@@ -84,6 +94,8 @@ class SurveyUtil {
         }).bind(this));
 
         console.log("Pushed:", sender.data);
+
+        this.aws.call('submitSurvey', { data: sender.data, lang: navigator.language.split('-')[0] }); // en, ur
       }).bind(this);
 
       this.addItems(json, json.pages, json.pages, dataObj.template, dataObj.template.Main)
@@ -95,6 +107,7 @@ class SurveyUtil {
   }
 
   render(el, json, handlers) {
+
     let survey = new Survey.Model(json);
 
     Object.keys(handlers).forEach(d => {
@@ -118,6 +131,7 @@ class SurveyUtil {
       "panelAddText": `Add New ${d.values}`,
       "panelRemoveText": `Remove ${d.values}`,
     }
+    if (parseInt(d.maxLen)) element.maxPanelCount = parseInt(d.maxLen);
     elements.push(element);
     return element.templateElements;
   }
@@ -175,6 +189,8 @@ class SurveyUtil {
           pplaceHolder: "Type Here",
           colCount: 0,
         }
+        if (d.type == "email") item.inputType = "email";
+        if (parseInt(d.maxLen)) item.maxLength = parseInt(d.maxLen);
 
       }
 
@@ -186,6 +202,7 @@ class SurveyUtil {
           title: d.description,
           pplaceHolder: "Type Here",
           colCount: 0,
+          maxValueExpression: "today(-1)"
         }
       }
 
@@ -265,12 +282,12 @@ class SurveyUtil {
   }
 
   singlePrep(d) {
-    let vals = d.values.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).split(',').map(d => `"${d}"`);
+    let vals = d.values.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter).split(',').map(d => `"${d.trim()}"`);
     return JSON.parse(`[${vals.join(',')}]`)
   }
 
   multiPrep(d) {
-    let vals = d.values.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()).split(',').map(d => `"${d}"`);
+    let vals = d.values.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter).split(',').map(d => `"${d.trim()}"`);
     return JSON.parse(`[${vals.join(',')}]`)
   }
 
@@ -286,7 +303,14 @@ class SurveyUtil {
 
         this.addItems(json, json.questions, json.questions, dataObj.template, dataObj.template.Main, -1);
         resolveFcn(json);
-        this.surveyObj = this.render("filters", json, { onComplete: setFilters });
+
+
+
+        // DEPROCATED FOR LACK OF DATA
+
+
+
+        // this.surveyObj = this.render("filters", json, { onComplete: setFilters });
         this.filterJSON = json;
       }).bind(this);
 

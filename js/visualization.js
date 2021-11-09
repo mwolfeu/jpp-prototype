@@ -5,7 +5,10 @@ import awsBackend from "../js/aws.js"
 
 class tortureVis {
   constructor(props) {
-    this.aws = new awsBackend({ byRegion: { POST: this.cb } });
+    this.aws = new awsBackend({
+        byRegion: { POST: this.cb }
+      },
+      false);
     this.aws.call('byRegion');
 
     this.hasMouse = matchMedia('(pointer:fine)').matches;
@@ -46,7 +49,9 @@ class tortureVis {
     this.survey = new SurveyUtil();
     this.survey.filterUI()
       .then((function(d) { // init filter UI get cfg
-        let filters = d.questions.filter(d => d.type == "tagbox" && d.name != "constituency");
+        // DEPROCATED FILTER - TOO LITTLE DATA
+        // REWRITE
+        let filters = d.questions.filter(d => d.type == "tagbox" && d.name != "region");
         let filterUICfg = d3.rollup(filters, d => d[0].choices, d => d.title); // map obj
         this.metaSelectInit(filterUICfg);
         this.cloudStore = new cloudStore(filterUICfg);
@@ -174,7 +179,12 @@ class tortureVis {
       type: 'pie',
       marker: {
         colors: ['#6388b4', '#ef6f6a', '#8cc2ca', '#55ad89', '#c3bc3f', '#bb7693', '#baa094', '#a9b5ae', '#767676', '#ffae34'],
+        // line: {
+        //   color: '#444',
+        //   width: [0, 5, 0, 0, 0, 0, 0, 0, 0, 0]
+        // },
       },
+      // pull: [0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     }];
 
     this.info.layout = {
@@ -313,6 +323,7 @@ class tortureVis {
     }
     this.map.ran = true;
   }
+
 
   buildMeta() {
 

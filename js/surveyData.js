@@ -101,7 +101,7 @@ class SurveyData {
   // }
 
   csvCleaner(d) {
-    return { page: d[`Page-${this.lang}`], name: d.Name, input: d.Input, description: d[`Description-${this.lang}`], values: d[`Values-${this.lang}`], required: d.Required }
+    return { page: d[`Page-${this.lang}`], name: d.Name, input: d.Input, description: d[`Description-${this.lang}`], values: d[`Values-${this.lang}`], required: d.Required, minLen: d.minLen, maxLen: d.maxLen, type: d.type }
   }
 
   loadQuestionTemplate(name, cb) {

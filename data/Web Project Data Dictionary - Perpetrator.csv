@@ -1,6 +1,8 @@
-Name,Input,Required,Description-en,Values-en,Description-ur,Values-ur
-force,single,,Law Inforcement Agency,"counter_terrorism_department (CTD),  criminal_investigation_agency (CIA), Punjab Elite Force, Punjab Traffic Police, Punjab Dolphin Force, Paramilitary forces, military",,
-action,single,,Action taken against perpetrator,"temporary suspension, permanent suspension, transfer, demotion, other",,
-rank,single,,Rank of the perpetrator,"constable, head_constable, assistant_sub_inspector, sub_inspector_inspector, assistant_superintendent_of_police, deputy_superintendent_of_police, supeintendent_of_police, senior_superintendent/assistant_inspector_general_of_police, deputy_inspector_general_of_police, additional_inspector_general_of_police, insepctor_general_of_police",,
-posting,string,,Police Station where posted,to be filled manually/unformed,,
-superior,string,,Perpetrator's immediate superior,unformed?,,
+Name,Required,Input,type,minLen,maxLen,Description-en,Values-en,Description-ur,Values-ur
+force,,single,code,,,Law Inforcement Agency,"counter_terrorism_department (CTD),  criminal_investigation_agency (CIA), Punjab Elite Force, Punjab Traffic Police, Punjab Dolphin Force, Paramilitary forces, military",,
+action,,single,code,,,Action taken against perpetrator,"temporary suspension, permanent suspension, transfer, demotion, other",,
+rank,,single,code,,,Rank of the perpetrator,"constable, head_constable, assistant_sub_inspector, sub_inspector_inspector, assistant_superintendent_of_police, deputy_superintendent_of_police, supeintendent_of_police, senior_superintendent/assistant_inspector_general_of_police, deputy_inspector_general_of_police, additional_inspector_general_of_police, insepctor_general_of_police",,
+posting,,string,string,,20,Police Station where posted,to be filled manually/unformed,,
+superior,,string,string,,20,Perpetrator's immediate superior,unformed?,,
+,,,,,,,,,
+Unknown,Unknown,Unknown,Unknown,Unknown,,,,,
