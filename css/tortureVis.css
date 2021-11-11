@@ -40,7 +40,7 @@
 
 #tortureVis #map,
 #tortureVis #map #filter-legend {
-    width: 48%;
+    width: 55%;
     margin-left: 2%;
     margin-right: 1%;
     flex-shrink: 1;
@@ -48,7 +48,7 @@
 }
 
 #tortureVis #meta {
-    width: 48%;
+    width: 40%;
     margin-right: 2%;
     flex-shrink: 1;
     flex-grow: 1;

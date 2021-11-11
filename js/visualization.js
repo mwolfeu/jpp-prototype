@@ -50,7 +50,7 @@ class tortureVis {
       let title = selRegions.length ? selRegions[0] : "Pakistan";
       let total = selRegions.length ? e.detail.filter.region[title] : e.detail.filter.total.value;
 
-      document.querySelector('#tortureVis #map #title').innerHTML = `<span id="location">${title}</span>`;
+      document.querySelector('#tortureVis #map #title').innerHTML = `Torture in <span id="location">${title}</span>`;
       document.querySelector('#tortureVis #map #value').innerHTML = total;
 
       map.react();

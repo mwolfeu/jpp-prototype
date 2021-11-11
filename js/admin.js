@@ -1,5 +1,12 @@
 import SurveyUtil from "./survey.js"
 
+// TODO
+// Switch between filter (map/pie), and crud mode
+//    print to pdf button
+// Buttons: getbyname, getbystatus, create, delete, update
+// Results chooser
+// Survey input 
+// Signin, Signin timer?
 
 let survey = new SurveyUtil();
 survey.init();

@@ -74,9 +74,6 @@ class Map {
     let c = this.cfg;
     this.el = document.querySelector(c.selector.root + ' ' + c.selector.vis);
 
-    // add ak and northern territory districts to sheet
-    // kleanup
-
     if (c.plotly.beforeRender)
       c.plotly.beforeRender(c);
 
