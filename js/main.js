@@ -32,45 +32,45 @@ function initFullpage() {
     navigationPosition: "right",
     slidesNavigation: true,
     slidesNavPosition: "top",
-    afterResize: function(width, height) {
-      window.tv.build({
-        width,
-        height
-      });
-      console.log('Resize:', width, height);
-      console.log("Body", document.body.clientWidth, document.body.clientHeight);
-      fullpage_api.reBuild();
-    },
+    // afterResize: function(width, height) {
+    //   window.tv.build({
+    //     width,
+    //     height
+    //   });
+    //   console.log('Resize:', width, height);
+    //   console.log("Body", document.body.clientWidth, document.body.clientHeight);
+    //   fullpage_api.reBuild();
+    // },
     // afterRender: function() {
     //   // window.tv.addTextBuffers();
     //   // bug hack: putting rebuild in afterRender then reloading WITH cache
     //   // setTimeout(d => fullpage_api.reBuild(), 100);
     // }
     normalScrollElements: '#tortureVis #filters, .select2-results__options',
-    afterLoad: d => window.tv.tip.show(),
-    onLeave: d => window.tv.tip.hide(),
-    afterSlideLoad: d => window.tv.tip.show(),
-    onSlideLeave: d => window.tv.tip.hide(),
+    // afterLoad: d => window.tv.tip.show(),
+    // onLeave: d => window.tv.tip.hide(),
+    // afterSlideLoad: d => window.tv.tip.show(),
+    // onSlideLeave: d => window.tv.tip.hide(),
   });
 }
 
-let dataPath = "data/";
-let promises = [];
-let files = [
-  // "PAK_adm0.json",
-  "PAK_adm1.json",
-  "PAK_adm2.json",
-  // "PAK_adm3.json",
-]
+// let dataPath = "data/";
+// let promises = [];
+// let files = [
+//   // "PAK_adm0.json",
+//   "PAK_adm1.json",
+//   "PAK_adm2.json",
+//   // "PAK_adm3.json",
+// ]
 
-files.forEach(d =>
-  promises.push(d3.json(dataPath + d))
-);
+// files.forEach(d =>
+//   promises.push(d3.json(dataPath + d))
+// );
 
-Promise.all(promises).then(d => {
-  initTortureVis(d);
-  d3.selectAll(".section")
-    .classed("fp-auto-height-responsive", true);
-  initFullpage();
-  // setTimeout(initFullpage, 1000)
-})
+// Promise.all(promises).then(d => {
+initTortureVis();
+d3.selectAll(".section")
+  .classed("fp-auto-height-responsive", true);
+initFullpage();
+// setTimeout(initFullpage, 1000)
+// })

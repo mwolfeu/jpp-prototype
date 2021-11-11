@@ -2,6 +2,8 @@
 
 // TODO
 // andOr
+// if all single select send color
+// province
 
 import { mergeDeep, pGet, pSet } from "./util.js"
 
@@ -22,9 +24,11 @@ class pieSelect {
       // textinfo: "label+percent",
       // textposition: "inside",
       // insidetextorientation: "radial",
-      hovertemplate: "%{label}<br>Totals: %{value} / %{percent} <extra></extra>",
+      hovertemplate: "<b>%{label}</b><br><span style='font-size:1.1em;'>Total: <b style='color:#e8545c'> %{value} </b></span> <extra></extra>",
       hoverlabel: {
-        bgcolor: '#444'
+        align: 'left',
+        bgcolor: '#444',
+        // font: { size: 16 },
       },
       automargin: true
     }];
@@ -64,11 +68,9 @@ class pieSelect {
       (d => {
         this.category = d.srcElement.value;
         this.react();
-        this.setInfo(this.category);
       }).bind(this));
 
     this.react();
-    this.setInfo(this.category);
   }
 
   setInfo(category) {
@@ -128,11 +130,14 @@ class pieSelect {
       }
     }
 
+    this.setInfo(this.category);
+
     // Event
     let eData = {
       category: this.category,
       selectState: {},
-      regions: {}
+      regions: {},
+      filter: null
     };
 
     pGet(this, "selectState", "aKey").forEach(d => {
@@ -146,6 +151,8 @@ class pieSelect {
       if (selected.length && row)
         eData.regions[d] = selected.map(d => row[d] || 0).reduce((a, b) => a + b);
     });
+
+    if (this.cfg.eventFilter) eData.filter = this.cfg.eventFilter(this.cfg.data);
 
     var event = new CustomEvent("pieselect-change", { detail: eData });
     document.dispatchEvent(event);
@@ -188,8 +195,8 @@ class pieSelect {
       // add specified options
       let specifiedOptions = pGet(this.cfg, `categories.${category}.options`, 'aVal');
 
-      pGet(data[d], category, 'aKey').forEach(e => {
-        values[e] = (values[e] || 0) + (data[d][category][e] || 0);
+      pGet(this.cfg.data[d], category, 'aKey').forEach(e => {
+        values[e] = (values[e] || 0) + (this.cfg.data[d][category][e] || 0);
       })
 
       let preDefVals = pGet(this.cfg.categories, "region.values", "aVal");

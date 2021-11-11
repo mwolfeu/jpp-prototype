@@ -66,7 +66,7 @@ class SurveyUtil {
     let build = (function(dataObj) {
 
       this.aws = new awsBackend({ submitSurvey: { POST: this.cb }, byDistrictOption: { POST: this.cb } }, false); // create - true
-      this.aws.call('byDistrictOption');
+      // this.aws.call('byDistrictOption');
 
       // this.chooser(dataObj);
 

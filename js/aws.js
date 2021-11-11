@@ -49,13 +49,13 @@ class awsBackend {
       // HANDLE:
       // {message: "The incoming token has expired"}
 
-      if (json.input) {
-        let rc = json.input.requestContext;
-        let call = json.input.path.split('/').pop();
-        let cb = this.config.cb[call][rc.httpMethod];
-        if (cb)
-          cb(json);
-      }
+      // if (json) {
+      // let rc = json.input.requestContext;
+      let call = url.substr(url.lastIndexOf('/') + 1); // json.input.path.split('/').pop();
+      let cb = this.config.cb[call][type];
+      if (cb)
+        cb(json);
+      // }
 
       console.log("The transfer is complete.", json);
     }).bind(this);

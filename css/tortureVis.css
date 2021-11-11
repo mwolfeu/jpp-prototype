@@ -1,3 +1,13 @@
+:root {
+    --jpp-red: #e8545c;
+}
+
+
+/* does not work
+.hover-format {
+    color: var(--jpp-red);
+} */
+
 .tippy-box {
     text-align: center;
     background-color: #ffe0001f;
@@ -65,8 +75,8 @@
     height: calc(90% - 2.5rem);
 }
 
-#tortureVis #map #howto,
-#tortureVis #meta #howto {
+#tortureVis #map #info,
+#tortureVis #meta #info {
     height: 5%;
     font-size: 1rem;
     padding-left: .5rem;
@@ -109,13 +119,17 @@
     width: 100%;
 } */
 
-#tortureVis #map #geo {
+
+/* KILLS HOVER */
+
+
+/* #tortureVis #map #geo { 
     height: 100%;
     width: 100%;
     position: relative;
-}
+} */
 
-#tortureVis #map #howto {
+#tortureVis #map #info {
     width: 100%;
     /* border-top: 1px solid black; */
 }
@@ -184,7 +198,7 @@
     background: #f3d3b326;
 }
 
-#tortureVis #meta #howto {
+#tortureVis #meta #info {
     width: 100%;
     /* border-top: 1px solid black;
 border-left: 1px solid black; */
@@ -219,12 +233,19 @@ border-left: 1px solid black; */
     transition-duration: .2s;
 } */
 
-.hovertext {
+
+/* .hovertext {
     display: none;
-}
+} */
 
 #meta svg {
     background: none !important;
+}
+
+#map #total {
+    margin-top: 0.2em;
+    margin-left: 0.4em;
+    font-size: .5em;
 }
 
 #meta #filter {
