@@ -1,0 +1,196 @@
+# MAIN CMDS
+# sls deploy --stage dev
+# sls remove --stage dev
+# sls info --verbose --stage dev
+
+service: torture
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Scan*
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-incidents-${opt:stage}
+    # - Effect: "Allow"
+    #   Action:
+    #     - dynamodb:PutItem
+    #     - dynamodb:Scan*
+    #     - dynamodb:DeleteItem
+    #   Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-survey-${opt:stage}
+  environment:
+      DYNAMODB_INCIDENT_TABLE: ${self:service}-incidents-${opt:stage}
+      # DYNAMODB_SURVEY_TABLE: ${self:service}-survey-${opt:stage}
+
+resources:
+  Resources:
+    incidentsTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:service}-incidents-${opt:stage}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: N
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    # surveyTable:
+    #   Type: 'AWS::DynamoDB::Table'
+    #   Properties:
+    #     TableName: ${self:service}-survey-${opt:stage}
+    #     AttributeDefinitions:
+    #       - AttributeName: requestId
+    #         AttributeType: S
+    #     KeySchema:
+    #       - AttributeName: requestId
+    #         KeyType: HASH
+    #     BillingMode: PAY_PER_REQUEST
+
+    tortureCognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-${opt:stage}-user-pool
+
+    tortureCognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-${opt:stage}-WebApp
+        GenerateSecret: false
+        UserPoolId:
+          Ref: "tortureCognitoUserPool"
+
+    tortureApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: ${self:service}-${opt:stage}-authorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [ tortureCognitoUserPool, Arn ]
+        IdentitySource: method.request.header.Authorization
+
+  Outputs:
+    # WildRydesBucketURL:
+    #   Description: "Wild Rydes Bucket Website URL"
+    #   Value: 
+    #     "Fn::GetAtt": [ WildRydesBucket, WebsiteURL ]
+    UserPoolId:
+      Description: "Cognito User Pool ID"
+      Value:
+        Ref: "tortureCognitoUserPool"
+    CognitoUserPoolClientId:
+      Description: "Cognito User Pool Client ID"
+      Value:
+        Ref: "tortureCognitoUserPoolClient"
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: post
+          cors: true
+          # cognito params
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: tortureApiGatewayAuthorizer
+
+  byRegion:
+    handler: handler.byRegion
+    events:
+      - http:
+          path: /v1/byRegion
+          method: post
+          cors: true
+
+  submitSurvey:
+    handler: handler.create
+    events:
+      - http:
+          path: /v1/submitSurvey
+          method: post
+          cors: true
+
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: /v1/incident
+          method: post
+          cors: true
+          authorizer: aws_iam
+          # cognito params
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: tortureApiGatewayAuthorizer
+
+  list:
+    handler: handler.list
+    events:
+      - http:
+          path: /v1/incident
+          method: get
+          cors: true
+          authorizer: aws_iam
+          # cognito params
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: tortureApiGatewayAuthorizer
+
+  # get:
+  #   handler: handler.get
+  #   events:
+  #     - http:
+  #         path: /v1/incident/{requestId}
+  #         method: get
+  #         # cognito params
+  #         cors: true
+  #         authorizer:
+  #           type: COGNITO_USER_POOLS
+  #           authorizerId:
+  #             Ref: tortureApiGatewayAuthorizer
+
+  # update:
+  #   handler: handler.update
+  #   events:
+  #     - http:
+  #         path: /v1/incident/{pk}
+  #         method: put
+  #         cors: true
+  #         authorizer: aws_iam
+  #         # cognito params
+  #         # authorizer:
+  #         #   type: COGNITO_USER_POOLS
+  #         #   authorizerId:
+  #         #     Ref: tortureApiGatewayAuthorizer
+
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: /v1/incident/{pk}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+          # cognito params
+          # authorizer:
+          #   type: COGNITO_USER_POOLS
+          #   authorizerId:
+          #     Ref: tortureApiGatewayAuthorizer
+          # cognito params

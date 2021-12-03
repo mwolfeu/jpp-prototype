@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>User Information</title>
+    <meta name="viewport" content="width=device-width" />
+
+    <!-- core -->
+    <script src="https://unpkg.com/knockout@3.5.1/build/output/knockout-latest.js"></script>
+    <script src="https://unpkg.com/survey-knockout@1.8.58/survey.ko.min.js"></script>
+    <link href="https://unpkg.com/survey-core@1.8.58/modern.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- tag box -->
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+
+    <!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet" /> -->
+
+    <script src="https://unpkg.com/surveyjs-widgets@1.8.59/surveyjs-widgets.min.js"></script>
+
+    <!-- other -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://unpkg.com/aws4fetch@1.0.5/dist/aws4fetch.umd.js"></script>
+
+    <!-- local -->
+    <link rel="stylesheet" href="../css/survey.css">
+
+</head>
+
+<body>
+    <div id="chooserContainer" style="display:inline-block;width:100%;"></div>
+    <div id="surveyContainer" style="display:inline-block;width:86%;margin:0 7%;"></div>
+    <!-- <div id="surveyResult"></div> -->
+
+    <!-- Get question names -->
+    <!-- <script type="module">
+        import layout from "../js/entry.js"; window.qNames = Object.keys(layout).flatMap(d => layout[d]).map(d => d.Type!='array'?d.Name:undefined).filter(d => d);
+    </script> -->
+    <script>
+        let url = 'https://4z4ntfa3oi.execute-api.us-east-1.amazonaws.com/dev/v1/submitSurvey';
+        let lang = navigator.language.endsWith('-UR') ? 'ur' : 'en';
+
+        function awsSubmit(obj) {
+            let data = obj.getAllValues();
+
+            let url = "https://4z4ntfa3oi.execute-api.us-east-1.amazonaws.com/dev/v1/submitSurvey";
+            let awsCfg = {
+                method: 'POST',
+                body: JSON.stringify({
+                    data,
+                    lang
+                })
+            };
+
+            const aws = new aws4fetch.AwsClient({
+                accessKeyId: 'none',
+                secretAccessKey: 'none',
+            });
+            console.log('Submitting survey', data)
+
+            async function call(url, opts) {
+                const response = await aws.fetch(url, opts);
+                return response;
+            }
+
+            call(url, awsCfg);
+        }
+
+        function modQI(ev, el) {
+
+            let e = $(el.htmlElement).parent().parent().parent();
+            // some have the name a level up
+            let n = e.attr('name') || $(el.htmlElement).parent().parent().attr('name');
+
+            let href = `./info.html#${n}`;
+            let style = 'text-decoration: none;float: right; color:#222;'
+            e.find('.sv-title').prepend(`<a class="far fa-question-circle" href="${href}" target="_blank" rel="noopener noreferrer" style="${style}"></a>`);
+
+            // move dropdown arrows left
+            // $(".sv-dropdown").css('background-position', 'left .1em top 50%, 0 0')
+            $("[type='date']").css('background-image', 'unset')
+        }
+
+        let surveyCfg = {
+            title: "Torture Incident Survey.",
+            completedHtml: "<h3>Thank you for your submission.</h3> <h5>We would be happy to send you more information, hear about a case referral, or get you involved!</h5><h6 style='cursor: pointer; transform:translateY(3rem);''>Click here to return home.</h6>",
+            onComplete: awsSubmit,
+            onAfterRenderQuestionInput: modQI,
+            lang
+        };
+    </script>
+    <script type="module">
+        import SurveyUtil from "../js/survey.js"; let survey = new SurveyUtil(); survey.init(surveyCfg);
+    </script>
+</body>
+
+</html>

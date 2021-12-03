@@ -1,9 +1,0 @@
-Name,Required,Input,type,minLen,maxLen,Description-en,Values-en,Description-ur,Values-ur
-date,,date,date,,,Date of incident,DD-MM-YYYY,,
-incident_type,,single,code,,,Type of incident,"torture, custodial_death, custodial_rape",,
-place,,single,code,,,place of occurence,"police_lock_up, private_torture_cell, detention_centres, internment_camp, check_post, other",,
-during,,single,code,,,What was happening at the time of the incident,"arrest, interrogation, search_or_checking, other",,
-torture_type,,multiple,code-array,,,Type of torture,"physical, psychological, cultural_humiliation, sexual_violence",,
-torture_methods,,multiple,code-array,,,Method of Torture,"beating, cheera, chittar, danda, dolli, falaka, jack, manji, rolla, roller, strappado, sleep_deprivation, water_boarding, solitary_confinement, light_deprivation, sexual_violence, witnessing_other_people_being_tortured",,
-perpetrators,,array,array,,10,Perpetrators Description,Perpetrator,,
-3.1.2019,custodial_death,Karachi,"Ali's relatives allege that Qaim was detained and tortured by police. The police denied his arrest and claimed he died of a heart attack outside the house where he worked as a driver. Police said that Qaim's boss had called for help to shift him to a hospital, after noticing his condition outside the house. Qaim's relatives state that police raided a house and detained Qaim and others from a party. Relatives said the police brought Qaim to the hospital and left. The Inspector General and provincial government ordered an impartial probe into this case.",Physical,Unknown,Unknown,,,

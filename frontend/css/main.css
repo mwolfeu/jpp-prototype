@@ -1,0 +1,326 @@
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+    height: 7px;
+    -webkit-overflow-scrolling: auto;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+:root {
+    --jpp-red: #e8545c;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+body {
+    font-family: 'Roboto', serif;
+    color: rgb(49, 49, 49);
+}
+
+.section {
+    font-size: 3rem;
+}
+
+p {
+    font-size: .6em;
+}
+
+.fp-tableCell {
+    height: 835px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* overflow-y: auto; */
+}
+
+.narration-question {
+    width: 70vw;
+    text-align: left;
+    background: #f5f5f596;
+    padding: 1em;
+    border-radius: 10px;
+    margin: 1em;
+    /* height: fit-content(20em); */
+    /* max-height: 80%;
+    overflow-y: auto; */
+}
+
+.title {
+    font-family: 'Roboto Slab', sans-serif;
+    color: azure;
+    font-weight: 700;
+}
+
+.title-bar {
+    width: 60vw;
+}
+
+.subtitle {
+    font-family: "Roboto Slab", serif;
+    color: azure;
+    width: 70vw;
+    text-align: center;
+}
+
+.chapeau {
+    font-family: "Roboto", sans-serif;
+}
+
+.chapeau-accent,
+#map #title #location,
+#map #title #option {
+    font-weight: 700;
+    color: var(--jpp-red);
+}
+
+.narration-question>p {
+    font-family: "Roboto Slab", serif;
+}
+
+.link {
+    color: var(--jpp-red);
+}
+
+
+/* #scroll-down-wrapper {
+    font-family: "Roboto Slab", serif;
+    color: azure;
+    z-index: 999;
+    position: absolute;
+    top: 85vh;
+    left: calc(50%);
+    text-align: center;
+    -webkit-transform: translate(-50%, 0%);
+    transform: translate(-50%, 0%);
+}
+
+#scroll-down-title {
+    font-family: "Roboto Slab", serif;
+    color: azure;
+    font-size: 1.5rem;
+}
+
+#scroll-down-icon {
+    animation: bounce 6s infinite;
+}
+
+@keyframes bounce {
+    0%,
+    20%,
+    45%,
+    60%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+    43% {
+        transform: translateY(-2vh);
+    }
+    48% {
+        transform: translateY(-1.5vh);
+    }
+} */
+
+.section,
+#section1 .slide {
+    background-position-x: center;
+    background-position-y: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.section {
+    background-size: cover;
+}
+
+#section0 {
+    background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), #e8545b75), url(../img/landing.png);
+    background-size: contain;
+    min-height: 100vh;
+}
+
+#section0 .fp-tableCell {
+    min-height: 100vh;
+}
+
+#section1 {
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/6._Torture_Cell.png);
+}
+
+#section2 {
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/4._Aftab%27s_Wife_.png);
+    background-position-x: left;
+}
+
+#section3 {
+    background-image: linear-gradient(to bottom, transparent, #e8545b75), url(../img/aftrab/8._Courtroom.png);
+    background-position-x: right;
+}
+
+#section6 .fp-tableCell {
+    flex-direction: row;
+    margin: auto;
+    width: 85%;
+}
+
+#section6 img {
+    width: 25%;
+}
+
+#method1 {
+    background-image: url(../img/methods/001_Chittar.png);
+    min-height: 100vh;
+    background-color: #786b4b;
+    /* min-height: 80vh;
+    max-height: 80vh;
+    border: 10vh solid green; */
+}
+
+#method2 {
+    background-image: url(../img/methods/002_Cheera.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method3 {
+    background-image: url(../img/methods/003_Danda.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method4 {
+    background-image: url(../img/methods/004_Dolli.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method5 {
+    background-image: url(../img/methods/005_Falaka.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method6 {
+    background-image: url(../img/methods/006_Manji.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method7 {
+    background-image: url(../img/methods/007_Roola.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+#method8 {
+    background-image: url(../img/methods/008_Strappado.png);
+    background-color: #786b4b;
+    min-height: 100vh;
+}
+
+
+/* BREADCRUMBS */
+
+.fp-tooltip {
+    color: white;
+    padding: 0 .5em;
+    background: #8b8a8a;
+}
+
+#fp-nav ul li a span,
+.fp-slidesNav ul li a span {
+    background: var(--jpp-red);
+    /* border: .5px solid lightslategrey; */
+}
+
+.fp-slidesNav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+}
+
+
+/* TOP BUTTONS */
+
+#menu li {
+    display: inline-block;
+    margin: 10px;
+    color: #000;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#menu li.active {
+    background: #666;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+#menu li a {
+    text-decoration: none;
+    color: #000;
+}
+
+#menu li.active a:hover {
+    color: #000;
+}
+
+#menu li:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+#menu li a,
+#menu li.active a {
+    padding: 9px 18px;
+    display: block;
+}
+
+#menu li.active a {
+    color: #fff;
+}
+
+#menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 40px;
+    z-index: 70;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* if vertical */
+
+@media (max-aspect-ratio: 1/1) {
+    /* does not work on desktop debugger */
+    #section1 #slide1 .fp-tableCell {
+        margin-top: 20vh;
+    }
+}

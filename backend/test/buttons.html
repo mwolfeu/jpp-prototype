@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Hello, world!</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="" />
+    <script src="js/libs/aws-cognito-sdk.min.js"></script>
+    <script src="js/libs/amazon-cognito-identity.min.js"></script>
+</head>
+
+<body>
+    <h1>AWS Xmlhttprequest Test</h1>
+    <h1>Make sure cors is enabled on the server! (Amplify/VSCode)</h3>
+        <!-- 
+          To set a new password on new accts when challenged: NEW_PASSWORD_REQUIRED
+          aws cognito-idp respond-to-auth-challenge --client-id myClientPoolID --region="us-east-1" --challenge-name NEW_PASSWORD_REQUIRED --challenge-responses USERNAME=myuid,NEW_PASSWORD='mypass' --session "A SESSION ID FROM JS"
+        -->
+
+        <!-- 
+          AWT Amplify CORS 
+          aws apigatewayv2 update-api --api-id api-id --cors-configuration AllowOrigins="https://www.example.com" 
+          https://jppt.auth.us-east-1.amazoncognito.com/login?client_id=3clju7pon415t39vs36anap0a3&response_type=code&scope=phone+email+openid&redirect_uri=http://localhost:5500/jpp-aws-torture/index.html
+        -->
+
+        <!-- 
+        AWS Hosted login
+        https://aws.amazon.com/premiumsupport/knowledge-center/cognito-hosted-web-ui/
+        https://cloudcompiled.com/tutorials/aws-cognito-hosted-ui/
+        -->
+
+        <button id='rest-create' class="rest-call">Create</button>
+        <button id='rest-get' class="rest-call">Get</button>
+        <button id='rest-update' class="rest-call">Update</button>
+        <button id='rest-list' class="rest-call">List</button>
+        <button id='rest-delete' class="rest-call">Delete</button>
+
+        <script>
+            let cognitoHostedURL = "https://jppt.auth.us-east-1.amazoncognito.com/login?client_id=3clju7pon415t39vs36anap0a3&response_type=token&scope=email+openid+aws.cognito.signin.user.admin+profile+phone&redirect_uri=http://localhost:5500/jpp-aws-torture/index.html"
+            let restCallType = {
+                create: "POST",
+                get: "GET",
+                list: "GET",
+                update: "PUT",
+                delete: "DELETE",
+            };
+
+            let restCallBody = {
+                create: {
+                    "name": "uid",
+                    "age": 4,
+                    "other": {
+                        "test": "foo"
+                    }
+                },
+                get: null,
+                list: null,
+                update: {
+                    "age": 5
+                },
+                delete: null,
+            };
+
+            document.querySelectorAll('.rest-call').forEach(d => d.addEventListener("click", d => {
+                let call = d.target.id.split('-')[1];
+                let restURL = `https://nrm5qc4mv3.execute-api.us-east-1.amazonaws.com/dev/v1/incident`
+                if (["get", "update", "delete"].includes(call))
+                    restURL += "/uid";
+
+                let req = getReq(restCallType[call], restURL);
+                if (restCallBody[call])
+                    req.send(JSON.stringify(restCallBody[call]));
+                else
+                    req.send();
+
+                // oReq.send();
+                console.log('Called:', restURL, restCallType[call], restCallBody[call]);
+                // "The incoming token has expired"
+                // { "message": "Unauthorized" }
+            }));
+
+            function getReq(type, url) {
+                let req = new XMLHttpRequest();
+
+                req.addEventListener("progress", updateProgress);
+                req.addEventListener("load", transferComplete);
+                req.addEventListener("error", transferFailed);
+                req.addEventListener("abort", transferCanceled);
+
+                req.open(type, url);
+
+                // if using Cognito Hosted UI w id_token
+                let urlSearchParams = new URLSearchParams(window.location.hash);
+                let params = Object.fromEntries(urlSearchParams.entries());
+                if (!("#id_token" in params)) // if not logged in
+                    window.location.href = cognitoHostedURL; // go to cognito hosted UI
+                // TODO href also if request fails
+                // list returns 404 if db empty
+
+                let id = params["#id_token"];
+
+                req.setRequestHeader("Authorization", id);
+                return req;
+            }
+
+            var poolData = {
+                UserPoolId: "us-east-1_Gccp0EUBc", //_config.cognito.userPoolId,
+                ClientId: "3clju7pon415t39vs36anap0a3" //_config.cognito.userPoolClientId
+            };
+
+            var userPool;
+            userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+            if (typeof AWSCognito !== 'undefined') {
+                AWSCognito.config.region = "us-east-1" // _config.cognito.region;
+            }
+
+            function signin(email, password, onSuccess, onFailure) {
+                var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+                    Username: "MYUSERNAME", // toUsername(email),
+                    Password: "MYPASSWORD" // password
+                });
+
+                var cognitoUser = createCognitoUser(email);
+                cognitoUser.authenticateUser(authenticationDetails, {
+                    onSuccess: onSuccess,
+                    onFailure: onFailure
+                });
+            }
+
+            function createCognitoUser(email) {
+                return new AmazonCognitoIdentity.CognitoUser({
+                    Username: "torture2021", // toUsername(email),
+                    Pool: userPool // userPool
+                });
+            }
+
+            function cbGood(d) {
+                console.log("Good", ...arguments)
+
+                oReq.setRequestHeader("Authorization", d.idToken.jwtToken)
+                oReq.send();
+            }
+
+            function cbFail(d) {
+                console.log("Fail", ...arguments)
+            }
+
+            // if manual signin
+            // signin(null, null, cbGood, cbFail);
+
+            var oReq = new XMLHttpRequest();
+
+            oReq.addEventListener("progress", updateProgress);
+            oReq.addEventListener("load", transferComplete);
+            oReq.addEventListener("error", transferFailed);
+            oReq.addEventListener("abort", transferCanceled);
+
+            oReq.open("POST", "https://nrm5qc4mv3.execute-api.us-east-1.amazonaws.com/dev/hello");
+
+            // if using Cognito Hosted UI w id_token
+            let urlSearchParams = new URLSearchParams(window.location.hash);
+            let params = Object.fromEntries(urlSearchParams.entries());
+            if (!("#id_token" in params)) // if not logged in
+                window.location.href = cognitoHostedURL; // go to cognito hosted UI
+            // TODO href also if request fails
+
+            let id = params["#id_token"];
+
+            oReq.setRequestHeader("Authorization", id);
+            oReq.send();
+
+            // progress on transfers from the server to the client (downloads)
+            function updateProgress(oEvent) {
+                if (oEvent.lengthComputable) {
+                    var percentComplete = oEvent.loaded / oEvent.total * 100;
+                    // ...
+                } else {
+                    // Unable to compute progress information since the total size is unknown
+                }
+            }
+
+            function transferComplete(evt) {
+                let json = evt.target.response.length ? JSON.parse(evt.target.response) : 'noResponse';
+                console.log("The transfer is complete.", json);
+            }
+
+            function transferFailed(evt) {
+                console.log("An error occurred while transferring the file.");
+            }
+
+            function transferCanceled(evt) {
+                console.log("The transfer has been canceled by the user.");
+            }
+
+            // d3.html('http://enable-cors.org')
+            //     .get((err, data) => {
+            //         console.log(data)
+            //     })
+        </script>
+</body>
+
+</html>

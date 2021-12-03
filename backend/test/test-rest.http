@@ -1,0 +1,25 @@
+# NOTE: This file is for VSCode with the "REST Client" extension to call the endpoints
+# Change xxx for your urls in the "endpoints" output of sls deploy
+
+POST https://xxx.execute-api.us-east-1.amazonaws.com/dev/hello
+
+### Create
+POST https://xxx.execute-api.us-east-1.amazonaws.com/dev/v1/incident
+
+{"name":"uid", "age":4, "other":{"test":"foo"}}
+
+### Scan
+GET https://xxx.execute-api.us-east-1.amazonaws.com/dev/v1/incident
+
+### Get
+GET https://xxx.execute-api.us-east-1.amazonaws.com/dev/v1/incident/uid
+
+### Update
+PUT https://xxx.execute-api.us-east-1.amazonaws.com/dev/v1/incident/uid
+
+{"age":5}
+
+### Delete
+DELETE https://xxx.execute-api.us-east-1.amazonaws.com/dev/v1/incident/uid
+
+

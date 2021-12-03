@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Abuse Tracker DB Manager- Justice Project Pakistan</title>
+    <meta name="author" content="Michael Wolf" />
+    <meta name="keywords" content="torture, pakistan, visualization" />
+    <meta name="Resource-type" content="Document" />
+    <!-- Prevents IOS auto zooming -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" /> -->
+
+    <!-- SURVEY -->
+    <script src="https://unpkg.com/knockout@3.5.1/build/output/knockout-latest.js"></script>
+    <script src="https://unpkg.com/survey-knockout@1.8.58/survey.ko.min.js"></script>
+    <link href="https://unpkg.com/survey-core@1.8.58/modern.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- SURVEY TAG BOX -->
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/surveyjs-widgets@1.8.59/surveyjs-widgets.min.js"></script>
+
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@300&family=Newsreader:wght@700&display=swap" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"> -->
+
+    <script src='https://cdn.jsdelivr.net/npm/d3@7.0.0/dist/d3.min.js'></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <link href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+
+    <!-- TABLE PLUGINS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <!-- <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/toolbar/bootstrap-table-toolbar.min.js"></script> -->
+
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous"> -->
+
+
+    <!-- <link href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/extensions/export/bootstrap-table-export.min.js"></script> -->
+
+    <!-- AWS4 Signing -->
+    <script src="https://unpkg.com/aws4fetch@1.0.5/dist/aws4fetch.umd.js"></script>
+
+    <!-- LOCAL -->
+    <script type="module" src="../js/admin.js"></script>
+
+    <style>
+        body {
+            font-size: 16px;
+        }
+        
+        #title {
+            font-family: "Roboto";
+            font-weight: 400;
+            font-size: 2rem;
+            padding: .5rem;
+        }
+        
+        #ui-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            margin: 0 6rem;
+        }
+        
+        #chooser-control {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        
+        .adm-function {
+            border-style: none;
+            color: white;
+            background-color: rgb(26, 179, 148);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: .5rem;
+            border-radius: 5%;
+        }
+        
+        .grid-selected {
+            color: rgb(26, 179, 148);
+        }
+        
+        .control {
+            padding: .5rem;
+        }
+        
+        #right {
+            font-weight: 600;
+            font-size: 1rem;
+            padding: .5rem;
+        }
+        
+        #surveyContainer {
+            margin: 0 !important;
+            width: 100% !important;
+        }
+        
+        .panel-selected {
+            display: flex !important;
+        }
+        
+        #chooser,
+        #chooser-control,
+        #survey,
+        #survey-control {
+            ddisplay: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ERRORS -->
+    <div id="error-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Oops...</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>It looks like your request to Amazon services failed.</p>
+                    <p>Verify your connectivity and credentials and try again.</p>
+                    <p></p>
+                    <p>AWS status: <span id="error-status"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI -->
+    <div id="ui-wrapper">
+        <div id="title">Torture Database Manager</div>
+        <div id="chooser" class="panel-element panel-selected"></div>
+        <div id="toolbar" class="form-row">
+            <!-- <button id="remove" class="btn btn-danger" disabled>
+            <i class="fa fa-trash"></i> Delete
+          </button> -->
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#setup-modal"><i class="fas fa-cog" title="Settings"></i></button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="setup-modal" tabindex="-1" aria-labelledby="setup-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="setup-modalLabel">AWS IAM Authorization</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="color-danger">Note: Saving may not work in incognito mode.</h6>
+                            <form id="login">
+                                <div class="row align-items-center">
+                                    <div class="col-sm-4 my-1">
+                                        <label class="sr-only" for="inlineFormInputName">Name</label>
+                                        <input type="text" class="form-control" id="iam-id" placeholder="IAM ID">
+                                    </div>
+                                    <div class="col-sm-4 my-1">
+                                        <label class="sr-only" for="inlineFormInputGroupUsername">Username</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="iam-secret" placeholder="IAM Secret">
+                                        </div>
+                                    </div>
+                                    <div id="login-button" class="col-auto my-1">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table id="table" data-ajax="ajaxRequest" data-search-highlight="true" data-show-export="true" data-pagination="true" data-toolbar="#toolbar" data-sortable="true" data-show-search-clear-button="true" data-id-field="filed_timestamp" data-buttons="buttons"
+            data-click-to-select="true" data-filter-control="true" data-show-search-clear-button="true" data-show-columns="true" data-show-refresh="true" data-show-columns-toggle-all="true">
+            <thead>
+                <tr></tr>
+            </thead>
+        </table>
+
+        <div id="chooser-control" class="panel-element control panel-selected">
+            <div id="left"></div>
+            <div id="right"></div>
+        </div>
+        <div id="survey" class="panel-element">
+        </div>
+        <div id="survey-control" class="panel-element control">
+            <div id="left"></div>
+        </div>
+    </div>
+
+    <!-- Survey -->
+    <div id="survey-modal" class="modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- <div class="modal-header">
+                      <h5 class="modal-title">Error</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div> -->
+                <div class="modal-body">
+                    <div id="surveyContainer" style="display:inline-block;width:86%;margin:0 7%;"></div>
+                </div>
+                <!-- <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div> -->
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
