@@ -109,7 +109,10 @@ class tortureVis {
         },
         gender: {
           // multiSelect: true
-        }
+        },
+        // other: {
+        //   // multiSelect: true
+        // }
       },
     };
 
@@ -122,7 +125,7 @@ class tortureVis {
     let provinces = pGet(data, "pakistan.region", "aKey");
     cfg.categories.region.options = provinces;
     cfg.categories.region.values = provinces.map(d => data.pakistan.region[d]);
-    let p = new pieSelect(cfg);
+    this.pie = new pieSelect(cfg);
   }
 
 }

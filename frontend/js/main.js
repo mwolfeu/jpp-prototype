@@ -33,15 +33,19 @@ function initFullpage() {
     navigationPosition: "right",
     slidesNavigation: true,
     slidesNavPosition: "top",
-    // afterResize: function(width, height) {
-    //   window.tv.build({
-    //     width,
-    //     height
-    //   });
-    //   console.log('Resize:', width, height);
-    //   console.log("Body", document.body.clientWidth, document.body.clientHeight);
-    //   fullpage_api.reBuild();
-    // },
+    afterResize: function(width, height) {
+      console.log('Resize:', width, height);
+      tv.pie.react(); // Redraw vis
+
+      // window.tv.build({
+      //   width,
+      //   height
+      // });
+      // console.log('Resize:', width, height);
+      // console.log("Body", document.body.clientWidth, document.body.clientHeight);
+      // fullpage_api.reBuild();
+      return true;
+    },
     // afterRender: function() {
     //   // window.tv.addTextBuffers();
     //   // bug hack: putting rebuild in afterRender then reloading WITH cache
@@ -77,6 +81,10 @@ if (urlSearchParams.has('vis-data')) {
     console.error('Bad JSON data in URL.', error);
   }
 }
+
+// init timeline
+let tlURL = `https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?theme=${window.location.href}css/timeline.css&source=14v8QancR0YtWpJc9djqwbqCvEDwgKHzaZ5tkJzssDKM&font=Default&lang=en&initial_zoom=2&height=650`;
+document.querySelector('iframe').setAttribute('src', tlURL);
 
 initTortureVis();
 // d3.selectAll(".section")

@@ -26,7 +26,7 @@ class pieSelect {
       // textinfo: "label+percent",
       // textposition: "inside",
       // insidetextorientation: "radial",
-      hovertemplate: "<b>%{label}</b><br><span style='font-size:1.1em;'>Total: <b style='color:#e8545c'> %{value} </b></span> <extra></extra>",
+      hovertemplate: "<b>%{label}</b><br><span style='font-size:1.1em;'>Total: <b style='color:#ebdf9a'> %{value} </b></span> <extra></extra>",
       hoverlabel: {
         align: 'left',
         bgcolor: '#444',
@@ -35,7 +35,7 @@ class pieSelect {
       automargin: true,
       title: { font: { family: "PT Sans Narrow" } },
       legendgrouptitle: { font: { family: "PT Sans Narrow" } },
-      hoverlabel: { font: { family: "PT Sans Narrow" } },
+      // hoverlabel: { font: { family: "PT Sans Narrow" } },
       textfont: { font: { family: "PT Sans Narrow" } },
       insidetextfont: { font: { family: "PT Sans Narrow" } },
       outsidetextfont: { font: { family: "PT Sans Narrow" } },

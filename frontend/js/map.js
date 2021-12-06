@@ -25,7 +25,7 @@ class Map {
           "side": "right"
         }
       },
-      hovertemplate: "<b>%{location}</b><br><span style='font-size:1.1em;'>Total: <b style='color:#e8545c'> %{z} </b></span> <extra></extra>",
+      hovertemplate: "<b>%{location}</b><br><span style='font-size:1.1em;'>Total: <b style='color:#ebdf9a'> %{z} </b></span> <extra></extra>",
       hoverlabel: { namelength: 50 },
       colorscale: 'Viridis',
       "reversescale": true,
