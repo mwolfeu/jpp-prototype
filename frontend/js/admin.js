@@ -1,4 +1,6 @@
 import SurveyUtil from "./survey.js"
+import "../../backend/js/entry.js"
+let layout = globalThis.schema.layout;
 
 // AWS IAM XMLHTTPREQ
 let url = 'https://4z4ntfa3oi.execute-api.us-east-1.amazonaws.com/dev/v1/incident';
@@ -137,13 +139,6 @@ let survey = new SurveyUtil();
 survey.init(surveyCfg);
 var surveyModal = new bootstrap.Modal(document.getElementById('survey-modal'));
 
-// $(function() {
-//   $('form').submit(function() {
-//     alert($(this).serialize())
-//     return false
-//   })
-// })
-
 // TOOLBAR BUTTONS
 window.buttons = function() {
   return {
@@ -209,6 +204,11 @@ window.buttons = function() {
       text: 'View changes',
       icon: 'fas fa-eye',
       event: function() {
+        let agg = aggregate();
+        if (!agg) {
+          alert('No data loaded. Please refresh.');
+          return;
+        }
         let rv = testRv;
         let data = JSON.stringify(rv); // DUMMY TEST
         let viewURL = `${window.location.protocol}//${window.location.host}/jpp-prototype/frontend/?vis-data=${data}`;
@@ -277,6 +277,15 @@ window.ajaxRequest = function(params) {
   uiFetch(cfg);
 }
 
+// CREATE AGGREGATES
+function aggregate() {
+  let data = $table.bootstrapTable('getData');
+  if (!data.length)
+    return false;
+  console.log('Creating Aggregates')
+  let agg = {};
+  return agg;
+}
 
 // for VIEW
 let testRv = {

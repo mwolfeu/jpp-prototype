@@ -1,6 +1,4 @@
 import { frames, allFeatures } from './tortureVisData.js';
-// import SurveyUtil from "./survey.js"
-// import awsBackend from "./aws.js"
 import { pieSelect } from './pie.js'
 import { Map } from './map.js'
 

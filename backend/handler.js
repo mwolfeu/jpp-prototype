@@ -44,8 +44,13 @@ module.exports = {
     try {
       bodyObj = JSON.parse(event.body);
       // if you keep pk you replace the contents
-      if (event.path != "/v1/incident" || (event.path == "/v1/incident" && !('pk' in bodyObj.data)))
+      if (event.path != "/v1/incident" || (event.path == "/v1/incident" && !('pk' in bodyObj.data))) {
         bodyObj.data.pk = Date.now();
+      }
+      // Use admin 'status' if specified
+      if (event.path != "/v1/incident") {
+        bodyObj.data.status = 'unreviewed'; // unreviewed == survey new, reviewed == adm updated
+      }
     } catch (jsonError) {
       console.log('There was an error parsing the body', jsonError)
       return {
@@ -67,15 +72,12 @@ module.exports = {
     let rv = schema.encode(bodyObj.data, lang);
     let putParams;
     if (rv.valid) {
+
       putParams = {
         TableName: process.env.DYNAMODB_INCIDENT_TABLE,
         Item: bodyObj.data
       }
 
-      // Use admin 'status' if specified
-      if (event.path != "/v1/incident") {
-        putParams.Item.status = 'unreviewed'; // unreviewed == survey new, reviewed == adm updated
-      }
     } else {
       console.log(JSON.stringify(rv));
       return {

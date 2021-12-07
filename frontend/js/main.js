@@ -35,7 +35,8 @@ function initFullpage() {
     slidesNavPosition: "top",
     afterResize: function(width, height) {
       console.log('Resize:', width, height);
-      tv.pie.react(); // Redraw vis
+      if (tv.pie)
+        tv.pie.react(); // Redraw vis
 
       // window.tv.build({
       //   width,
@@ -84,7 +85,8 @@ if (urlSearchParams.has('vis-data')) {
 
 // init timeline
 let tlURL = `https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?theme=${window.location.href}css/timeline.css&source=14v8QancR0YtWpJc9djqwbqCvEDwgKHzaZ5tkJzssDKM&font=Default&lang=en&initial_zoom=2&height=650`;
-document.querySelector('iframe').setAttribute('src', tlURL);
+let timeline = document.querySelector('iframe')
+if (timeline) timeline.setAttribute('src', tlURL);
 
 initTortureVis();
 // d3.selectAll(".section")
