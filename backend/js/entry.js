@@ -183,7 +183,7 @@ let layout = { // one row in the backend db
       {
         "Name": "region",
         "Input": "single",
-        "Type": "code",
+        "Type": "string",
         "Description-en": "Region",
         "Values-en": "*Regions",
         "Description-ur": "علاقے کا نام"

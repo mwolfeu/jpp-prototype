@@ -202,7 +202,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.hello",
         "Runtime": "nodejs12.x",
@@ -232,7 +232,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.byRegion",
         "Runtime": "nodejs12.x",
@@ -262,7 +262,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.create",
         "Runtime": "nodejs12.x",
@@ -292,7 +292,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.create",
         "Runtime": "nodejs12.x",
@@ -322,7 +322,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.list",
         "Runtime": "nodejs12.x",
@@ -352,7 +352,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/torture/dev/1638808334335-2021-12-06T16:32:14.335Z/torture.zip"
+          "S3Key": "serverless/torture/dev/1638876850869-2021-12-07T11:34:10.869Z/torture.zip"
         },
         "Handler": "handler.delete",
         "Runtime": "nodejs12.x",
@@ -375,64 +375,64 @@
         "DeleteLogGroup"
       ]
     },
-    "HelloLambdaVersioni5CTPMSJObfAvwJ4TaxU1FzOavYPSGrbX2lRi9rYc": {
+    "HelloLambdaVersionofwQCgEn3z9DhualIlSvlr1FlX94WYnYnGL2VNbBXI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HelloLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
-    "ByRegionLambdaVersionnycYEis9BNvBsKHD2LOgWOqpymJtUpveiXWyTHAAxKI": {
+    "ByRegionLambdaVersionkeI5nKjS4bm7m9msjV7n6D8R97KW83YbEHGfYoNIrs": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ByRegionLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
-    "SubmitSurveyLambdaVersionv3aUslFWcDPzTY2i9mi2ClTBm6RBlxRDCWAW1ehw": {
+    "SubmitSurveyLambdaVersionPxbZaG7RVFm7QBpCksSOjaj5mDgEv2uD1sdU8geg6zc": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SubmitSurveyLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
-    "CreateLambdaVersionHNfgFjVh0xFfvpk4AGljlTk97jycvm3uALF7PJo": {
+    "CreateLambdaVersionQDMJWqVopUwMCwqWRt9BjnFbW3i9QGe1mXpmDsScbw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CreateLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
-    "ListLambdaVersionGukiFjhhT0HDUeCBQxZhCzPfHAiXLzicuGkDAdfdZbA": {
+    "ListLambdaVersionI6MLWtas1xWrSqb66HaQIMq3VZyFbVxhtT78rrAnzE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ListLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
-    "DeleteLambdaVersionXj3yAMtGy3y2OrzvekXRLfrt99xC5DFsTsxr8ObC7I": {
+    "DeleteLambdaVersion39U0sDYZP4XbftDxhCNjI6WR2RoTeSoHhcqhaet14": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "DeleteLambdaFunction"
         },
-        "CodeSha256": "1axruCEwqgVELcmyZ5kHPgzoLA4YUTHxIIdQJhuWitU="
+        "CodeSha256": "YEuobTKnSS3+uvX4htMzwA0VgLojyGV17FLD0TzdVO4="
       }
     },
     "ApiGatewayRestApi": {
@@ -1026,7 +1026,7 @@
         "DeleteLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1638808332045": {
+    "ApiGatewayDeployment1638876847928": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -1337,7 +1337,7 @@
     "HelloLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersioni5CTPMSJObfAvwJ4TaxU1FzOavYPSGrbX2lRi9rYc"
+        "Ref": "HelloLambdaVersionofwQCgEn3z9DhualIlSvlr1FlX94WYnYnGL2VNbBXI"
       },
       "Export": {
         "Name": "sls-torture-dev-HelloLambdaFunctionQualifiedArn"
@@ -1346,7 +1346,7 @@
     "ByRegionLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ByRegionLambdaVersionnycYEis9BNvBsKHD2LOgWOqpymJtUpveiXWyTHAAxKI"
+        "Ref": "ByRegionLambdaVersionkeI5nKjS4bm7m9msjV7n6D8R97KW83YbEHGfYoNIrs"
       },
       "Export": {
         "Name": "sls-torture-dev-ByRegionLambdaFunctionQualifiedArn"
@@ -1355,7 +1355,7 @@
     "SubmitSurveyLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SubmitSurveyLambdaVersionv3aUslFWcDPzTY2i9mi2ClTBm6RBlxRDCWAW1ehw"
+        "Ref": "SubmitSurveyLambdaVersionPxbZaG7RVFm7QBpCksSOjaj5mDgEv2uD1sdU8geg6zc"
       },
       "Export": {
         "Name": "sls-torture-dev-SubmitSurveyLambdaFunctionQualifiedArn"
@@ -1364,7 +1364,7 @@
     "CreateLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CreateLambdaVersionHNfgFjVh0xFfvpk4AGljlTk97jycvm3uALF7PJo"
+        "Ref": "CreateLambdaVersionQDMJWqVopUwMCwqWRt9BjnFbW3i9QGe1mXpmDsScbw"
       },
       "Export": {
         "Name": "sls-torture-dev-CreateLambdaFunctionQualifiedArn"
@@ -1373,7 +1373,7 @@
     "ListLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ListLambdaVersionGukiFjhhT0HDUeCBQxZhCzPfHAiXLzicuGkDAdfdZbA"
+        "Ref": "ListLambdaVersionI6MLWtas1xWrSqb66HaQIMq3VZyFbVxhtT78rrAnzE"
       },
       "Export": {
         "Name": "sls-torture-dev-ListLambdaFunctionQualifiedArn"
@@ -1382,7 +1382,7 @@
     "DeleteLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "DeleteLambdaVersionXj3yAMtGy3y2OrzvekXRLfrt99xC5DFsTsxr8ObC7I"
+        "Ref": "DeleteLambdaVersion39U0sDYZP4XbftDxhCNjI6WR2RoTeSoHhcqhaet14"
       },
       "Export": {
         "Name": "sls-torture-dev-DeleteLambdaFunctionQualifiedArn"
