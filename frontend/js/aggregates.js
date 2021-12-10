@@ -1,1 +1,1 @@
-my content
+[object Object]
